@@ -39,6 +39,12 @@ public class Field {
         coordinates.add(this.y);
         return coordinates;
     }
+    public ArrayList<Integer> getPosition(){
+        ArrayList<Integer> position = new ArrayList<>();
+        position.add(this.x % 3);
+        position.add(this.y % 3);
+        return position;
+    }
 }
 
 
