@@ -18,25 +18,27 @@ public class Field {
             legalEntries.add(i);
         }
     }
-
     public void setValue(int value){
         this.value = value;
     }
     public void addEdge(Field field){
         Edges.add(field);
     }
-
     public void removeEdges(Field field){//This method removes all out going edges
         Edges.clear();
     }
     public void updateLE(int LE){
         legalEntries.remove(Integer.valueOf(LE));
     }
-    public void removeEdge(Field field){
+    public void removeEdge(Field field){//This method removes an incoming edge
         Edges.remove(field);
     }
-
-
+    public ArrayList<Integer> getCoordinates(){
+        ArrayList<Integer> coordinates = new ArrayList();
+        coordinates.add(this.x);
+        coordinates.add(this.y);
+        return coordinates;
+    }
 }
 
 
