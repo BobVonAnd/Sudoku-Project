@@ -20,6 +20,9 @@ public class Field {
     public void setValue(int value){
         this.value = value;
     }
+    public int getValue(int value){
+        return value;
+    }
     public void addEdge(Field field){
         Edges.add(field);
     }
