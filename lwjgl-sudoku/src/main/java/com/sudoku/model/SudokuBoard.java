@@ -80,12 +80,12 @@ public class SudokuBoard {
 
     }
     public void makeEdges(Field field){
-        int[] corner = new int[2];
         int x_coordinate = field.getCoordinates()[0];
         int y_coordinate = field.getCoordinates()[1];
 
-        corner[0] = x_coordinate-field.getPosition()[0];
-        corner[1] = y_coordinate-field.getPosition()[1];
+        int cornerX = x_coordinate-field.getPosition()[0];
+        int cornerY = y_coordinate-field.getPosition()[1];
+
 
 
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
@@ -100,13 +100,12 @@ public class SudokuBoard {
             }
             
         }
+
         for (int j = 0; j<3 ; j++){
             for (int k = 0; k<3; k++){
-                if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
-                    continue;
-                }
-                if (wholeBoard[corner[0]+j][corner[1]+k].getValue() == 0 && field.notcontainsEdge(wholeBoard[corner[0]+j][corner[1]+k])){
-                    field.addEdge(wholeBoard[corner[0]+j][corner[1]+k]);
+                Field f = wholeBoard[cornerX+j][cornerY+k];
+                if (f.getValue() == 0 && field.notcontainsEdge(f)){
+                    field.addEdge(f);
                 }
                 
             }
