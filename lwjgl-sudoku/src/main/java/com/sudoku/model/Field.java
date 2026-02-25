@@ -34,7 +34,7 @@ public class Field {
         Edges.remove(field);
     }
     public ArrayList<Integer> getCoordinates(){
-        ArrayList<Integer> coordinates = new ArrayList();
+        ArrayList<Integer> coordinates = new ArrayList<>();
         coordinates.add(this.x);
         coordinates.add(this.y);
         return coordinates;
