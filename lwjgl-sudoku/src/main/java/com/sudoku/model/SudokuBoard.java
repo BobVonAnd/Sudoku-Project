@@ -89,13 +89,13 @@ public class SudokuBoard {
 
 
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
-            if (fields.getValue() == 0){
+            if (fields.getValue() == 0 && field != fields){
                 field.addEdge(fields);
             }
             
         }
         for (int i = 0; i<this.size; i++){
-            if (wholeBoard[i][y_coordinate].getValue() == 0){
+            if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate]){
                 field.addEdge(wholeBoard[i][y_coordinate]);
             }
             

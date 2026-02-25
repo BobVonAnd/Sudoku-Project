@@ -21,7 +21,10 @@ public class Field {
         this.value = value;
     }
     public void addEdge(Field field){
-        Edges.add(field);
+        if (Edges.contains(field) == false){
+            Edges.add(field);
+        }
+        
     }
     public void removeEdges(Field field){//This method removes all out going edges
         Edges.clear();
