@@ -33,13 +33,13 @@ public class Field {
         Edges.remove(field);
     }
     public int[] getCoordinates(){
-        int[] coordinates = new int[1];
+        int[] coordinates = new int[2];
         coordinates[0] = this.x;
         coordinates[1] = this.y;
         return coordinates;
     }
     public int[] getPosition(){
-        int[] position = new int[1];
+        int[] position = new int[2];
         position[0] = this.x % 3;
         position[1] = this.y % 3;
         return position;

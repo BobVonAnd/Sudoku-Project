@@ -80,7 +80,7 @@ public class SudokuBoard {
 
     }
     public void makeEdges(Field field){
-        int[] corner = new int[1];
+        int[] corner = new int[2];
         int x_coordinate = field.getCoordinates()[0];
         int y_coordinate = field.getCoordinates()[1];
 
