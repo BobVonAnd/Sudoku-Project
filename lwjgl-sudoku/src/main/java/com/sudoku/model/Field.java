@@ -1,7 +1,6 @@
 package com.sudoku.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Field {
     private int value, x, y;
