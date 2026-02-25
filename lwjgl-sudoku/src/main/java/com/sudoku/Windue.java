@@ -6,7 +6,8 @@ import org.lwjgl.Version;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
@@ -14,6 +15,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
@@ -33,6 +36,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -45,6 +49,9 @@ public class Windue {
 
     // The window handle
     private long window;
+    private Button button = new Button(200, 600, 200, 200, "Ole", () -> {
+        System.out.println("Knappen blev klikket!");
+    });
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -74,7 +81,7 @@ public class Windue {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the window
         window = glfwCreateWindow(1980, 1080, "Hello World!", NULL, NULL);
@@ -109,7 +116,6 @@ public class Windue {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
 
-
         createCallBacks(window);
 
         // Enable v-sync
@@ -120,25 +126,34 @@ public class Windue {
     }
 
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
         GL.createCapabilities();
 
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        // Sæt 2D ortho
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, 1980, 0, 1080, -1, 1); // (0,0) nederst til venstre
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glLoadIdentity();
 
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
+        glClearColor(0f, 0f, 0f, 1f); // sort baggrund
+
         while (!glfwWindowShouldClose(window)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glfwSwapBuffers(window); // swap the color buffers
+            // Render knappen
+            button.render();
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
+            // Hent mus og tjek klik
+            double[] mx = new double[1];
+            double[] my = new double[1];
+            glfwGetCursorPos(window, mx, my);
+            float correctedY = 1080 - (float) my[0];
+
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+                button.checkClick((float) mx[0], correctedY);
+            }
+
+            glfwSwapBuffers(window);
             glfwPollEvents();
         }
     }
@@ -147,9 +162,11 @@ public class Windue {
         new Windue().run();
     }
 
-
-
-    private void createCallBacks(long windue){
-
+    private void createCallBacks(long window) {
+        double[] mx = new double[1];
+        double[] my = new double[1];
+        glfwGetCursorPos(window, mx, my);
+        float correctedY = 1080 - (float) my[0]; // vindueshøjde - musY
+        button.checkClick((float) mx[0], correctedY);
     }
 }
