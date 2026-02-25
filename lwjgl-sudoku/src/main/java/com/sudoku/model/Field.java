@@ -40,7 +40,7 @@ public class Field {
     }
     public ArrayList<Integer> getPosition(){
         ArrayList<Integer> position = new ArrayList<>();
-        position.add(this.x % 3);
+        position.add(this.x % 3); // hardcoded 3x3 bigfields aka 9x9 sudoku
         position.add(this.y % 3);
         return position;
     }
