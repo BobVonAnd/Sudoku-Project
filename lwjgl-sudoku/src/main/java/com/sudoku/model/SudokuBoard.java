@@ -53,4 +53,8 @@ public class SudokuBoard {
         
     }
 
+    public void updateLegalEntriesOfField(Field field){
+        int x_coordinate = field.getCoordinates().get(0);
+        int y_coordinate = field.getCoordinates().get(1);
+    }
 }
