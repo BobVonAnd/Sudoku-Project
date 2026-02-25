@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Field {
     private int value, x, y;
-    private List<Integer> legalEntries = new ArrayList<>();
-    private List<Field> Edges = new ArrayList<>();
+    private ArrayList<Integer> legalEntries = new ArrayList<>();
+    private ArrayList<Field> Edges = new ArrayList<>();
 
 
     public Field(int x, int y, int value, int size){
@@ -44,6 +44,9 @@ public class Field {
         position.add(this.x % 3);
         position.add(this.y % 3);
         return position;
+    }
+    public ArrayList<Field> getEdges(){
+        return this.Edges;
     }
 }
 
