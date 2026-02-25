@@ -48,7 +48,9 @@ public class SudokuBoard {
 
     public void changeField(int x, int y, int value) {
         // changes a value of a field and therefore updates other legal entries
-
+        Field field = wholeBoard[x][y];
+        field.setValue(value);
+        
     }
 
 }
