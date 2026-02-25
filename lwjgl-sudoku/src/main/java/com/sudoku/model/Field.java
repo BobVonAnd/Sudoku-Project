@@ -47,6 +47,9 @@ public class Field {
     public ArrayList<Field> getEdges(){
         return this.Edges;
     }
+    public Integer getLeSize(){
+        return legalEntries.size();
+    }
 }
 
 
