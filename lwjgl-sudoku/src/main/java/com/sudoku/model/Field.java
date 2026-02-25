@@ -26,7 +26,7 @@ public class Field {
     public void removeEdges(Field field){//This method removes all out going edges
         Edges.clear();
     }
-    public void updateLE(int LE){
+    public void removeLE(int LE){
         legalEntries.remove(Integer.valueOf(LE));
     }
     public void removeEdge(Field field){//This method removes an incoming edge
