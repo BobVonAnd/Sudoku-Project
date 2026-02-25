@@ -6,6 +6,7 @@ public class Field {
     private int value, x, y;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
+    public Object getLegalEntries;
 
 
     public Field(int x, int y, int value, int size){
@@ -62,6 +63,8 @@ public class Field {
     public Integer getValue(){
         return this.value;
     }
+    public ArrayList<Integer> getLegalEntries(){
+        return legalEntries;
+    }
 }
-
 

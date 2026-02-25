@@ -39,6 +39,7 @@ import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.TerminalView;
 
@@ -141,6 +142,16 @@ public class App {
 	public static void main(String[] args) {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
+		sudokuBoard.populate();
+		for (int i = 0; i<sudokuBoard.getSize()-1; i++){//Change method
+			for (int j = 0; j<sudokuBoard.getSize()-1; j++){
+				sudokuBoard.updateLegalEntriesOfField(sudokuBoard.getSingleField(i, j));
+				sudokuBoard.makeEdges(sudokuBoard.getSingleField(i, j));
+			}
+		}
+		Solver solver = new Solver();
+		solver.solves(sudokuBoard);
+		
 		TerminalView terminalView = new TerminalView(sudokuBoard);
 		terminalView.printBoard();
 

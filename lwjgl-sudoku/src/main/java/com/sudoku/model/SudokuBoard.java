@@ -3,7 +3,7 @@ package com.sudoku.model;
 public class SudokuBoard {
     
     private Field[][] wholeBoard;
-    private int size;
+    private int size = 9;
 
     public SudokuBoard(int size){
         wholeBoard = new Field[size][size];
@@ -45,37 +45,48 @@ public class SudokuBoard {
         changeField(0, 7, 6);
         changeField(1, 8, 7);
         changeField(8, 8, 3);
+        changeField(1,0,2);
+        changeField(2,0,3);
+        changeField(4,0,5);
+        changeField(6,0,8);
+        changeField(8,0,7);
     }
 
     public void changeField(int x, int y, int value) {
         // changes a value of a field and therefore updates other legal entries
         Field field = wholeBoard[x][y];
         field.setValue(value);
-        
     }
 
-    public void updateLegalEntriesOfField(Field field){
-        int[] corner = new int[1];
+public void updateLegalEntriesOfField(Field field){
         int x_coordinate = field.getCoordinates()[0];
         int y_coordinate = field.getCoordinates()[1];
 
-        corner[0] = x_coordinate-field.getPosition()[0];
-        corner[1] = y_coordinate-field.getPosition()[1];
+        int cornerX = x_coordinate-field.getPosition()[0];
+        int cornerY = y_coordinate-field.getPosition()[1];
+
 
 
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
-            fields.removeLE(field.getValue());
+            if (field != fields ){
+                field.removeLE(fields.getValue());
+            }
+            
         }
         for (int i = 0; i<this.size; i++){
-            wholeBoard[i][y_coordinate].removeLE(field.getValue());
+            if (field != wholeBoard[i][y_coordinate]){
+                field.removeLE(wholeBoard[i][y_coordinate].getValue());
+            }
+            
         }
+
         for (int j = 0; j<3 ; j++){
             for (int k = 0; k<3; k++){
-                if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
-                    continue;
+                Field f = wholeBoard[cornerX+j][cornerY+k];
+                if (field != f ){
+                    field.removeLE(f.getValue());
                 }
-                wholeBoard[corner[0]+j][corner[1]+k].removeLE(field.getValue());
-            }
+            }   
         }
 
     }
@@ -111,6 +122,17 @@ public class SudokuBoard {
             }
         }
 
+    }
+
+    public Field[][] getWholeBoard() {
+        return this.wholeBoard;
+    }
+    public int getSize(){
+        return this.size;
+    }
+    public Field getSingleField(int x, int y){
+        Field f = this.wholeBoard[x][y];
+        return f;
     }
 
 
