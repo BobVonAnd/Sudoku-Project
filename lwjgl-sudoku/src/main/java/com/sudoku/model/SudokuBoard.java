@@ -3,10 +3,11 @@ package com.sudoku.model;
 public class SudokuBoard {
     
     private Field[][] wholeBoard;
+    private int size;
 
     public SudokuBoard(int size){
         wholeBoard = new Field[size][size];
-        
+        this.size = size;
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
                 wholeBoard[j][i] = new Field(j,i, 0, size);
@@ -54,7 +55,55 @@ public class SudokuBoard {
     }
 
     public void updateLegalEntriesOfField(Field field){
-        int x_coordinate = field.getCoordinates().get(0);
-        int y_coordinate = field.getCoordinates().get(1);
+        int[] corner = new int[1];
+        int x_coordinate = field.getCoordinates()[0];
+        int y_coordinate = field.getCoordinates()[1];
+
+        corner[0] = x_coordinate-field.getPosition()[0];
+        corner[1] = y_coordinate-field.getPosition()[1];
+
+
+        for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
+            fields.removeLE(field.getValue());
+        }
+        for (int i = 0; i<this.size; i++){
+            wholeBoard[i][y_coordinate].removeLE(field.getValue());
+        }
+        for (int j = 0; j<3 ; j++){
+            for (int k = 0; k<3; k++){
+                if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
+                    continue;
+                }
+                wholeBoard[corner[0]+j][corner[1]+k].removeLE(field.getValue());
+            }
+        }
+
     }
+    public void makeEdges(Field field){
+        int[] corner = new int[1];
+        int x_coordinate = field.getCoordinates()[0];
+        int y_coordinate = field.getCoordinates()[1];
+
+        corner[0] = x_coordinate-field.getPosition()[0];
+        corner[1] = y_coordinate-field.getPosition()[1];
+
+
+        for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
+            fields.removeLE(field.getValue());
+        }
+        for (int i = 0; i<this.size; i++){
+            wholeBoard[i][y_coordinate].removeLE(field.getValue());
+        }
+        for (int j = 0; j<3 ; j++){
+            for (int k = 0; k<3; k++){
+                if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
+                    continue;
+                }
+                wholeBoard[corner[0]+j][corner[1]+k].removeLE(field.getValue());
+            }
+        }
+
+    }
+
+
 }
