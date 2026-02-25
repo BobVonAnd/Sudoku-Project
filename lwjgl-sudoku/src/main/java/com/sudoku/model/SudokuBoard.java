@@ -89,13 +89,13 @@ public class SudokuBoard {
 
 
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
-            if (fields.getValue() == 0 && field != fields){
+            if (fields.getValue() == 0 && field != fields && field.notcontainsEdge(fields)){
                 field.addEdge(fields);
             }
             
         }
         for (int i = 0; i<this.size; i++){
-            if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate]){
+            if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate] && field.notcontainsEdge(wholeBoard[i][y_coordinate])){
                 field.addEdge(wholeBoard[i][y_coordinate]);
             }
             
@@ -105,7 +105,7 @@ public class SudokuBoard {
                 if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
                     continue;
                 }
-                if (wholeBoard[corner[0]+j][corner[1]+k].getValue() == 0){
+                if (wholeBoard[corner[0]+j][corner[1]+k].getValue() == 0 && field.notcontainsEdge(wholeBoard[corner[0]+j][corner[1]+k])){
                     field.addEdge(wholeBoard[corner[0]+j][corner[1]+k]);
                 }
                 

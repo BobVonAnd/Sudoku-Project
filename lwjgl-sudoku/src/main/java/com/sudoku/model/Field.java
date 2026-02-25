@@ -26,6 +26,12 @@ public class Field {
         }
         
     }
+    public boolean notcontainsEdge(Field field){
+        if (Edges.contains(field) == true){
+            return false;
+        } 
+        return true;
+    }
     public void removeEdges(Field field){//This method removes all out going edges
         Edges.clear();
     }
