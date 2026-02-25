@@ -14,4 +14,8 @@ public class SudokuBoard {
         }
     }
 
+    public Field[][] getWholeBoard(){
+        return wholeBoard;
+    }
+
 }
