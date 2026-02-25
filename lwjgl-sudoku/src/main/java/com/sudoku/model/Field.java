@@ -3,13 +3,15 @@ package com.sudoku.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmallField {
-    private int value;
+public class Field {
+    private int value, x, y;
     private List<Integer> legalEntries = new ArrayList<>();
 
 
-    public SmallField(int size){
-        size = size*size;
+    public Field(int x, int y, int value, int size){
+        this.x = x;
+        this.y = y;
+        this.value = value;
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
         }
