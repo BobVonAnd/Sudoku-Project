@@ -39,6 +39,9 @@ import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.model.SudokuBoard;
+import com.sudoku.view.TerminalView;
+
 public class App {
 
 	// The window handle
@@ -136,6 +139,11 @@ public class App {
 	}
 
 	public static void main(String[] args) {
+
+		SudokuBoard sudokuBoard = new SudokuBoard(9);
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		terminalView.printBoard();
+
 		new App().run();
 	}
 

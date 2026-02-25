@@ -50,6 +50,10 @@ public class Field {
     public Integer getLeSize(){
         return legalEntries.size();
     }
+
+    public int getVal(){
+        return value;
+    }
 }
 
 
