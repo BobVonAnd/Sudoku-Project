@@ -89,17 +89,26 @@ public class SudokuBoard {
 
 
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
-            fields.removeLE(field.getValue());
+            if (fields.getValue() == 0){
+                field.addEdge(fields);
+            }
+            
         }
         for (int i = 0; i<this.size; i++){
-            wholeBoard[i][y_coordinate].removeLE(field.getValue());
+            if (wholeBoard[i][y_coordinate].getValue() == 0){
+                field.addEdge(wholeBoard[i][y_coordinate]);
+            }
+            
         }
         for (int j = 0; j<3 ; j++){
             for (int k = 0; k<3; k++){
                 if (wholeBoard[corner[0]+j][corner[1]+k].getPosition()[0] == field.getPosition()[0] || wholeBoard[corner[0]+j][corner[1]+k].getPosition()[1] == field.getPosition()[1]){
                     continue;
                 }
-                wholeBoard[corner[0]+j][corner[1]+k].removeLE(field.getValue());
+                if (wholeBoard[corner[0]+j][corner[1]+k].getValue() == 0){
+                    field.addEdge(wholeBoard[corner[0]+j][corner[1]+k]);
+                }
+                
             }
         }
 
