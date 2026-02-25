@@ -38,10 +38,10 @@ public class Field {
         coordinates[1] = this.y;
         return coordinates;
     }
-    public ArrayList<Integer> getPosition(){
-        ArrayList<Integer> position = new ArrayList<>();
-        position.add(this.x % 3); // hardcoded 3x3 bigfields aka 9x9 sudoku
-        position.add(this.y % 3);
+    public int[] getPosition(){
+        int[] position = new int[1];
+        position[0] = this.x % 3;
+        position[1] = this.y % 3;
         return position;
     }
     public ArrayList<Field> getEdges(){
