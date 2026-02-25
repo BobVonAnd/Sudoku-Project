@@ -65,8 +65,6 @@ public void updateLegalEntriesOfField(Field field){
         int cornerX = x_coordinate-field.getPosition()[0];
         int cornerY = y_coordinate-field.getPosition()[1];
 
-
-
         for (Field fields : wholeBoard[x_coordinate]){//Removes legal entry from itself rn
             if (field != fields ){
                 field.removeLE(fields.getValue());
