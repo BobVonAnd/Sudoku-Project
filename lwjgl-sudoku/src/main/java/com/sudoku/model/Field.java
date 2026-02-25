@@ -32,10 +32,10 @@ public class Field {
     public void removeEdge(Field field){//This method removes an incoming edge
         Edges.remove(field);
     }
-    public ArrayList<Integer> getCoordinates(){
-        ArrayList<Integer> coordinates = new ArrayList<>();
-        coordinates.add(this.x);
-        coordinates.add(this.y);
+    public int[] getCoordinates(){
+        int[] coordinates = new int[1];
+        coordinates[0] = this.x;
+        coordinates[1] = this.y;
         return coordinates;
     }
     public ArrayList<Integer> getPosition(){
