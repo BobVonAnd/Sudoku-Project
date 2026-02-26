@@ -42,6 +42,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.TerminalView;
+import com.sudoku.model.Field;
 
 public class App {
 
@@ -143,10 +144,11 @@ public class App {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		sudokuBoard.populate();
-		for (int i = 0; i<sudokuBoard.getSize()-1; i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize()-1; j++){
-				sudokuBoard.updateLegalEntriesOfField(sudokuBoard.getSingleField(i, j));
-				sudokuBoard.makeEdges(sudokuBoard.getSingleField(i, j));
+		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+			for (int j = 0; j<sudokuBoard.getSize(); j++){
+				Field f = sudokuBoard.getSingleField(i, j);
+				sudokuBoard.updateLegalEntriesOfField(f);
+				sudokuBoard.makeEdges(f);
 			}
 		}
 		Solver solver = new Solver();

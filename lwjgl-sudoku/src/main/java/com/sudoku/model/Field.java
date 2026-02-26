@@ -33,7 +33,7 @@ public class Field {
         } 
         return true;
     }
-    public void removeEdges(Field field){//This method removes all out going edges
+    public void removeEdges(){//This method removes all out going edges
         Edges.clear();
     }
     public void removeLE(int LE){
@@ -48,6 +48,12 @@ public class Field {
         coordinates[1] = this.y;
         return coordinates;
     }
+    public void removeValueFromLegalEntriesOfNeighbours(){
+        for (Field f : Edges){
+            f.removeLE(this.value);
+        }
+    }
+
     public int[] getPosition(){
         int[] position = new int[2];
         position[0] = this.x % 3;
