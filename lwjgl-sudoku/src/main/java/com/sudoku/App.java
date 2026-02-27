@@ -147,8 +147,8 @@ public class App {
 		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 			for (int j = 0; j<sudokuBoard.getSize(); j++){
 				Field f = sudokuBoard.getSingleField(i, j);
-				sudokuBoard.updateLegalEntriesOfField(f);
 				sudokuBoard.makeEdges(f);
+				sudokuBoard.updateLegalEntriesOfField(f);
 			}
 		}
 		Solver solver = new Solver();

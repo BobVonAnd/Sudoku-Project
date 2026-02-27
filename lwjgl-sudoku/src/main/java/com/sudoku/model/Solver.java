@@ -2,11 +2,12 @@ package com.sudoku.model;
 import java.util.ArrayList;
 
 public class Solver {
-    private boolean solved = false;
+    private boolean progress = true;
+    private int counter = 0;
     public void solves(SudokuBoard sudokuboard) {
     
-    while (!solved) {
-        boolean progress = false;
+    while (progress) {
+        progress = false;
         int x = 0;
         int y = 0;
         for ( x = 0; x < sudokuboard.getSize(); x++){
@@ -35,13 +36,54 @@ public class Solver {
                     progress = true;
                     continue;
                 }
+                
+                //if (f.getValue() == 0 && f.getLeSize() == 2){
+                //    boxPair(f);
+                //    progress = true;
+                //    continue;
+                //}
             }
-        }
-        if (progress == false){
-            solved = true;
         }
     }
 }
+    public void boxPair(Field f){   
+        ArrayList<Field> edges = f.getEdges(); 
+        ArrayList<Integer> legalEntries = f.getLegalEntries();
+        for (Field g : edges){
+            if (isBoxEdge(f, g)){
+                ArrayList<Integer> partnerLe = g.getLegalEntries();
+                if (partnerLe.size() == 2){
+                    if (legalEntries.containsAll(partnerLe)){
+                        for (Field h : edges){
+                            if (!isBoxEdge(f, h)){
+                                continue;
+                            }
+                            if (h == f || h == g){
+                                continue;
+                            }
+                            if (h.getValue() != 0){
+                                continue;
+                            }
+                            if (h.getLegalEntries().equals(legalEntries)){
+                                continue;
+                            }
+                            if (h.getLeSize() <= 2){
+                                continue;
+                            }
+                            for (Integer i : legalEntries){
+                                System.out.println("This is the pair" + f.getLegalEntries().get(0) + f.getLegalEntries().get(1) + "  "+ g.getLegalEntries().get(0)+ g.getLegalEntries().get(1));
+                                System.out.println("This is the legal entry that is being removed" + h.getLegalEntries());
+                                h.removeLE(i);
+                                System.out.println("This is the legal entry that is being removed after" + h.getLegalEntries());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     public Integer lookAtNeighbours(Field f){
         if (f.getValue() != 0) return 0;
         ArrayList<Field> edges = f.getEdges();
@@ -49,13 +91,13 @@ public class Solver {
         ArrayList<Field> yEdges = new ArrayList<>();
         ArrayList<Field> xEdges = new ArrayList<>();
         for (Field g : edges){
-            if (isBoxEdge(f, g)){
+            if (isBoxEdge(f, g)){//Same box
                 boxEdges.add(g);
             }
-            if (g.getCoordinates()[0]!=f.getCoordinates()[0] && g.getCoordinates()[1] == f.getCoordinates()[1]){
+            if (isRowEdge(f, g)){//Same row
                 xEdges.add(g);
             }
-            if (g.getCoordinates()[1]!=f.getCoordinates()[1] && g.getCoordinates()[0] == f.getCoordinates()[0]){
+            if (isColumnEdge(f, g)){//Same column
                 yEdges.add(g);
             }
         }
@@ -109,4 +151,13 @@ public class Solver {
         return false;
         
     }
+    public Boolean isRowEdge(Field f, Field otherField){
+        return otherField.getCoordinates()[0]!=f.getCoordinates()[0] && otherField.getCoordinates()[1] == f.getCoordinates()[1];
+        
+    }
+    public Boolean isColumnEdge(Field f, Field otherField){
+        return otherField.getCoordinates()[1]!=f.getCoordinates()[1] && otherField.getCoordinates()[0] == f.getCoordinates()[0];
+        
+    }
+
 }

@@ -18,17 +18,17 @@ public class SudokuBoard {
     public void populate() {
         // preset board
         int[][] board = {
-    {3,0,0,0,4,9,0,0,0},
-    {0,0,0,6,0,0,5,0,1},
-    {7,5,2,0,0,1,0,0,0},
+    {0,0,2,0,0,7,0,9,6},
+    {7,0,5,0,9,0,0,1,8},
+    {1,0,0,0,0,4,7,0,0},
 
-    {0,0,1,0,0,0,7,0,0},
-    {5,0,0,3,9,6,0,0,0},
-    {0,0,8,1,5,0,0,9,6},
+    {0,0,9,7,0,0,1,0,5},
+    {0,0,0,0,2,8,0,0,0},
+    {0,0,0,0,0,5,0,6,2},
 
-    {0,0,3,0,1,0,0,6,0},
-    {0,0,4,0,0,0,1,0,0},
-    {0,0,0,0,2,8,0,0,0}
+    {0,0,0,6,7,2,0,0,1},
+    {0,0,0,8,0,0,0,4,0},
+    {0,0,3,0,4,0,0,2,0}
 };
 
 for (int y = 0; y < 9; y++) {
@@ -46,6 +46,10 @@ for (int y = 0; y < 9; y++) {
         // changes a value of a field and therefore updates other legal entries
         Field field = wholeBoard[x][y];
         field.setValue(value);
+        if (value!=0){
+            field.clearLe();
+        }
+        field.removeValueFromLegalEntriesOfNeighbours();
         System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
     }
 

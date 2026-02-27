@@ -36,8 +36,11 @@ public class Field {
     public void removeEdges(){//This method removes all out going edges
         Edges.clear();
     }
+    public void clearLe(){
+        this.legalEntries.clear();
+    }
     public void removeLE(int LE){
-        legalEntries.remove(Integer.valueOf(LE));
+        this.legalEntries.remove(Integer.valueOf(LE));
     }
     public void removeEdge(Field field){//This method removes an incoming edge
         Edges.remove(field);
