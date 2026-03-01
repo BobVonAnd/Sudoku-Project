@@ -13,6 +13,7 @@ public class Solver {
         for ( x = 0; x < sudokuboard.getSize(); x++){
             for ( y = 0; y < sudokuboard.getSize(); y++){
                 Field f = sudokuboard.getSingleField(x, y);
+                int candidate = lookAtNeighbours(f);
                 if (f.getValue() == 0 && f.getLeSize() == 1) {
                     sudokuboard.changeField(
                         f.getCoordinates()[0],
@@ -22,10 +23,8 @@ public class Solver {
                     sudokuboard.updateLegalEntriesOfField(f);
                     f.removeValueFromLegalEntriesOfNeighbours();
                     progress = true;
-                    continue;
                 }
-                int candidate = lookAtNeighbours(f);
-                if (candidate != 0 && f.getValue() == 0){
+                else if (candidate != 0 && f.getValue() == 0){
                     sudokuboard.changeField(
                         f.getCoordinates()[0],
                         f.getCoordinates()[1],
@@ -34,54 +33,74 @@ public class Solver {
                     sudokuboard.updateLegalEntriesOfField(f);
                     f.removeValueFromLegalEntriesOfNeighbours();
                     progress = true;
-                    continue;
                 }
                 
-                //if (f.getValue() == 0 && f.getLeSize() == 2){
-                //    boxPair(f);
-                //    progress = true;
-                //    continue;
-                //}
+                if (f.getValue() == 0 && f.getLeSize() == 2){
+                    progress = nakedPair(f, progress);
+                    System.out.println("Used naked pair");
+                }
+                if (f.getValue() == 0 && f.getLegalEntries().isEmpty()) {
+                    System.out.println("HOLE at: " + x + "," + y);
+                }
+                if (x >=sudokuboard.getSize() && y == sudokuboard.getSize()-1 && progress == false && counter == 0){
+                    System.out.println("Trying more complex algorithms");
+                    counter = 1;
+                }
             }
         }
     }
 }
-    public void boxPair(Field f){   
-        ArrayList<Field> edges = f.getEdges(); 
-        ArrayList<Integer> legalEntries = f.getLegalEntries();
+    public Boolean nakedPair(Field f, boolean bool){   
+        ArrayList<Field> edges = f.getEdges();
+        ArrayList<Field> boxEdges = new ArrayList<>();
+        ArrayList<Field> yEdges = new ArrayList<>();
+        ArrayList<Field> xEdges = new ArrayList<>();
         for (Field g : edges){
-            if (isBoxEdge(f, g)){
-                ArrayList<Integer> partnerLe = g.getLegalEntries();
-                if (partnerLe.size() == 2){
-                    if (legalEntries.containsAll(partnerLe)){
-                        for (Field h : edges){
-                            if (!isBoxEdge(f, h)){
-                                continue;
-                            }
-                            if (h == f || h == g){
-                                continue;
-                            }
-                            if (h.getValue() != 0){
-                                continue;
-                            }
-                            if (h.getLegalEntries().equals(legalEntries)){
-                                continue;
-                            }
-                            if (h.getLeSize() <= 2){
-                                continue;
-                            }
-                            for (Integer i : legalEntries){
-                                System.out.println("This is the pair" + f.getLegalEntries().get(0) + f.getLegalEntries().get(1) + "  "+ g.getLegalEntries().get(0)+ g.getLegalEntries().get(1));
-                                System.out.println("This is the legal entry that is being removed" + h.getLegalEntries());
+            if (isBoxEdge(f, g)){//Same box
+                boxEdges.add(g);
+            }
+            if (isRowEdge(f, g)){//Same row
+                xEdges.add(g);
+            }
+            if (isColumnEdge(f, g)){//Same column
+                yEdges.add(g);
+            }
+        }
+        for (Field g : edges){
+            if ((g.getLeSize() == 2 && g.getLegalEntries().equals(f.getLegalEntries())) && g.equals(f) == false){
+                if (isBoxEdge(f, g)){
+                    for (Field h : boxEdges){
+                        if (h.getValue() == 0 && h!=g && h!=f){ 
+                            for (Integer i : f.getLegalEntries()){
                                 h.removeLE(i);
-                                System.out.println("This is the legal entry that is being removed after" + h.getLegalEntries());
+                                bool = true;
+                            }
+                        }
+                    }
+                }
+                else if (isRowEdge(f, g)){
+                    for (Field h : xEdges){
+                        if (h.getValue() == 0 && h!=g && h!=f){ 
+                            for (Integer i : f.getLegalEntries()){
+                                h.removeLE(i);
+                                bool = true;
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (Field h : yEdges){
+                        if (h.getValue() == 0 && h!=g && h!=f){ 
+                            for (Integer i : f.getLegalEntries()){
+                                h.removeLE(i);
+                                bool = true;
                             }
                         }
                     }
                 }
             }
         }
-
+        return bool;
     }
 
     public Integer lookAtNeighbours(Field f){
@@ -140,6 +159,9 @@ public class Solver {
 
         int otherField_x = otherField.getCoordinates()[0];
         int otherField_y = otherField.getCoordinates()[1];
+        if (otherField_x == x_coordinate && otherField_y == y_coordinate){
+            return false;
+        }
 
         for (int j = 0; j<3 ; j++){
             for (int k = 0; k<3; k++){
