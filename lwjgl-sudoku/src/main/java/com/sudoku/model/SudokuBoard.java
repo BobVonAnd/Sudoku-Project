@@ -3,6 +3,7 @@ package com.sudoku.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class SudokuBoard {
@@ -44,7 +45,32 @@ public class SudokuBoard {
         Solver solver = new Solver();
         solver.solves(this);
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
+        Random rand = new Random();
+        for (int i = 0; i < amountToRemove; i++) {
+            int x = rand.nextInt(this.size);
+            int y = rand.nextInt(this.size);
 
+            // if chosen value is 0, try again (brute force, this is temp)
+            if (wholeBoard[x][y].getValue() == 0) {
+                i--;
+                continue;
+            }
+
+            // temp removal of field
+            int tempVal = wholeBoard[x][y].getValue();
+            wholeBoard[x][y].setValue(0);
+            uniquenessTest();
+            if (this.solutions > 1) {
+                wholeBoard[x][y].setValue(tempVal);
+                i--;
+            } else if (this.solutions == 1) {
+                continue;
+            } else {
+                wholeBoard[x][y].setValue(tempVal);
+                i--;
+            }
+
+        }
         System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
         System.out.println("Stopped initialising here");
         System.out.println("");
