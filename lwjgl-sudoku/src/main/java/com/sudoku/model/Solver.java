@@ -13,6 +13,7 @@ public class Solver {
         for ( x = 0; x < sudokuboard.getSize(); x++){
             for ( y = 0; y < sudokuboard.getSize(); y++){
                 Field f = sudokuboard.getSingleField(x, y);
+                
                 int candidate = lookAtNeighbours(f);
                 if (f.getValue() == 0 && f.getLeSize() == 1) {
                     sudokuboard.changeField(
@@ -50,6 +51,44 @@ public class Solver {
         }
     }
 }
+    public ArrayList<Integer>[][] matrixSolve(ArrayList<Integer>[][] sudokuMatrix, SudokuBoard sudokuBoard){
+        //Logic for single
+        int counter = 0;
+        for (ArrayList<Integer>[] row : sudokuMatrix) {
+            for (ArrayList<Integer> cell : row) {
+                if (cell.size() == 1){
+                    sudokuBoard.changeField(counter/9, counter%9 ,cell.get(0) );
+                }
+                counter+=1;
+            }
+            break;
+        }
+
+        return sudokuMatrix;
+    }
+    public ArrayList<Integer>[][] matrixCreate(SudokuBoard sudokuboard){
+        int size = sudokuboard.getSize();
+        int total = size * size;
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[][] sudokuMatrix = (ArrayList<Integer>[][]) new ArrayList[total][total];
+        for (int x = 0; x < size; x++){
+            for (int y = 0; y < size; y++){
+                Field f = sudokuboard.getSingleField(x, y);
+                int rowIndex = x * size + y;
+                sudokuMatrix[rowIndex][0] = f.getLegalEntries();
+                for (Field g : f.getEdges()){
+                    int gx = g.getCoordinates()[0];
+                    int gy = g.getCoordinates()[1];
+
+                    int colIndex = gx * size + gy;
+                    sudokuMatrix[rowIndex][colIndex] = g.getLegalEntries();
+                }
+            }
+            
+        }
+        return sudokuMatrix;
+    }
+
     public Boolean nakedPair(Field f, boolean bool){   
         ArrayList<Field> edges = f.getEdges();
         ArrayList<Field> boxEdges = new ArrayList<>();
