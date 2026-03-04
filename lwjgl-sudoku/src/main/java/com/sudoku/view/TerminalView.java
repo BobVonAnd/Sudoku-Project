@@ -22,7 +22,7 @@ public class TerminalView {
                 if(j%3 == 0){
                     System.out.print(" ");
                 }
-                System.out.print("[" + sudokuBoard[j][i].getVal() + "]");
+                System.out.print("[" + sudokuBoard[j][i].getValue() + "]");
             }
             System.out.println();
         }
