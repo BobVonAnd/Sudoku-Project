@@ -2,13 +2,19 @@ package com.sudoku.model;
 
 import java.util.ArrayList;
 
+import com.sudoku.view.Button;
+
 public class Field {
     private int value, x, y;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
+    private Button button;
 
 
     public Field(int x, int y, int value, int size){
+        
+        button = new Button(x, y);
+
         this.x = x;
         this.y = y;
         this.value = value;
@@ -53,6 +59,10 @@ public class Field {
 
     public int getVal(){
         return value;
+    }
+
+    public Button getButton(){
+        return button;
     }
 }
 
