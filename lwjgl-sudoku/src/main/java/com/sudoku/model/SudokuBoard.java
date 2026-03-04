@@ -12,6 +12,8 @@ public class SudokuBoard {
     private int bigFieldSize;
     private double difficultyScale;
 
+    private int solutions; // for generating the sudoku
+
     public SudokuBoard(int size) {
         wholeBoard = new Field[size][size];
         this.size = size;
@@ -53,6 +55,54 @@ public class SudokuBoard {
         double scale = Math.min(1, Math.max(difficultyScale, 0));
         double fraction = 0.55 - 0.2 * scale;
         return (int) (totalCells * fraction);
+    }
+
+    private Boolean isValid(int row, int col, int num) {
+        // Check row
+        for (int x = 0; x < this.size; x++) {
+            if (wholeBoard[row][x].getValue() == num) {
+                return false;
+            }
+        }
+        // Check col
+        for (int x = 0; x < this.size; x++) {
+            if (this.wholeBoard[x][col].getValue() == num) {
+                return false;
+            }
+        }
+        // Check bigfield
+        int startRow = row - row % this.bigFieldSize;
+        int startCol = col - col % this.bigFieldSize;
+        for (int i = 0; i < this.bigFieldSize; i++) {
+            for (int j = 0; j < this.bigFieldSize; j++) {
+                if (this.wholeBoard[startRow + i][startCol + j].getValue() == num) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Boolean uniquenessTest() {
+        if (this.solutions > 1) {
+            return true;
+        }
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (wholeBoard[i][j].getValue() == 0) {
+                    for (int k = 1; k <= this.size; k++) {
+                        if (isValid(i, j, k)) {
+                            changeField(i, j, k);
+                            uniquenessTest();
+                            changeField(i, j, 0);
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        this.solutions++;
+        return false;
     }
 
     public String getDifficultyString() {
