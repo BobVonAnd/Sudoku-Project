@@ -143,7 +143,7 @@ public class App {
 	public static void main(String[] args) {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate();
+		sudokuBoard.populate(0); // hard to easy aka 0 to 1 (decimal)
 		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 			for (int j = 0; j<sudokuBoard.getSize(); j++){
 				Field f = sudokuBoard.getSingleField(i, j);
@@ -151,11 +151,13 @@ public class App {
 				sudokuBoard.updateLegalEntriesOfField(f);
 			}
 		}
-		Solver solver = new Solver();
-		solver.solves(sudokuBoard);
+		TerminalView before = new TerminalView(sudokuBoard);
+		before.printBoard();
+		// Solver solver = new Solver();
+		// solver.solves(sudokuBoard);
 		
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
+		// TerminalView after = new TerminalView(sudokuBoard);
+		// after.printBoard();
 
 		new App().run();
 	}
