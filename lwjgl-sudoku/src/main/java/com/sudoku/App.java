@@ -63,20 +63,20 @@ public class App {
 
 	public void run() {
 
-		sudokuBoard = new SudokuBoard(9);
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		sudokuBoard.populate();
-		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize(); j++){
-				Field f = sudokuBoard.getSingleField(i, j);
-				sudokuBoard.makeEdges(f);
-				sudokuBoard.updateLegalEntriesOfField(f);
-			}
-		}
-		Solver solver = new Solver();
-		solver.solves(sudokuBoard);
+		// sudokuBoard = new SudokuBoard(9);
+		// TerminalView terminalView = new TerminalView(sudokuBoard);
+		// sudokuBoard.populate();
+		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
+		// 		Field f = sudokuBoard.getSingleField(i, j);
+		// 		sudokuBoard.makeEdges(f);
+		// 		sudokuBoard.updateLegalEntriesOfField(f);
+		// 	}
+		// }
+		// Solver solver = new Solver();
+		// solver.solves(sudokuBoard);
 		
-		terminalView.printBoard();
+		// terminalView.printBoard();
 
 
 
@@ -184,7 +184,7 @@ public class App {
 	public static void main(String[] args) {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(0); // hard to easy aka 0 to 1 (decimal)
+		sudokuBoard.populate(1); // hard to easy aka 0 to 1 (decimal)
 		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 			for (int j = 0; j<sudokuBoard.getSize(); j++){
 				Field f = sudokuBoard.getSingleField(i, j);

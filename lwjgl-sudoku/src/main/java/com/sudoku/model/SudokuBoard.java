@@ -46,28 +46,30 @@ public class SudokuBoard {
         solver.solves(this);
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
         Random rand = new Random();
-        for (int i = 0; i < amountToRemove; i++) {
+        int removed = 0;
+        int attempts = 0;
+
+        while (removed < amountToRemove && attempts < size * size * 10) {
+            attempts++;
             int x = rand.nextInt(this.size);
             int y = rand.nextInt(this.size);
 
             // if chosen value is 0, try again (brute force, this is temp)
             if (wholeBoard[x][y].getValue() == 0) {
-                i--;
                 continue;
             }
 
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
+            this.solutions = 0;
             uniquenessTest();
             if (this.solutions > 1) {
                 wholeBoard[x][y].setValue(tempVal);
-                i--;
             } else if (this.solutions == 1) {
-                continue;
+                removed++;
             } else {
                 wholeBoard[x][y].setValue(tempVal);
-                i--;
             }
 
         }
