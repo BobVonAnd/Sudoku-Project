@@ -1,4 +1,6 @@
 package com.sudoku;
+
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.Version;
@@ -31,6 +33,9 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBTTFontinfo;
+
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
@@ -47,7 +52,6 @@ import static org.lwjgl.opengl.GL11.glVertex2d;
 
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
@@ -55,19 +59,41 @@ import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
 import com.sudoku.model.Field;
 
+import java.awt.Font;
+
+import static org.lwjgl.stb.STBTruetype.stbtt_InitFont;
+import static org.lwjgl.stb.STBTruetype.stbtt_ScaleForPixelHeight;
+
+import com.sudoku.view.FieldText;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.lwjgl.system.MemoryUtil.*;
+
 public class App {
 
 	// The window handle
 	private long window;
 	private SudokuBoard sudokuBoard;
+	private FieldText fieldText = new FieldText();
+	private int fontQuality = 16;
+	private ByteBuffer fontBuffer;
 
-	public void run() {
+	public void run() throws  Exception {
+
+		//https://www.youtube.com/watch?v=1BC2QfJWgfw
+		fontBuffer = loadFont("sudoku/Fonts/ARIAL.TTF"); //chatGPT ->
+		STBTTFontinfo fontInfo = STBTTFontinfo.create();
+		stbtt_InitFont(fontInfo, fontBuffer); //<-
 
 		sudokuBoard = new SudokuBoard(9);
 		TerminalView terminalView = new TerminalView(sudokuBoard);
 		sudokuBoard.populate();
-		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize(); j++){
+		for (int i = 0; i < sudokuBoard.getSize(); i++) {// Change method
+			for (int j = 0; j < sudokuBoard.getSize(); j++) {
 				Field f = sudokuBoard.getSingleField(i, j);
 				sudokuBoard.makeEdges(f);
 				sudokuBoard.updateLegalEntriesOfField(f);
@@ -75,12 +101,9 @@ public class App {
 		}
 		Solver solver = new Solver();
 		solver.solves(sudokuBoard);
-		
+
 		terminalView.printBoard();
 
-
-
-		
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 
 		init();
@@ -101,7 +124,7 @@ public class App {
 		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
-		if ( !glfwInit() )
+		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Configure GLFW
@@ -111,17 +134,18 @@ public class App {
 
 		// Create the window
 		window = glfwCreateWindow(1280, 720, "Sudoku", NULL, NULL);
-		if ( window == NULL )
+		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
+		// Setup a key callback. It will be called every time a key is pressed, repeated
+		// or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
 
 		// Get the thread stack and push a new frame
-		try ( MemoryStack stack = stackPush() ) {
+		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
 			IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -133,10 +157,9 @@ public class App {
 
 			// Center the window
 			glfwSetWindowPos(
-				window,
-				(vidmode.width() - pWidth.get(0)) / 2,
-				(vidmode.height() - pHeight.get(0)) / 2
-			);
+					window,
+					(vidmode.width() - pWidth.get(0)) / 2,
+					(vidmode.height() - pHeight.get(0)) / 2);
 		} // the stack frame is popped automatically
 
 		// Make the OpenGL context current
@@ -157,33 +180,53 @@ public class App {
 		GL.createCapabilities();
 
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity(); 
-		glOrtho(0, 1280, 0, 720, -1, 1); 
+		glLoadIdentity();
+		glOrtho(0, 1280, 0, 720, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		try {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// Set the clear color
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
-		while ( !glfwWindowShouldClose(window) ) {
+
+		while (!glfwWindowShouldClose(window)) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		
 
 			for (Field[] arrayField : sudokuBoard.getWholeBoard()) {
 				for (Field field : arrayField) {
 					field.getButton().rendering();
 				}
 			}
-			
+
+			fieldText.renderText("Hallo World");
 
 			glfwSwapBuffers(window); // swap the color buffers
 			glfwPollEvents();
+			memFree(fontBuffer);
 		}
 	}
 
-	public static void main(String[] args) {
+	public static ByteBuffer loadFont(String path) throws IOException {
+		byte[] bytes = Files.readAllBytes(Paths.get(path));
+		ByteBuffer buffer = memAlloc(bytes.length);
+		buffer.put(bytes);
+		buffer.flip();
+		return buffer;
+	}
 
-		
+	public static void main(String[] args) throws Exception {
 
 		new App().run();
 	}

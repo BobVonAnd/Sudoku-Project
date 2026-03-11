@@ -32,12 +32,19 @@
 
     <dependencies>
         <!-- JUnit 5 -->
-          <dependency>
-              <groupId>org.junit.jupiter</groupId>
-              <artifactId>junit-jupiter</artifactId>
-              <version>5.10.1</version>
-              <scope>test</scope>
-          </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- STB bindings -->
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+        </dependency> 
+
         <!-- LWJGL Core -->
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -74,6 +81,13 @@
             <artifactId>lwjgl-opengl</artifactId>
             <classifier>natives-windows</classifier>
         </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <classifier>natives-windows</classifier>
+        </dependency>
+
     </dependencies>
 
     <build>
