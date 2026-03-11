@@ -192,13 +192,14 @@ public class App {
 				sudokuBoard.updateLegalEntriesOfField(f);
 			}
 		}
-		TerminalView before = new TerminalView(sudokuBoard);
-		before.printBoard();
+		
 		// Solver solver = new Solver();
 		// solver.solves(sudokuBoard);
 		
-		// TerminalView after = new TerminalView(sudokuBoard);
-		// after.printBoard();
+		TerminalView after = new TerminalView(sudokuBoard);
+		
+		System.out.println("\n\n");
+		after.printBoard();
 
 		new App().run();
 	}

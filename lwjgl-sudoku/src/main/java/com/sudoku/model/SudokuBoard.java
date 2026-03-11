@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import com.sudoku.view.TerminalView;
+
 public class SudokuBoard {
 
     private Field[][] wholeBoard;
@@ -42,6 +44,8 @@ public class SudokuBoard {
                 }
             }
         }
+        TerminalView before = new TerminalView(this);
+		before.printBoard();
         Solver solver = new Solver();
         solver.solves(this);
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
