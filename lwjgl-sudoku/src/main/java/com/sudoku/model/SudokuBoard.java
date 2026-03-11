@@ -23,15 +23,15 @@ public class SudokuBoard {
         this.bigFieldSize = (int) Math.sqrt(size);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                wholeBoard[j][i] = new Field(j, i, 0, size);
+                wholeBoard[i][j] = new Field(i, j, 0, size);
             }
         }
     }
 
     public void readIntoBoard(int[][] integerBoard) {
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 9; x++) {
-                changeField(x, y, integerBoard[y][x]);
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                changeField(x, y, integerBoard[x][y]);
             }
         }
     }
@@ -123,7 +123,7 @@ public class SudokuBoard {
         return true;
     }
 
-    private Boolean uniquenessTest() {
+    public Boolean uniquenessTest() {
         if (this.solutions > 1) {
             return true;
         }
@@ -243,6 +243,10 @@ public class SudokuBoard {
 
     public int getSolutions() {
         return this.solutions;
+    }
+
+    public void setSolutions(int sol) {
+        this.solutions = sol;
     }
 
     public Field getSingleField(int x, int y) {

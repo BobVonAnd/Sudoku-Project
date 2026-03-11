@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.sudoku.SudokuBoardTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.910 s <<< FAILURE! -- in com.sudoku.SudokuBoardTest
-com.sudoku.SudokuBoardTest.populateCorrectDifficultyTest -- Time elapsed: 0.876 s <<< FAILURE!
+Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.904 s <<< FAILURE! -- in com.sudoku.SudokuBoardTest
+com.sudoku.SudokuBoardTest.populateCorrectDifficultyTest -- Time elapsed: 0.878 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <3> but was: <36>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -10,7 +10,7 @@ org.opentest4j.AssertionFailedError: expected: <3> but was: <36>
 	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
 	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
 	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
-	at com.sudoku.SudokuBoardTest.populateCorrectDifficultyTest(SudokuBoardTest.java:39)
+	at com.sudoku.SudokuBoardTest.populateCorrectDifficultyTest(SudokuBoardTest.java:52)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
