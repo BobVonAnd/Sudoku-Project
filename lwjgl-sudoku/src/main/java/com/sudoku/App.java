@@ -41,6 +41,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.model.algoXSolver;
 import com.sudoku.view.TerminalView;
 import com.sudoku.model.Field;
 
@@ -151,11 +152,32 @@ public class App {
 				sudokuBoard.updateLegalEntriesOfField(f);
 			}
 		}
-		Solver solver = new Solver();
-		solver.solves(sudokuBoard);
+		//Solver solver = new Solver();
+		//solver.solves(sudokuBoard);
 		
 		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
+		//terminalView.printBoard();
+
+		algoXSolver algoXManager = new algoXSolver(); 
+		int[][] matrix = new int[9][9];
+		int[][] sparseMatrix = algoXManager.sparseMatrixCreate(4);
+		int blockSize = sparseMatrix[0].length / 4;
+
+		for (int i = 0; i < sparseMatrix.length; i++) {
+
+			System.out.printf("%3d: ", i);
+
+			for (int j = 0; j < sparseMatrix[i].length; j++) {
+
+				System.out.print(sparseMatrix[i][j] + " ");
+
+				if ((j + 1) % blockSize == 0 && j != sparseMatrix[i].length - 1) {
+					System.out.print("| ");
+				}
+			}
+
+			System.out.println();
+		}
 
 		new App().run();
 	}
