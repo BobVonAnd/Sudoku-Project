@@ -28,6 +28,14 @@ public class SudokuBoard {
         }
     }
 
+    public void readIntoBoard(int[][] integerBoard) {
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                changeField(x, y, integerBoard[y][x]);
+            }
+        }
+    }
+
     public void populate(double difficultyScale) {
         this.difficultyScale = difficultyScale;
         for (int i = 0; i < this.bigFieldSize; i++) {
@@ -231,6 +239,10 @@ public class SudokuBoard {
 
     public int getSize() {
         return this.size;
+    }
+
+    public int getSolutions() {
+        return this.solutions;
     }
 
     public Field getSingleField(int x, int y) {
