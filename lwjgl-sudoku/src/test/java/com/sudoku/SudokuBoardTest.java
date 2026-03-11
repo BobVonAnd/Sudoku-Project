@@ -1,4 +1,7 @@
 package com.sudoku;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 import com.sudoku.model.Field;
@@ -14,7 +17,8 @@ public class SudokuBoardTest {
     // Change field, to see if the field value gets changed
     // Check if the board size changes after operations to catch a error/issue or edgecase
     // Uniqueness Test
-    // 
+    // Update Legal Entries
+    // Validity Test
 
 
     private SudokuBoard board;
@@ -26,6 +30,34 @@ public class SudokuBoardTest {
         board = new SudokuBoard(boardSize);
     }
     
+    @Test
+void updateLETest() {
+    SudokuBoard board2 = new SudokuBoard(4);
+    board2.readIntoBoard(new int[][] {
+        {2,1,3,4},
+        {3,0,1,2},
+        {1,2,4,3},
+        {4,3,2,1}
+    });
+
+    Field f = board2.getSingleField(1,1);
+    board2.updateLegalEntriesOfField(f);
+
+    System.out.println(f.getValue()); // 0
+    ArrayList<Integer> LE = f.getLegalEntries();
+    ArrayList<Integer> ManualLE = new ArrayList<>();
+    ManualLE.add(4);
+    assertEquals(ManualLE, LE);
+}
+
+    @Test
+    void validityTest() {
+        SudokuBoard board2 = new SudokuBoard(2);
+        board2.readIntoBoard(new int[][] {{2,1},{3,0}});
+        assertEquals(false,board2.isValid(1,1,1));
+        assertEquals(true,board2.isValid(1,1,4));
+    }
+
     @Test
     void uniquenessTest() {
         SudokuBoard board2 = new SudokuBoard(2);
@@ -49,7 +81,7 @@ public class SudokuBoardTest {
                 }
             }
         }
-        assertEquals(amountRemoved,amountToRemove);
+        assertEquals(amountToRemove, amountRemoved);
         // assertEquals(1,1);
     }
 
@@ -57,8 +89,8 @@ public class SudokuBoardTest {
     void changeFieldTest() {
         int tempVal = board.getSingleField(0,0).getValue();
         board.changeField(0,0,1);
-        assertEquals(tempVal,0);
-        assertEquals(board.getSingleField(0,0).getValue(),1);
+        assertEquals(0,tempVal);
+        assertEquals(1,board.getSingleField(0,0).getValue());
     }
 
     @Test
@@ -67,7 +99,7 @@ public class SudokuBoardTest {
         board.changeField(boardFieldsBefore.length-1,boardFieldsBefore[0].length-1,1);
         board.changeField(0,0,1);
         Field[][] boardFields = board.getWholeBoard();
-        assertEquals(boardFields.length, boardSize);
-        assertEquals(boardFields[0].length, boardSize);
+        assertEquals(boardSize, boardFields.length);
+        assertEquals(boardSize, boardFields[0].length);
     }
 }

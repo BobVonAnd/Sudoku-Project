@@ -1,5 +1,5 @@
 # So what do we acutally need to test?
-1. Test the Public Behavior, Not the Implementation
+1. Test the behaviour
 2. Test Edge Cases
 3. Test Rules
 4. Test Different Inputs

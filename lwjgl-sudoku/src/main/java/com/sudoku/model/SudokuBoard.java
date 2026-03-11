@@ -11,7 +11,7 @@ import com.sudoku.view.TerminalView;
 public class SudokuBoard {
 
     private Field[][] wholeBoard;
-    private int size = 9;
+    private int size;
     private int bigFieldSize;
     private double difficultyScale;
 
@@ -23,7 +23,7 @@ public class SudokuBoard {
         this.bigFieldSize = (int) Math.sqrt(size);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                wholeBoard[i][j] = new Field(i, j, 0, size);
+                wholeBoard[i][j] = new Field(i,j, 0, size);
             }
         }
     }
@@ -31,7 +31,7 @@ public class SudokuBoard {
     public void readIntoBoard(int[][] integerBoard) {
         for (int y = 0; y < this.size; y++) {
             for (int x = 0; x < this.size; x++) {
-                changeField(x, y, integerBoard[x][y]);
+                changeField(x, y, integerBoard[y][x]);
             }
         }
     }
@@ -97,7 +97,7 @@ public class SudokuBoard {
         return (int) (totalCells * fraction);
     }
 
-    private Boolean isValid(int row, int col, int num) {
+    public Boolean isValid(int row, int col, int num) {
         // Check row
         for (int x = 0; x < this.size; x++) {
             if (wholeBoard[row][x].getValue() == num) {
@@ -189,8 +189,8 @@ public class SudokuBoard {
 
         }
 
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 3; k++) {
+        for (int j = 0; j < this.bigFieldSize; j++) {
+            for (int k = 0; k < this.bigFieldSize; k++) {
                 Field f = wholeBoard[cornerX + j][cornerY + k];
                 if (field != f) {
                     field.removeLE(f.getValue());
@@ -221,8 +221,8 @@ public class SudokuBoard {
 
         }
 
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 3; k++) {
+        for (int j = 0; j < this.bigFieldSize; j++) {
+            for (int k = 0; k < this.bigFieldSize; k++) {
                 Field f = wholeBoard[cornerX + j][cornerY + k];
                 if (f.getValue() == 0 && field.notcontainsEdge(f)) {
                     field.addEdge(f);
