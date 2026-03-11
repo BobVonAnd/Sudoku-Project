@@ -33,14 +33,25 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glVertex2d;
+
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
 import com.sudoku.model.Field;
 
@@ -48,8 +59,28 @@ public class App {
 
 	// The window handle
 	private long window;
+	private SudokuBoard sudokuBoard;
 
 	public void run() {
+
+		sudokuBoard = new SudokuBoard(9);
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		sudokuBoard.populate();
+		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+			for (int j = 0; j<sudokuBoard.getSize(); j++){
+				Field f = sudokuBoard.getSingleField(i, j);
+				sudokuBoard.makeEdges(f);
+				sudokuBoard.updateLegalEntriesOfField(f);
+			}
+		}
+		Solver solver = new Solver();
+		solver.solves(sudokuBoard);
+		
+		terminalView.printBoard();
+
+
+
+		
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 
 		init();
@@ -125,6 +156,11 @@ public class App {
 		// bindings available for use.
 		GL.createCapabilities();
 
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity(); 
+		glOrtho(0, 1280, 0, 720, -1, 1); 
+		glMatrixMode(GL_MODELVIEW);
+
 		// Set the clear color
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		// Run the rendering loop until the user has attempted to close
@@ -132,10 +168,15 @@ public class App {
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		
-			glfwSwapBuffers(window); // swap the color buffers
 
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
+			for (Field[] arrayField : sudokuBoard.getWholeBoard()) {
+				for (Field field : arrayField) {
+					field.getButton().rendering();
+				}
+			}
+			
+
+			glfwSwapBuffers(window); // swap the color buffers
 			glfwPollEvents();
 		}
 	}

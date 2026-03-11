@@ -1,1 +1,15 @@
-C:\Users\victo\Documents\DTU_Kurser\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\App.java
+<<<<<<< HEAD
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\App.java
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Field.java
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Solver.java
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\SudokuBoard.java
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\Button.java
+C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\TerminalView.java
+=======
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/App.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/Field.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/Solver.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/SudokuBoard.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/Button.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/TerminalView.java
+>>>>>>> f9c995d (works on arm mac now too)
