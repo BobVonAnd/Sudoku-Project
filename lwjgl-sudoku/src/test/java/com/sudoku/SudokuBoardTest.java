@@ -62,18 +62,18 @@ void updateLETest() {
 
     @Test
     void populateCorrectDifficultyTest() {
-        // board.populate(difficulty);
-        // int amountToRemove = board.getFieldsToRemove(difficulty);
-        // int amountRemoved = 0;
-        // for (int i = 0 ; i < boardSize ; i++) {
-        //     for (int j = 0 ; j < boardSize ; j++) {
-        //         if (board.getSingleField(i,j).getValue() == 0) {
-        //             amountRemoved++;
-        //         }
-        //     }
-        // }
-        // assertEquals(amountToRemove, amountRemoved);
-        assertEquals(1,1);
+        board.populate(difficulty);
+        int amountToRemove = board.getFieldsToRemove(difficulty);
+        int amountRemoved = 0;
+        for (int i = 0 ; i < boardSize ; i++) {
+            for (int j = 0 ; j < boardSize ; j++) {
+                if (board.getSingleField(i,j).getValue() == 0) {
+                    amountRemoved++;
+                }
+            }
+        }
+        assertEquals(amountToRemove, amountRemoved);
+        // assertEquals(1,1);
     }
 
     @Test
