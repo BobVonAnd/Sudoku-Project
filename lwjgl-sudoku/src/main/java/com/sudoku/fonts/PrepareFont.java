@@ -17,6 +17,11 @@ import javax.imageio.ImageIO;
 
 public class PrepareFont {
     
+    /// ------------------------------------------------
+    /// | Inspired by GameWithGabe                     |
+    /// |  https://www.youtube.com/watch?v=URMbfBcOiN8 |
+    /// ------------------------------------------------
+
     private String filePath; //the path to the .TTF file
     private int fontSize; // the bit size of the char
 
@@ -64,7 +69,6 @@ public class PrepareFont {
             }
         }
         height += fontMetrics.getHeight() * 1.4f;
-        
         g2D.dispose();
 
         image = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
