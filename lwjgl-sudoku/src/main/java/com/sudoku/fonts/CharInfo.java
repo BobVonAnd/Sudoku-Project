@@ -19,14 +19,14 @@ public class CharInfo {
         float x0 = (float)x / (float)fontWidth;
         float x1 = ((float)x + width) / (float)fontWidth;
         float y0 = (float)y / (float)fontHeight;
-        float y1 = ((float)y + height) / (float)fontHeight;
+        float y1 = ((float)y - height) / (float)fontHeight;
 
-        textureCoord[0] = new Vector2f(x0, y0);
-        textureCoord[1] = new Vector2f(x1, y0);
+        textureCoord[0] = new Vector2f(x1, y0);
+        textureCoord[1] = new Vector2f(x1, y1);
         textureCoord[2] = new Vector2f(x0, y1);
-        textureCoord[3] = new Vector2f(x1, y1);
+        textureCoord[3] = new Vector2f(x0, y0);
 
-        
+
     }
 
 }
