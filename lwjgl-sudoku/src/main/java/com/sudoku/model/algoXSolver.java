@@ -2,79 +2,92 @@ package com.sudoku.model;
 import java.util.ArrayList;
 
 public class algoXSolver {
+    private ColumnNode root;
+    private ArrayList<Node> solution = new ArrayList<>();
 
     public void algoXManager(SudokuBoard sudokuBoard){
-        int[][] matrix = matrixCreate(sudokuBoard);
-        int[][] sparseMatrix = sparseMatrixCreate(4);
+        int size = sudokuBoard.getSize();
+
+        int[][] sparseMatrix = sparseMatrixCreate(size);
 
     }
-
-    public int[][] dlx (int[][] sparseMatrix){
-        boolean notSolved = true;
-        int size = sparseMatrix.length;
-        int colIndex = 0;
-        ArrayList<int[]> partialSolution = new ArrayList<int[]>();
-        if (sparseMatrix[0].length == 0){
-            notSolved = false;
+    public void initializeNodes(int[][] sparseMatrix){
+        int rows = sparseMatrix.length;
+        int cols = sparseMatrix[0].length;
+        root = new ColumnNode();
+        ColumnNode prev = root;
+        for (int h = 0; h<cols; h++){
+            ColumnNode c = new ColumnNode();
+            prev.right = c;
+            c.left = prev;
+            prev = c;
         }
-        //Finds a row in the first column that holds a 1
-        for (int i = 0; i<sparseMatrix.length; i++){
-            if (sparseMatrix[i][colIndex] == 1){//if it does check if it is in the partial solution
-                partialSolution.add(takeRow(sparseMatrix, i));
-                for (int j = 0; j<sparseMatrix.length ; j++){
-                    if (sparseMatrix[i][j] == 1){
-                        sparseMatrix = removeColumn(sparseMatrix, j);
-                    }
+        //Start with first column
+        ColumnNode rightColumnNode =(ColumnNode) root.right;
+        for (int i = 0; i < rows; i++){
+            //Initialize the start of the new column
+            Node lastColNode = rightColumnNode;
+            for (int j = 0; j < cols; j++){
+                if (sparseMatrix[i][j] == 1){
+                    Node node = new Node();
+                    node.up=lastColNode;
+                    lastColNode.down = node;
+
+                    lastColNode = node;
                 }
-                sparseMatrix = removeRow(sparseMatrix, i);
             }
-
+            rightColumnNode = (ColumnNode) rightColumnNode.right;
         }
-
-
-        return matrix;
+        
     }
-    public int[] takeRow(int[][] matrix, int rowIndex){
-        int[] rowOfMatrix = new int[matrix.length];
-        int size = matrix.length;
-        for (int i = 0; i<size; i++){
-            rowOfMatrix[i] = matrix[rowIndex][i];
-        }
-        return rowOfMatrix;
-    }
-    public int[][] removeRow(int[][] matrix, int rowIndex){
-        int size = matrix.length;
-        int[][] tempMatrix = new int[size-1][size];
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                if (i == rowIndex){
-                    continue;
-                }
-                tempMatrix[i][j] = matrix[i][j];
+    //Cover a node to test the system without the node
+    public void cover(Node node){
+        //Removing the node from the system by assigning it's neighbours as neighbours
+        node.right.left = node.left;
+        node.left.right = node.right;
+        //Go to the node under the current node to remove the row
+        Node down = node.down;
+        while (down != node){
+            //Go to the right of the node under to remove the rows through the columns
+            Node downRow = down.right;
+            while (downRow != down){
+                //Through the row called downRow, set the up and down neighbours to as neighbours to "remove" the row
+                downRow.down.up = downRow.up;
+                downRow.up.down = downRow.down;
+                //Set columns size down by one and continue through the row
+                downRow.column.size = downRow.column.size - 1;
+                downRow = downRow.right;
             }
+            //Go to next node as it is circular, at some point it will reach the original node
+            down = node.down;
         }
-        return tempMatrix;
     }
-    public int[][] removeColumn(int[][] matrix, int colIndex){
-        int size = matrix.length;
-        int[][] tempMatrix = new int[size][size-1];
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                if (j == colIndex){
-                    continue;
-                }
-                tempMatrix[i][j] = matrix[i][j];
+    //Do the reverse of cover
+    public void uncover(Node node){
+        //Go through the column going up
+        Node upNode = node.up;
+        while (upNode != node){
+            //Go to the left to go through the row
+            Node leftNode = upNode.left;
+            while (leftNode != upNode){
+                //We add the node back, so increase the column size and restore the nodes neighbours
+                leftNode.column.size = leftNode.column.size + 1;
+                leftNode.up.down = leftNode;
+                leftNode.down.up = leftNode;
+                //Continue going through the row
+               leftNode = leftNode.left;
             }
+            //Continue going through the column
+            upNode = upNode.up;
         }
-        return tempMatrix;
+        //In the end restore the nodes neighbours.
+        node.left.right = node;
+        node.right.left = node;
     }
-
     public int[][] sparseMatrixCreate(int size){  
         int constraints = 4;
-        int[][] matrice = new int[4][4];
-        size = matrice.length;
         int[][] sparseMatrix = new int[size*size*size][constraints*size*size];
-        int colIndex = 0;
+        int rowIndex = 0;
 
         int boxSize = (int)Math.sqrt(size);
         for (int i = 0; i < size; i++){
@@ -82,32 +95,22 @@ public class algoXSolver {
                 for (int n = 0; n < size ; n++){
 
                     //cell constraint
-                    sparseMatrix[colIndex][i*size + j] = 1;
+                    sparseMatrix[rowIndex][i*size + j] = 1;
 
                     //row constraint
-                    sparseMatrix[colIndex][size*size+i*size+n] = 1;
+                    sparseMatrix[rowIndex][size*size+i*size+n] = 1;
 
                     //column constraint
-                    sparseMatrix[colIndex][2*size*size + j*size + n] = 1;
+                    sparseMatrix[rowIndex][2*size*size + j*size + n] = 1;
 
                     //Box constraint
                     int box = (i/boxSize)*boxSize + (j/boxSize);
-                    sparseMatrix[colIndex][3*size*size + box*size + n] = 1;
+                    sparseMatrix[rowIndex][3*size*size + box*size + n] = 1;
 
-                    colIndex++;
+                    rowIndex++;
                 }
             }
         }
         return sparseMatrix;
-    }
-    public int[][] matrixCreate(SudokuBoard sudokuBoard){
-        int size = sudokuBoard.getSize();
-        int [][] grid = new int[size][size];
-        for (int i = 0 ; i < 9 ; i++){
-            for (int j = 0; j < 9 ; j++){
-                grid[i][j] = sudokuBoard.getSingleField(i,j).getValue();
-            }
-        }
-        return grid;
     }
 }
