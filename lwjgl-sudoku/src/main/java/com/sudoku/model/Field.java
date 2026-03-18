@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.sudoku.view.Button;
 
 public class Field {
-    private int value, x, y;
+    private int value, x, y, boardSize;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
     private Button button;
@@ -19,6 +19,7 @@ public class Field {
         this.x = x;
         this.y = y;
         this.value = value;
+        this.boardSize = size;
 
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
@@ -77,6 +78,9 @@ public class Field {
     }
     public Integer getValue(){
         return this.value;
+    }
+    public int getBoardSize() {
+        return boardSize;
     }
     public ArrayList<Integer> getLegalEntries(){
         return legalEntries;
