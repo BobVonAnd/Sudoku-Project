@@ -46,7 +46,7 @@ public class PrepareFont {
         lineHeight = fontMetrics.getHeight(); 
 
         int x = 0;
-        int y = (int)(fontMetrics.getHeight() * 1.4);
+        int y = (int)(fontMetrics.getHeight() * 1.4f);
 
         //there are glyphs we can't display. font.canDisplay can take a unicode and check
         //if it can be displayed
@@ -63,7 +63,8 @@ public class PrepareFont {
                 }
             }
         }
-
+        height += fontMetrics.getHeight() * 1.4f;
+        
         g2D.dispose();
 
         image = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);

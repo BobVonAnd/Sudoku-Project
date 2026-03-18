@@ -35,25 +35,20 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.fonts.PrepareFont;
+import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
-import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
-import com.sudoku.model.Field;
 
 public class App {
 
@@ -200,7 +195,7 @@ public class App {
 		
 		// System.out.println("\n\n");
 		// after.printBoard();
-
+		PrepareFont font = new PrepareFont("lwjgl-sudoku/assets/fonts/ARIAL.TTF", 64);
 		new App().run();
 	}
 
