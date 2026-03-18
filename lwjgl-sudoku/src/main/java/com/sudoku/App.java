@@ -160,24 +160,7 @@ public class App {
 
 		algoXSolver algoXManager = new algoXSolver(); 
 		int[][] matrix = new int[9][9];
-		int[][] sparseMatrix = algoXManager.sparseMatrixCreate(4);
-		int blockSize = sparseMatrix[0].length / 4;
-
-		for (int i = 0; i < sparseMatrix.length; i++) {
-
-			System.out.printf("%3d: ", i);
-
-			for (int j = 0; j < sparseMatrix[i].length; j++) {
-
-				System.out.print(sparseMatrix[i][j] + " ");
-
-				if ((j + 1) % blockSize == 0 && j != sparseMatrix[i].length - 1) {
-					System.out.print("| ");
-				}
-			}
-
-			System.out.println();
-		}
+		algoXManager.solve(9);
 
 		new App().run();
 	}

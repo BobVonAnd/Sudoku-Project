@@ -7,38 +7,112 @@ public class algoXSolver {
 
     public void algoXManager(SudokuBoard sudokuBoard){
         int size = sudokuBoard.getSize();
+        ArrayList<Node> solution = new ArrayList<Node>();
+        ColumnNode root = initializeNodes(size);
 
-        int[][] sparseMatrix = sparseMatrixCreate(size);
+        solution = search(root, size, solution);
+        for (Node solNode : solution){
+            System.out.println(solNode.column.label);
+        }
 
     }
-    public void initializeNodes(int[][] sparseMatrix){
-        int rows = sparseMatrix.length;
-        int cols = sparseMatrix[0].length;
+    public ColumnNode initializeNodes(int size){
+        int constraints = 4;
+        int cols = size * size * constraints;
         root = new ColumnNode();
+        root.left = root;
+        root.right = root;
         ColumnNode prev = root;
+        ColumnNode[] columnNodes = new ColumnNode[cols];
         for (int h = 0; h<cols; h++){
             ColumnNode c = new ColumnNode();
             prev.right = c;
             c.left = prev;
             prev = c;
-        }
-        //Start with first column
-        ColumnNode rightColumnNode =(ColumnNode) root.right;
-        for (int i = 0; i < rows; i++){
-            //Initialize the start of the new column
-            Node lastColNode = rightColumnNode;
-            for (int j = 0; j < cols; j++){
-                if (sparseMatrix[i][j] == 1){
-                    Node node = new Node();
-                    node.up=lastColNode;
-                    lastColNode.down = node;
+            columnNodes[h] = c;
 
-                    lastColNode = node;
+            c.up = c;
+            c.down = c;
+
+            c.label = "C" + h;
+        }
+        prev.right = root;
+        root.left = prev;
+        //Start with first column
+        int boxSize = (int)Math.sqrt(size);
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j<size; j++){
+                for (int n = 0; n < size ; n++){
+                    int box = (i/boxSize)*boxSize + (j/boxSize);
+                    //cell constraint
+                    Node cellNode = new Node();
+                    Node rowNode = new Node();
+                    Node colNode = new Node();
+                    Node boxNode = new Node();
+
+                    // vertical insert
+                    appendToColumn(columnNodes[i*size + j], cellNode);
+                    appendToColumn(columnNodes[size*size+i*size+n], rowNode);
+                    appendToColumn(columnNodes[2*size*size + j*size + n], colNode);
+                    appendToColumn(columnNodes[3*size*size + box*size + n], boxNode);
+
+                    // horizontal circular link
+                    cellNode.right = rowNode;
+                    rowNode.right = colNode;
+                    colNode.right = boxNode;
+                    boxNode.right = cellNode;
+
+                    cellNode.left = boxNode;
+                    rowNode.left = cellNode;
+                    colNode.left = rowNode;
+                    boxNode.left = colNode;
                 }
             }
-            rightColumnNode = (ColumnNode) rightColumnNode.right;
         }
-        
+        return root;
+    }
+    public void appendToColumn(ColumnNode col, Node newNode) {
+    newNode.column = col;
+
+    newNode.down = col;
+    newNode.up = col.up;
+    col.up.down = newNode;
+    col.up = newNode;
+
+    col.size++;
+}
+
+    public ArrayList<Node> search(ColumnNode root, int k, ArrayList<Node> solution){
+        //If the matrix is empty, we have found a solution
+        if (root.right == root ){
+            return solution;
+        }
+        else {
+            //Start with the column right of the root
+            ColumnNode columnNode = (ColumnNode) root.right;
+            //Go down into the matrix
+            Node firstNode = columnNode.down;
+            //While the node we went into isn't 
+            while (firstNode != columnNode){
+                solution.add(firstNode);
+                Node rightNode = firstNode.right;
+                while (rightNode != firstNode){
+                    cover(rightNode.column);
+                    rightNode = rightNode.right;
+                }
+                search(root, k+1, solution);
+                firstNode = solution.get(k);
+                columnNode = firstNode.column;
+                rightNode = rightNode.left;
+                while (rightNode != firstNode){
+                    uncover(rightNode.column);
+                    rightNode = rightNode.left;
+                }
+                firstNode = firstNode.down;
+            }
+            uncover(columnNode);
+        }
+        return solution;
     }
     //Cover a node to test the system without the node
     public void cover(Node node){
@@ -84,10 +158,14 @@ public class algoXSolver {
         node.left.right = node;
         node.right.left = node;
     }
+    //Solution just using sparseMatrix
+
+
     public int[][] sparseMatrixCreate(int size){  
         int constraints = 4;
         int[][] sparseMatrix = new int[size*size*size][constraints*size*size];
         int rowIndex = 0;
+
 
         int boxSize = (int)Math.sqrt(size);
         for (int i = 0; i < size; i++){
