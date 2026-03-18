@@ -9,7 +9,6 @@ public class Field {
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
     private Button button;
-    public Object getLegalEntries;
 
 
     public Field(int x, int y, int value, int size){

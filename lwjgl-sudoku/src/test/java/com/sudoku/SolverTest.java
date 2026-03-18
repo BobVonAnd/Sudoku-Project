@@ -46,7 +46,7 @@ public class SolverTest {
     @Test
     void lookAtNeighboursUniqueCandidateTest() {
         Field target = createField(0, 0, 0);
-        target.getLegalEntries().addAll(Arrays.asList(1, 2, 3));
+        target.getLegalEntries().addAll(Arrays.asList(  1, 3, 2));
 
         Field other1 = createField(1, 0, 0);
         other1.getLegalEntries().addAll(Arrays.asList(1, 3));

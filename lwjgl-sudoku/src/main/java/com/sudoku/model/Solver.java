@@ -122,6 +122,10 @@ public class Solver {
         }
         for (int candidate : f.getLegalEntries()){
             boolean candidateInBox = false;
+            //If there are no boxedges
+            if (boxEdges.isEmpty() == true){
+                candidateInBox = true;
+            }
             for (Field k : boxEdges){
                 if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
                     candidateInBox = true;
@@ -131,6 +135,9 @@ public class Solver {
             if (!candidateInBox) return candidate;
 
             boolean candidateInRow = false;
+            if (xEdges.isEmpty() == true){
+                candidateInRow = true;
+            }
             for (Field k : xEdges){
                 if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
                     candidateInRow = true;
@@ -140,6 +147,9 @@ public class Solver {
             if (!candidateInRow) return candidate;
 
             boolean candidateInColumn = false;
+            if (yEdges.isEmpty() == true){
+                candidateInColumn = true;
+            }
             for (Field k : yEdges){
                 if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
                     candidateInColumn = true;
