@@ -1,5 +1,6 @@
 package com.sudoku;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -33,45 +34,26 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.stb.STBTTFontinfo;
-
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-
+import static org.lwjgl.opengl.GL11.glEnable;
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
-import com.sudoku.view.Button;
-import com.sudoku.view.TerminalView;
-import com.sudoku.model.Field;
-
-import java.awt.Font;
-
-import static org.lwjgl.stb.STBTruetype.stbtt_InitFont;
-import static org.lwjgl.stb.STBTruetype.stbtt_ScaleForPixelHeight;
-
 import com.sudoku.view.FieldText;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.lwjgl.system.MemoryUtil.*;
+import com.sudoku.view.TerminalView;
+import com.sudoku.view.TestShader;
+import com.sudoku.view.TestTextShader;
 
 public class App {
 
@@ -82,12 +64,16 @@ public class App {
 	private int fontQuality = 16;
 	private ByteBuffer fontBuffer;
 
+	TestShader testShader = new TestShader();
+
+	private TestTextShader textRenderer;
+
 	public void run() throws  Exception {
 
 		//https://www.youtube.com/watch?v=1BC2QfJWgfw
-		fontBuffer = loadFont("sudoku/Fonts/ARIAL.TTF"); //chatGPT ->
-		STBTTFontinfo fontInfo = STBTTFontinfo.create();
-		stbtt_InitFont(fontInfo, fontBuffer); //<-
+		// fontBuffer = loadFont("sudoku/Fonts/ARIAL.TTF"); //chatGPT ->
+		// STBTTFontinfo fontInfo = STBTTFontinfo.create();
+		// stbtt_InitFont(fontInfo, fontBuffer); //<-
 
 		sudokuBoard = new SudokuBoard(9);
 		TerminalView terminalView = new TerminalView(sudokuBoard);
@@ -118,7 +104,7 @@ public class App {
 		glfwSetErrorCallback(null).free();
 	}
 
-	private void init() {
+	private void init()  {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -155,6 +141,10 @@ public class App {
 			// Get the resolution of the primary monitor
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
+
+		
+			
+
 			// Center the window
 			glfwSetWindowPos(
 					window,
@@ -169,26 +159,35 @@ public class App {
 
 		// Make the window visible
 		glfwShowWindow(window);
+
+		
+		
 	}
 
-	private void loop() {
+	private void loop()throws IOException  {
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		textRenderer = new TestTextShader();
+    	textRenderer.init("C:/Windows/Fonts/ARIAL.TTF", 16);
+		testShader.init();
+	
+		
+		// glMatrixMode(GL_PROJECTION);
+		// glLoadIdentity();
+		// glOrtho(0, 1280, 0, 720, -1, 1);
+		// glMatrixMode(GL_MODELVIEW);
+		// glLoadIdentity();
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, 1280, 0, 720, -1, 1);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_ALPHA);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		// GL11.glEnable(GL11.GL_TEXTURE_2D);
+		// GL11.glEnable(GL11.GL_ALPHA);
+		// GL11.glEnable(GL11.GL_BLEND);
+		// GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		try {
 
@@ -204,30 +203,29 @@ public class App {
 		while (!glfwWindowShouldClose(window)) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			for (Field[] arrayField : sudokuBoard.getWholeBoard()) {
-				for (Field field : arrayField) {
-					field.getButton().rendering();
-				}
-			}
+			float[] white = {1f,0f,0f,1f};
+			textRenderer.drawText("H", 10f, 100f, 1.0f, white);
+			//testShader.update();
+
+			// for (Field[] arrayField : sudokuBoard.getWholeBoard()) {
+			// 	for (Field field : arrayField) {
+			// 		field.getButton().rendering();
+			// 	}
+			// }
 
 			fieldText.renderText("Hallo World");
 
 			glfwSwapBuffers(window); // swap the color buffers
 			glfwPollEvents();
-			memFree(fontBuffer);
+			
 		}
 	}
 
-	public static ByteBuffer loadFont(String path) throws IOException {
-		byte[] bytes = Files.readAllBytes(Paths.get(path));
-		ByteBuffer buffer = memAlloc(bytes.length);
-		buffer.put(bytes);
-		buffer.flip();
-		return buffer;
-	}
+	
 
 	public static void main(String[] args) throws Exception {
 
+		
 		new App().run();
 	}
 
