@@ -35,25 +35,19 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
-import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
-import com.sudoku.model.Field;
 
 public class App {
 
@@ -63,20 +57,20 @@ public class App {
 
 	public void run() {
 
-		// sudokuBoard = new SudokuBoard(9);
-		// TerminalView terminalView = new TerminalView(sudokuBoard);
-		// sudokuBoard.populate();
-		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
-		// 		Field f = sudokuBoard.getSingleField(i, j);
-		// 		sudokuBoard.makeEdges(f);
-		// 		sudokuBoard.updateLegalEntriesOfField(f);
-		// 	}
-		// }
-		// Solver solver = new Solver();
-		// solver.solves(sudokuBoard);
+		sudokuBoard = new SudokuBoard(9);
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		sudokuBoard.populate(1);
+		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+			for (int j = 0; j<sudokuBoard.getSize(); j++){
+				Field f = sudokuBoard.getSingleField(i, j);
+				sudokuBoard.makeEdges(f);
+				sudokuBoard.updateLegalEntriesOfField(f);
+			}
+		}
+		Solver solver = new Solver();
+		solver.solves(sudokuBoard);
 		
-		// terminalView.printBoard();
+		terminalView.printBoard();
 
 
 
@@ -183,23 +177,23 @@ public class App {
 
 	public static void main(String[] args) {
 
-		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(1); // hard to easy aka 0 to 1 (decimal)
-		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize(); j++){
-				Field f = sudokuBoard.getSingleField(i, j);
-				sudokuBoard.makeEdges(f);
-				sudokuBoard.updateLegalEntriesOfField(f);
-			}
-		}
+		// SudokuBoard sudokuBoard = new SudokuBoard(9);
+		// sudokuBoard.populate(1); // hard to easy aka 0 to 1 (decimal)
+		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
+		// 		Field f = sudokuBoard.getSingleField(i, j);
+		// 		sudokuBoard.makeEdges(f);
+		// 		sudokuBoard.updateLegalEntriesOfField(f);
+		// 	}
+		// }
 		
-		// Solver solver = new Solver();
-		// solver.solves(sudokuBoard);
+		// // Solver solver = new Solver();
+		// // solver.solves(sudokuBoard);
 		
-		TerminalView after = new TerminalView(sudokuBoard);
+		// TerminalView after = new TerminalView(sudokuBoard);
 		
-		System.out.println("\n\n");
-		after.printBoard();
+		// System.out.println("\n\n");
+		// after.printBoard();
 
 		new App().run();
 	}
