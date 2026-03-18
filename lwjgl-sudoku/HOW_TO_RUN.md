@@ -3,3 +3,5 @@ cd lwjgl-sudoku
 
 Then use command:
 mvn compile exec:java
+for mac
+mvn compile exec:exec 
