@@ -62,6 +62,12 @@
             <artifactId>lwjgl</artifactId>
             <classifier>natives-windows</classifier>
         </dependency>
+        <!-- Joml -->
+        <dependency>
+            <groupId>org.joml</groupId>
+            <artifactId>joml</artifactId>
+            <version>1.10.5</version>
+        </dependency>
 
         <dependency>
             <groupId>org.lwjgl</groupId>
