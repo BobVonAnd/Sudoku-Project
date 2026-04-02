@@ -145,6 +145,8 @@ public class App {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		sudokuBoard.populate();
+		algoXSolver algoXManager = new algoXSolver(); 
+		algoXManager.algoXManager(sudokuBoard);
 		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 			for (int j = 0; j<sudokuBoard.getSize(); j++){
 				Field f = sudokuBoard.getSingleField(i, j);
@@ -156,30 +158,7 @@ public class App {
 		//solver.solves(sudokuBoard);
 		
 		TerminalView terminalView = new TerminalView(sudokuBoard);
-		//terminalView.printBoard();
-
-		algoXSolver algoXManager = new algoXSolver(); 
-		int[][] matrix = new int[9][9];
-		int[][] sparseMatrix = algoXManager.sparseMatrixCreate(4);
-		int blockSize = sparseMatrix[0].length / 4;
-
-		for (int i = 0; i < sparseMatrix.length; i++) {
-
-			System.out.printf("%3d: ", i);
-
-			for (int j = 0; j < sparseMatrix[i].length; j++) {
-
-				System.out.print(sparseMatrix[i][j] + " ");
-
-				if ((j + 1) % blockSize == 0 && j != sparseMatrix[i].length - 1) {
-					System.out.print("| ");
-				}
-			}
-
-			System.out.println();
-		}
-		algoXManager.algoXManager(sudokuBoard);
-
+		terminalView.printBoard();
 		new App().run();
 	}
 

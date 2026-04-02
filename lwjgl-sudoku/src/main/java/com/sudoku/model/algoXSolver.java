@@ -7,15 +7,40 @@ public class algoXSolver {
 
     public void algoXManager(SudokuBoard sudokuBoard){
         int size = sudokuBoard.getSize();
-        ArrayList<Node> solution = new ArrayList<Node>();
-        ColumnNode root = initializeNodes(size);
+        solution = new ArrayList<>();
+        root = initializeNodes(size);
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                int value = sudokuBoard.getSingleField(i,j).getValue();
+                if (value != 0 ){
+                    int n = value - 1;
+                    Node node = findRowInSolution(i, j, n);
+                    solution.add(node);
 
-        solution = search(root, size, solution);
-        for (Node solNode : solution){
-            System.out.println(solNode.column.label);
+                    //Now covering the node so the solver doesn't break
+                    Node tempNode = node;
+                    do {
+                        cover(tempNode.column);
+                        tempNode = tempNode.right;
+                    } while (tempNode != node);
+                }
+            }
         }
+        
 
+
+        solution = search(root, 0, solution);
+
+        for (Node n : solution){
+            int i = n.getRow();
+            int j = n.getCol();
+            int value = n.getNum() + 1; // if 0-based
+
+            sudokuBoard.changeField( i, j , value);
+        }
     }
+
+
     public ColumnNode initializeNodes(int size){
         int constraints = 4;
         int cols = size * size * constraints;
@@ -46,9 +71,13 @@ public class algoXSolver {
                     int box = (i/boxSize)*boxSize + (j/boxSize);
                     //cell constraint
                     Node cellNode = new Node();
+                    cellNode.setNodeCoordinates(i, j, n);
                     Node rowNode = new Node();
+                    rowNode.setNodeCoordinates(i, j, n);
                     Node colNode = new Node();
+                    colNode.setNodeCoordinates(i, j, n);
                     Node boxNode = new Node();
+                    boxNode.setNodeCoordinates(i, j, n);
 
                     // vertical insert
                     appendToColumn(columnNodes[i*size + j], cellNode);
@@ -85,37 +114,48 @@ public class algoXSolver {
     public ArrayList<Node> search(ColumnNode root, int k, ArrayList<Node> solution){
         //If the matrix is empty, we have found a solution
         if (root.right == root ){
-            return solution;
+            return new ArrayList<>(solution);
         }
         else {
             //Start with the column right of the root
             ColumnNode columnNode = (ColumnNode) root.right;
+            //Cover the first column to start
+            cover(columnNode);
             //Go down into the matrix
             Node firstNode = columnNode.down;
-            //While the node we went into isn't 
+            //While the node we went into isn't the original node
             while (firstNode != columnNode){
+                //We try to add the row to the solution
                 solution.add(firstNode);
                 Node rightNode = firstNode.right;
+                //We cover the entire row
                 while (rightNode != firstNode){
                     cover(rightNode.column);
                     rightNode = rightNode.right;
                 }
-                search(root, k+1, solution);
-                firstNode = solution.get(k);
-                columnNode = firstNode.column;
-                rightNode = rightNode.left;
-                while (rightNode != firstNode){
-                    uncover(rightNode.column);
-                    rightNode = rightNode.left;
+                //We search for a solution one depth further in
+                ArrayList<Node> result = search(root, k+1, solution);
+                if (result != null){
+                    for (Node j = firstNode.left; j != firstNode; j = j.left){
+                        uncover(j.column);
+                    }
+                    uncover(columnNode);
+                    return result;
                 }
+                solution.remove(solution.size() - 1);
+                //We get ready to uncover the nodes that were covered
+                for (Node j = firstNode.left; j != firstNode; j = j.left){
+                    uncover(j.column);
+                }
+                //We go down to the next row
                 firstNode = firstNode.down;
             }
             uncover(columnNode);
         }
-        return solution;
+        return null;
     }
     //Cover a node to test the system without the node
-    public void cover(Node node){
+    public void cover(ColumnNode node){
         //Removing the node from the system by assigning it's neighbours as neighbours
         node.right.left = node.left;
         node.left.right = node.right;
@@ -129,15 +169,15 @@ public class algoXSolver {
                 downRow.down.up = downRow.up;
                 downRow.up.down = downRow.down;
                 //Set columns size down by one and continue through the row
-                downRow.column.size = downRow.column.size - 1;
+                downRow.column.size --;
                 downRow = downRow.right;
             }
             //Go to next node as it is circular, at some point it will reach the original node
-            down = node.down;
+            down = down.down;
         }
     }
     //Do the reverse of cover
-    public void uncover(Node node){
+    public void uncover(ColumnNode node){
         //Go through the column going up
         Node upNode = node.up;
         while (upNode != node){
@@ -158,7 +198,23 @@ public class algoXSolver {
         node.left.right = node;
         node.right.left = node;
     }
-    //Solution just using sparseMatrix
+
+    public Node findRowInSolution(int i, int j, int n){
+        //Start with the column right of the root
+        ColumnNode columnNode = (ColumnNode) root.right;
+        while (columnNode != root){
+            Node row = columnNode.down;
+            while (row != columnNode){
+                if(row.getRow() == i && row.getCol() == j && row.getNum() == n){
+                    return row;
+                }
+                row = row.down;
+            }
+            columnNode =(ColumnNode) columnNode.right;
+        }
+        return null;
+    }
+
 
 
     public int[][] sparseMatrixCreate(int size){  
