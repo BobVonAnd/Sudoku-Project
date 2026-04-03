@@ -146,8 +146,8 @@ public class App {
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		sudokuBoard.populate();
 		long startTime = System.nanoTime();
-		algoXSolver algoXManager = new algoXSolver(); 
-		algoXManager.algoXManager(sudokuBoard);
+		algoXSolver algoX = new algoXSolver(); 
+		algoX.algoXManager(sudokuBoard);
 		long endTime = System.nanoTime();
 		long durationOfAlgoX = (endTime - startTime)/1000000;
 		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
