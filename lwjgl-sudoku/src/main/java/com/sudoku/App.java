@@ -145,8 +145,11 @@ public class App {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		sudokuBoard.populate();
+		long startTime = System.nanoTime();
 		algoXSolver algoXManager = new algoXSolver(); 
 		algoXManager.algoXManager(sudokuBoard);
+		long endTime = System.nanoTime();
+		long durationOfAlgoX = (endTime - startTime)/1000000;
 		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
 		// 		Field f = sudokuBoard.getSingleField(i, j);
@@ -160,6 +163,7 @@ public class App {
 		TerminalView terminalView = new TerminalView(sudokuBoard);
 		terminalView.printBoard();
 		new App().run();
+		System.out.println("The algoX took " + durationOfAlgoX + " miliseconds");
 	}
 
 }
