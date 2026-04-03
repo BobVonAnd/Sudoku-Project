@@ -34,7 +34,7 @@ public class algoXSolver {
         for (Node n : solution){
             int i = n.getRow();
             int j = n.getCol();
-            int value = n.getNum() + 1; // if 0-based
+            int value = n.getNum() + 1;
 
             sudokuBoard.changeField( i, j , value);
         }
