@@ -14,12 +14,13 @@ public class TerminalView {
     }
 
     public void printBoard(){
+        int boxSize = (int) Math.sqrt(sudokuBoard.length);
         for (int i = 0; i<sudokuBoard.length;i++){
-            if(i%3 == 0){
+            if(i%boxSize == 0){
                 System.out.println();
             }
             for (int j = 0; j<sudokuBoard.length;j++) {
-                if(j%3 == 0){
+                if(j%boxSize == 0){
                     System.out.print(" ");
                 }
                 System.out.print("[" + sudokuBoard[j][i].getValue() + "]");
