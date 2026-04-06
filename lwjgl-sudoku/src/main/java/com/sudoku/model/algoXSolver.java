@@ -28,8 +28,11 @@ public class algoXSolver {
         }
         
 
-
+        long startTime = System.nanoTime();
         solution = search(root, 0, solution);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000;
+        System.out.println("The algo itself took "+ duration + "ms");
 
         for (Node n : solution){
             int i = n.getRow();
