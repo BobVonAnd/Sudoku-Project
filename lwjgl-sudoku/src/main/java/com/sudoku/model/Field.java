@@ -2,17 +2,21 @@ package com.sudoku.model;
 
 import java.util.ArrayList;
 
+import com.sudoku.view.Button;
+
 public class Field {
-    private int value, x, y;
+    private int value, x, y, boardSize;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
-    public Object getLegalEntries;
+    private Button button;
 
 
     public Field(int x, int y, int value, int size){
+
         this.x = x;
         this.y = y;
         this.value = value;
+        this.boardSize = size;
 
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
@@ -72,8 +76,15 @@ public class Field {
     public Integer getValue(){
         return this.value;
     }
+    public int getBoardSize() {
+        return boardSize;
+    }
     public ArrayList<Integer> getLegalEntries(){
         return legalEntries;
+    }
+
+    public Button getButton(){
+        return button;
     }
 }
 

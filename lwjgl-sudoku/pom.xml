@@ -74,6 +74,24 @@
             <artifactId>lwjgl-opengl</artifactId>
             <classifier>natives-windows</classifier>
         </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <classifier>natives-macos-arm64</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <classifier>natives-macos-arm64</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <classifier>natives-macos-arm64</classifier>
+        </dependency>
     </dependencies>
 
     <build>
@@ -92,6 +110,21 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+
+            <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <executable>java</executable>
+                <arguments>
+                    <argument>-XstartOnFirstThread</argument>
+                    <argument>-classpath</argument>
+                    <classpath/>
+                    <argument>com.sudoku.App</argument>
+                </arguments>
+            </configuration>
+        </plugin>
 
         </plugins>
     </build>
