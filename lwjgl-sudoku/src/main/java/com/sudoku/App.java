@@ -47,6 +47,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
 
 public class App {
@@ -162,10 +163,12 @@ public class App {
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		
-
+			Button button;
 			for (Field[] arrayField : sudokuBoard.getWholeBoard()) {
 				for (Field field : arrayField) {
-					field.getButton().rendering();
+					int [] coordinates = field.getCoordinates();
+					button = new Button(coordinates[0], coordinates[1]);
+					button.rendering();
 				}
 			}
 			

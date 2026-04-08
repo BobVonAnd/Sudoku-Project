@@ -12,8 +12,6 @@ public class Field {
 
 
     public Field(int x, int y, int value, int size){
-        
-        button = new Button(x, y);
 
         this.x = x;
         this.y = y;
