@@ -82,9 +82,5 @@ public class Field {
     public ArrayList<Integer> getLegalEntries(){
         return legalEntries;
     }
-
-    public Button getButton(){
-        return button;
-    }
 }
 
