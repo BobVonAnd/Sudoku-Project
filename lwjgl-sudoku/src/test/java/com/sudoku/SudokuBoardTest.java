@@ -52,7 +52,12 @@ void updateLETest() {
     @Test
     void uniquenessTest() {
         SudokuBoard board2 = new SudokuBoard(4);
-        board2.readIntoBoard(new int[][] { {2,0,0,0},{0,0,4,0},{0,2,0,0},{0,0,0,1}});
+        board2.readIntoBoard(
+            new int[][] { 
+            {2,0,0,0},
+            {0,0,4,0},
+            {0,2,0,0},
+            {0,0,0,1}});
         board2.uniquenessTest();
         int before = board2.getSolutions();
         board2.setSolutions(0);

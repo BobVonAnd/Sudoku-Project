@@ -150,7 +150,7 @@ public class SudokuBoard {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (wholeBoard[i][j].getValue() == 0) {
-                    for (int k = 0; k < this.size; k++) {
+                    for (int k = 1; k <= this.size; k++) {
                         if (isValid(i, j, k)) {
                             changeField(i, j, k);
                             uniquenessTest();
