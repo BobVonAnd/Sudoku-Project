@@ -60,23 +60,14 @@ public class App {
 	public void run() {
 
 		sudokuBoard = new SudokuBoard(9);
-		TerminalView terminalView = new TerminalView(sudokuBoard);
 		sudokuBoard.populate(1);
-		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize(); j++){
-				Field f = sudokuBoard.getSingleField(i, j);
-				sudokuBoard.makeEdges(f);
-				sudokuBoard.updateLegalEntriesOfField(f);
-			}
-		}
-		Solver solver = new Solver();
-		solver.solves(sudokuBoard);
-		
+		long startTime = System.nanoTime();
+		sudokuBoard.solve();
+		long endTime = System.nanoTime();
+		long durationOfAlgoX = (endTime - startTime)/1000000;
+		System.out.println("The algoX took " + durationOfAlgoX + " miliseconds");
+		TerminalView terminalView = new TerminalView(sudokuBoard);
 		terminalView.printBoard();
-
-
-
-		
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 
 		init();
@@ -180,28 +171,9 @@ public class App {
 	}
 
 	public static void main(String[] args) {
-
-		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(1);
-		long startTime = System.nanoTime();
-		algoXSolver algoX = new algoXSolver(); 
-		algoX.algoXManager(sudokuBoard);
-		long endTime = System.nanoTime();
-		long durationOfAlgoX = (endTime - startTime)/1000000;
-		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
-		// 		Field f = sudokuBoard.getSingleField(i, j);
-		// 		sudokuBoard.makeEdges(f);
-		// 		sudokuBoard.updateLegalEntriesOfField(f);
-		// 	}
-		// }
-		//Solver solver = new Solver();
-		//solver.solves(sudokuBoard);
 		
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
 		new App().run();
-		System.out.println("The algoX took " + durationOfAlgoX + " miliseconds");
+		
 	}
 
 }
