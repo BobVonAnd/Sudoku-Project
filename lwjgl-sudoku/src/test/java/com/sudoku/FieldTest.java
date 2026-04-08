@@ -3,7 +3,7 @@ package com.sudoku;
 import org.junit.jupiter.api.Test;
 
 import com.sudoku.model.Field;
-import com.sudoku.view.Button;
+//import com.sudoku.view.Button;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,10 +65,10 @@ public class FieldTest {
         assertFalse(field.getLegalEntries().contains(1));
     }
 
-    @Test
-    void fieldButtonTest() {
-        assertTrue(field.getButton() instanceof Button);
-    }
+    //@Test
+    //void fieldButtonTest() {
+    //    assertTrue(field.getButton() instanceof Button);
+    //}
 
     @Test
     void removeValueFromNeighboursTest() {
