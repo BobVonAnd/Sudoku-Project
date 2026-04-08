@@ -112,7 +112,6 @@ public class SudokuBoard {
             } else {
                 wholeBoard[x][y].setValue(tempVal);
             }
-
         }
         System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
         TerminalView after = new TerminalView(this);
@@ -172,12 +171,11 @@ public class SudokuBoard {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (wholeBoard[i][j].getValue() == 0) {
-                    for (int k = 1; k <= this.size; k++) {
-                        if (isValid(i, j, k)) {
-                            changeField(i, j, k);
-                            uniquenessTest();
-                            changeField(i, j, 0);
-                        }
+                    ArrayList<Integer> candidates = wholeBoard[i][j].getLegalEntries();
+                    for (int k = 0; k < candidates.size(); k++) { // <-- optimization: only valid candidates
+                        changeField(i, j, candidates.get(k));
+                        uniquenessTest();
+                        changeField(i, j, 0);
                     }
                     return false;
                 }
