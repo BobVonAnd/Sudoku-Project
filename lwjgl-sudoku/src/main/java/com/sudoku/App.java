@@ -2,6 +2,7 @@ package com.sudoku;
 
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.model.algoXSolver;
+import com.sudoku.view.Fonts.CreateFont;
 import com.sudoku.view.TerminalView;
 import com.sudoku.view.Window;
 
@@ -9,6 +10,8 @@ import com.sudoku.view.Window;
 public class App {
 
 	public static void main(String[] args) {
+		CreateFont font = new CreateFont(null, 32)
+		
 		Window window = new Window();
 
 

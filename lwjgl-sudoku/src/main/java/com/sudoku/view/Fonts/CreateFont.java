@@ -85,11 +85,4 @@ public class CreateFont {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-    }
 }

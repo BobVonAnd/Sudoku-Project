@@ -1,5 +1,7 @@
 package com.sudoku.view.Fonts;
 
+import org.joml.Vector2f;
+
 public class CharInfo {
     
     public int x;
