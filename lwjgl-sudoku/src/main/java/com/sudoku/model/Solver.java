@@ -13,6 +13,7 @@ public class Solver {
         for ( x = 0; x < sudokuboard.getSize(); x++){
             for ( y = 0; y < sudokuboard.getSize(); y++){
                 Field f = sudokuboard.getSingleField(x, y);
+                
                 int candidate = lookAtNeighbours(f);
                 if (f.getValue() == 0 && f.getLeSize() == 1) {
                     sudokuboard.changeField(
@@ -50,6 +51,7 @@ public class Solver {
         }
     }
 }
+
     public Boolean nakedPair(Field f, boolean bool){   
         ArrayList<Field> edges = f.getEdges();
         ArrayList<Field> boxEdges = new ArrayList<>();

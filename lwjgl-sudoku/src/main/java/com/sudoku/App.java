@@ -47,7 +47,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
-import com.sudoku.view.Button;
+import com.sudoku.model.algoXSolver;
 import com.sudoku.view.TerminalView;
 
 public class App {
@@ -180,8 +180,13 @@ public class App {
 
 	public static void main(String[] args) {
 
-		// SudokuBoard sudokuBoard = new SudokuBoard(9);
-		// sudokuBoard.populate(1); // hard to easy aka 0 to 1 (decimal)
+		SudokuBoard sudokuBoard = new SudokuBoard(9);
+		sudokuBoard.populate();
+		long startTime = System.nanoTime();
+		algoXSolver algoX = new algoXSolver(); 
+		algoX.algoXManager(sudokuBoard);
+		long endTime = System.nanoTime();
+		long durationOfAlgoX = (endTime - startTime)/1000000;
 		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
 		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
 		// 		Field f = sudokuBoard.getSingleField(i, j);
@@ -189,16 +194,13 @@ public class App {
 		// 		sudokuBoard.updateLegalEntriesOfField(f);
 		// 	}
 		// }
+		//Solver solver = new Solver();
+		//solver.solves(sudokuBoard);
 		
-		// // Solver solver = new Solver();
-		// // solver.solves(sudokuBoard);
-		
-		// TerminalView after = new TerminalView(sudokuBoard);
-		
-		// System.out.println("\n\n");
-		// after.printBoard();
-
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		terminalView.printBoard();
 		new App().run();
+		System.out.println("The algoX took " + durationOfAlgoX + " miliseconds");
 	}
 
 }
