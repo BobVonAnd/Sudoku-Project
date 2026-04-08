@@ -106,10 +106,15 @@ public class SudokuBoard {
 
 
     public int getFieldsToRemove(double difficultyScale/* hard to easy aka 0 to 1 (decimal) */) {
-        int totalCells = this.size * this.size;
         double scale = Math.min(1, Math.max(difficultyScale, 0));
-        double fraction = 0.55 - 0.2 * scale;
-        return (int) (totalCells * fraction);
+        int totalCells = this.size * this.size;
+        switch (this.size) {
+            case 9:
+                return (int) (-28*scale+64);
+            default:
+                double fraction = 0.55 - 0.2 * scale;
+                return (int) (totalCells * fraction);
+        }
     }
 
     public Boolean isValid(int row, int col, int num) {
