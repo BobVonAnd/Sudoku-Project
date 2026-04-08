@@ -6,9 +6,11 @@ public class algoXSolver {
     private ArrayList<Node> solution = new ArrayList<>();
 
     public void algoXManager(SudokuBoard sudokuBoard){
+        //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
         int size = sudokuBoard.getSize();
         solution = new ArrayList<>();
         root = initializeNodes(size);
+        //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size; j++){
                 int value = sudokuBoard.getSingleField(i,j).getValue();
@@ -17,7 +19,7 @@ public class algoXSolver {
                     Node node = findRowInSolution(i, j, n);
                     solution.add(node);
 
-                    //Now covering the node so the solver doesn't break
+                    //Now covering the node so the solver is more efficient and so the solver actually solves the sudoku given
                     Node tempNode = node;
                     do {
                         cover(tempNode.column);
@@ -26,19 +28,19 @@ public class algoXSolver {
                 }
             }
         }
-        
 
+        //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
         solution = search(root, 0, solution);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
         System.out.println("The algo itself took "+ duration + "ms");
-
+        //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
         for (Node n : solution){
             int i = n.getRow();
             int j = n.getCol();
-            int value = n.getNum() + 1;
-
+            int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
+            //Then we update the sudokuboards field
             sudokuBoard.changeField( i, j , value);
         }
     }
