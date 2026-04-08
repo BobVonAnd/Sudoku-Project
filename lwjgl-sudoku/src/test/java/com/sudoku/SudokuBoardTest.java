@@ -51,15 +51,21 @@ void updateLETest() {
 
     @Test
     void uniquenessTest() {
-        SudokuBoard board2 = new SudokuBoard(2);
-        board2.readIntoBoard(new int[][] {{2,1},{3,0}});
+        SudokuBoard board2 = new SudokuBoard(4);
+        board2.readIntoBoard(
+            new int[][] { 
+            {2,0,0,0},
+            {0,0,4,0},
+            {0,2,0,0},
+            {0,0,0,1}});
         board2.uniquenessTest();
         int before = board2.getSolutions();
         board2.setSolutions(0);
         board2.uniquenessTest();
         assertEquals(before,board2.getSolutions());
+        assertEquals(1,board2.getSolutions());
     }
-
+   
     @Test
     void populateCorrectDifficultyTest() {
         board.populate(difficulty);

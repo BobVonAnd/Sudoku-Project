@@ -27,30 +27,22 @@ public class SudokuBoard {
             }
         }
     }
+    
+    public void solve() {
+        algoXSolver algoX = new algoXSolver(); 
+		algoX.algoXManager(this);
+    }
 
-    public void populate() {
-        // preset board
-        int[][] board = {
-    {4,0,0,0,6,0,0,0,0},
-    {7,6,3,0,0,0,0,2,0},
-    {9,0,8,0,0,4,0,6,0},
-
-    {2,8,0,7,0,0,0,0,0},
-    {0,9,6,2,0,0,0,0,5},
-    {0,0,7,0,9,0,0,0,2},
-
-    {0,0,0,0,0,0,0,5,0},
-    {5,0,0,8,0,0,0,0,3},
-    {0,7,0,0,0,1,9,0,0}
-};
-
-for (int y = 0; y < 9; y++) {
-    for (int x = 0; x < 9; x++) {
-        changeField(x, y, board[y][x]);
+    public void readIntoBoard(int[][] integerBoard) {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                changeField(x, y, integerBoard[y][x]);
+            }
         }
     }
-}
+
     public void populate(double difficultyScale) {
+        long startTime = System.nanoTime();
         this.difficultyScale = difficultyScale;
         for (int i = 0; i < this.bigFieldSize; i++) {
             // Get choices
@@ -68,13 +60,18 @@ for (int y = 0; y < 9; y++) {
         }
         TerminalView before = new TerminalView(this);
 		before.printBoard();
-        Solver solver = new Solver();
-        solver.solves(this);
+        algoXSolver algoX = new algoXSolver(); 
+		algoX.algoXManager(this);
+
+        TerminalView solved = new TerminalView(this);
+        solved.printBoard();
+        System.out.println("Solved Sudoku (Before removal)^^");
+        
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
         Random rand = new Random();
         int removed = 0;
         int attempts = 0;
-
+        
         while (removed < amountToRemove && attempts < size * size * 10) {
             attempts++;
             int x = rand.nextInt(this.size);
@@ -100,15 +97,28 @@ for (int y = 0; y < 9; y++) {
 
         }
         System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
+        TerminalView after = new TerminalView(this);
+        after.printBoard();
         System.out.println("Stopped initialising here");
+		long endTime = System.nanoTime();
+		long durationOfPopulate = (endTime - startTime)/1000000;
+        System.out.println("Took " + durationOfPopulate + "ms to populate.");
         System.out.println("");
+
+       
     }
 
+
     public int getFieldsToRemove(double difficultyScale/* hard to easy aka 0 to 1 (decimal) */) {
-        int totalCells = this.size * this.size;
         double scale = Math.min(1, Math.max(difficultyScale, 0));
-        double fraction = 0.55 - 0.2 * scale;
-        return (int) (totalCells * fraction);
+        int totalCells = this.size * this.size;
+        switch (this.size) {
+            case 9:
+                return (int) (-28*scale+64);
+            default:
+                double fraction = 0.55 - 0.2 * scale;
+                return (int) (totalCells * fraction);
+        }
     }
 
     public Boolean isValid(int row, int col, int num) {
@@ -180,7 +190,7 @@ for (int y = 0; y < 9; y++) {
             field.clearLe();
         }
         field.removeValueFromLegalEntriesOfNeighbours();
-        System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
+        //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
     }
 
     public void updateLegalEntriesOfField(Field field) {
