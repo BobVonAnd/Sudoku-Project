@@ -31,6 +31,11 @@ public class SudokuBoard {
     public void solve() {
         algoXSolver algoX = new algoXSolver(); 
 		algoX.algoXManager(this);
+        long startTime = System.currentTimeMillis();
+        algoX.generateRandomBoard(this, 64);
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        System.out.println("It took " + duration + " ms to generate this board");
     }
 
     public void readIntoBoard(int[][] integerBoard) {

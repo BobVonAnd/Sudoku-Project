@@ -1,5 +1,6 @@
 package com.sudoku.model;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class algoXSolver {
     private ColumnNode root;
@@ -159,6 +160,50 @@ public class algoXSolver {
         }
         return null;
     }
+    public ArrayList<Node> othersearch(ColumnNode root, int k, ArrayList<Node> ranNodes){
+        //If the matrix is empty, we have found a solution
+        System.out.println(k);
+        if (root.right == root ){
+            return new ArrayList<>(ranNodes);
+        }
+        else {
+            //Start with the column right of the root
+            ColumnNode columnNode = (ColumnNode) root.right;
+            //Cover the first column to start
+            cover(columnNode);
+            //Go down into the matrix
+            Node firstNode = columnNode.down;
+            //While the node we went into isn't the original node
+            while (firstNode != columnNode){
+                //We try to add the row to the solution
+                ranNodes.add(firstNode);
+                Node rightNode = firstNode.right;
+                //We cover the entire row
+                while (rightNode != firstNode){
+                    cover(rightNode.column);
+                    rightNode = rightNode.right;
+                }
+                //We search for a solution one depth further in
+                ArrayList<Node> result = othersearch(root, k+1, ranNodes);
+                if (result == null){
+                    for (Node j = firstNode.left; j != firstNode; j = j.left){
+                        uncover(j.column);
+                    }
+                    uncover(columnNode);
+                    return result;
+                }
+                ranNodes.remove(ranNodes.size() - 1);
+                //We get ready to uncover the nodes that were covered
+                for (Node j = firstNode.left; j != firstNode; j = j.left){
+                    uncover(j.column);
+                }
+                //We go down to the next row
+                firstNode = firstNode.down;
+            }
+            uncover(columnNode);
+        }
+        return null;
+    }
     //Cover a node to test the system without the node
     public void cover(ColumnNode node){
         //Removing the node from the system by assigning it's neighbours as neighbours
@@ -219,4 +264,32 @@ public class algoXSolver {
         }
         return null;
     }
+    public void generateRandomBoard(SudokuBoard sudokuBoard, int n){
+        ArrayList<Node> randNodes = new ArrayList<>(solution);
+        Collections.shuffle(randNodes);
+        for (int i = 0; i < n; i++){
+            Node randNode = randNodes.get(0);
+            randNodes.remove(0);
+            //Now to cover the row to check for solution without it
+            Node startNode = randNode.right;
+            cover(randNode.column);
+            do{
+                cover(startNode.column);
+                startNode = startNode.right;
+            } while (startNode != randNode);
+
+            ArrayList<Node> result = othersearch(root, 0, randNodes);
+            Node j = randNode.left;
+            while (j != randNode) {
+                uncover(j.column);
+                j = j.left;
+            }
+            uncover(randNode.column);
+            if (result == null){
+                int x = randNode.getRow();
+                int y = randNode.getCol();
+                sudokuBoard.changeField(x, y, 0);
+            }
+        }
+    }    
 }

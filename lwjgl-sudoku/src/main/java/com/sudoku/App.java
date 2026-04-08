@@ -60,7 +60,20 @@ public class App {
 	public void run() {
 
 		sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(1);
+		//sudokuBoard.populate(1);
+		sudokuBoard.readIntoBoard(new int [][] {
+								{4,0,0,0,6,0,0,0,0},
+								{7,6,3,0,0,0,0,2,0},
+								{9,0,8,0,0,4,0,6,0},
+
+								{2,8,0,7,0,0,0,0,0},
+								{0,9,6,2,0,0,0,0,5},
+								{0,0,7,0,9,0,0,0,2},
+
+								{0,0,0,0,0,0,0,5,0},
+								{5,0,0,8,0,0,0,0,3},
+								{0,7,0,0,0,1,9,0,0}
+							});
 		long startTime = System.nanoTime();
 		sudokuBoard.solve();
 		long endTime = System.nanoTime();
