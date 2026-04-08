@@ -42,6 +42,7 @@ public class SudokuBoard {
     }
 
     public void populate(double difficultyScale) {
+        long startTime = System.nanoTime();
         this.difficultyScale = difficultyScale;
         for (int i = 0; i < this.bigFieldSize; i++) {
             // Get choices
@@ -99,6 +100,9 @@ public class SudokuBoard {
         TerminalView after = new TerminalView(this);
         after.printBoard();
         System.out.println("Stopped initialising here");
+		long endTime = System.nanoTime();
+		long durationOfPopulate = (endTime - startTime)/1000000;
+        System.out.println("Took " + durationOfPopulate + "ms to populate.");
         System.out.println("");
 
        
