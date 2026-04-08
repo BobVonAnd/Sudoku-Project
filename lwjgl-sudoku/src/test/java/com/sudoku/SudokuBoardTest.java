@@ -63,7 +63,7 @@ void updateLETest() {
         board2.setSolutions(0);
         board2.uniquenessTest();
         assertEquals(before,board2.getSolutions());
-        assertTrue(board2.getSolutions() == 1);
+        assertEquals(1,board2.getSolutions());
     }
    
     @Test
