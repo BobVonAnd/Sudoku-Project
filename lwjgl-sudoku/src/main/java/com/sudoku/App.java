@@ -182,7 +182,7 @@ public class App {
 	public static void main(String[] args) {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate();
+		sudokuBoard.populate(1);
 		long startTime = System.nanoTime();
 		algoXSolver algoX = new algoXSolver(); 
 		algoX.algoXManager(sudokuBoard);

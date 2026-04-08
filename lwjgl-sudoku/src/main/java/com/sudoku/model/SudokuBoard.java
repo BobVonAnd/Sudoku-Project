@@ -27,29 +27,15 @@ public class SudokuBoard {
             }
         }
     }
-
-    public void populate() {
-        // preset board
-        int[][] board = {
-    {4,0,0,0,6,0,0,0,0},
-    {7,6,3,0,0,0,0,2,0},
-    {9,0,8,0,0,4,0,6,0},
-
-    {2,8,0,7,0,0,0,0,0},
-    {0,9,6,2,0,0,0,0,5},
-    {0,0,7,0,9,0,0,0,2},
-
-    {0,0,0,0,0,0,0,5,0},
-    {5,0,0,8,0,0,0,0,3},
-    {0,7,0,0,0,1,9,0,0}
-};
-
-for (int y = 0; y < 9; y++) {
-    for (int x = 0; x < 9; x++) {
-        changeField(x, y, board[y][x]);
+    
+    public void readIntoBoard(int[][] integerBoard) {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                changeField(x, y, integerBoard[y][x]);
+            }
         }
     }
-}
+
     public void populate(double difficultyScale) {
         this.difficultyScale = difficultyScale;
         for (int i = 0; i < this.bigFieldSize; i++) {
@@ -68,8 +54,8 @@ for (int y = 0; y < 9; y++) {
         }
         TerminalView before = new TerminalView(this);
 		before.printBoard();
-        Solver solver = new Solver();
-        solver.solves(this);
+        algoXSolver algoX = new algoXSolver(); 
+		algoX.algoXManager(this);
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
         Random rand = new Random();
         int removed = 0;
