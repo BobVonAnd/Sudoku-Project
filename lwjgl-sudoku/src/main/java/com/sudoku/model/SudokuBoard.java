@@ -14,6 +14,7 @@ public class SudokuBoard {
     private int size;
     private int bigFieldSize;
     private double difficultyScale;
+    private ArrayList<Field> emptyCells = new ArrayList<Field>();
 
     private int solutions; // for generating the sudoku
 
@@ -24,6 +25,7 @@ public class SudokuBoard {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 wholeBoard[i][j] = new Field(i,j, 0, size);
+                emptyCells.add(wholeBoard[i][j]);
             }
         }
     }
@@ -168,17 +170,17 @@ public class SudokuBoard {
         if (this.solutions > 1) {
             return true;
         }
-        for (int i = 0; i < this.size; i++) {
-            for (int j = 0; j < this.size; j++) {
-                if (wholeBoard[i][j].getValue() == 0) {
-                    ArrayList<Integer> candidates = wholeBoard[i][j].getLegalEntries();
-                    for (int k = 0; k < candidates.size(); k++) { // <-- optimization: only valid candidates
-                        changeField(i, j, candidates.get(k));
-                        uniquenessTest();
-                        changeField(i, j, 0);
-                    }
-                    return false;
+        
+        for (int i = 0; i < emptyCells.size(); i++) {
+            if (emptyCells.get(i).getValue() == 0) {
+                ArrayList<Integer> candidates = emptyCells.get(i).getLegalEntries();
+                for (int k = 0; k < candidates.size(); k++) { // <-- optimization: only valid candidates
+                    int[] fieldPos = emptyCells.get(i).getCoordinates();
+                    changeField(fieldPos[0], fieldPos[1], candidates.get(k));
+                    uniquenessTest();
+                    changeField(fieldPos[0], fieldPos[1], 0);
                 }
+                return false;
             }
         }
         this.solutions++;
@@ -204,6 +206,9 @@ public class SudokuBoard {
         field.setValue(value);
         if (value != 0) {
             field.clearLe();
+            emptyCells.remove(field);
+        } else if (!emptyCells.contains(field)) {
+            emptyCells.add(field);
         }
         field.removeValueFromLegalEntriesOfNeighbours();
         //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
