@@ -47,8 +47,9 @@ public class SudokuBoard {
 for (int y = 0; y < 9; y++) {
     for (int x = 0; x < 9; x++) {
         changeField(x, y, board[y][x]);
+        }
     }
-
+}
     public void populate(double difficultyScale) {
         this.difficultyScale = difficultyScale;
         for (int i = 0; i < this.bigFieldSize; i++) {
@@ -268,3 +269,4 @@ for (int y = 0; y < 9; y++) {
     }
 
 }
+

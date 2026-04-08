@@ -48,6 +48,7 @@ import com.sudoku.model.Field;
 import com.sudoku.model.Solver;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.model.algoXSolver;
+import com.sudoku.view.Button;
 import com.sudoku.view.TerminalView;
 
 public class App {
