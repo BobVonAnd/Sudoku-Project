@@ -105,14 +105,17 @@ public class SudokuBoard {
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
+            wholeBoard[size-x-1][size-y-1].setValue(0);
             this.solutions = 0;
             uniquenessTest();
             if (this.solutions > 1) {
                 wholeBoard[x][y].setValue(tempVal);
+                wholeBoard[size-x-1][size-y-1].setValue(tempVal);
             } else if (this.solutions == 1) {
-                removed++;
+                removed+=2;
             } else {
                 wholeBoard[x][y].setValue(tempVal);
+                wholeBoard[size-x-1][size-y-1].setValue(tempVal);
             }
         }
         System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
