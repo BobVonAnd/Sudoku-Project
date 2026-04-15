@@ -262,6 +262,8 @@ public class algoXSolver {
         }
     }
     public boolean algoXIsUnique(SudokuBoard sudokuBoard){
+        solutionCounter = 0;
+        solution = new ArrayList<>();
         int size = sudokuBoard.getSize();
         root = initializeNodes(size);
         for (int i = 0; i < size; i++){

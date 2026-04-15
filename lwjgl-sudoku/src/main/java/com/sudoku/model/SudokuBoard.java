@@ -14,6 +14,7 @@ public class SudokuBoard {
     private int size;
     private int bigFieldSize;
     private double difficultyScale;
+    private algoXSolver algoX = new algoXSolver();
 
     private int solutions; // for generating the sudoku
 
@@ -24,6 +25,14 @@ public class SudokuBoard {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 wholeBoard[i][j] = new Field(i,j, 0, size);
+            }
+        }
+    }
+    
+    public void clear() {
+        for (int i = 0 ; i < wholeBoard.length ; i++) {
+            for (int j = 0 ; j < wholeBoard.length ; j++) {
+                wholeBoard[i][j].setValue(0);
             }
         }
     }
@@ -54,68 +63,73 @@ public class SudokuBoard {
     }
 
     public void populate(double difficultyScale) {
-        long startTime = System.nanoTime();
-        this.difficultyScale = difficultyScale;
-        for (int i = 0; i < this.bigFieldSize; i++) {
-            // Get choices
-            ArrayList<Integer> choices = new ArrayList<>(
-                    Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-            Collections.shuffle(choices);
-            int counter = 0;
-            // Insert Field
-            for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                    changeField(k, j, choices.get(counter));
-                    counter++;
+        long accumulatedTime = 0;
+        int testTimes = 1000;
+        for (int p = 0 ; p < testTimes ; p++) {
+            long startTime = System.nanoTime();
+            this.difficultyScale = difficultyScale;
+            for (int i = 0; i < this.bigFieldSize; i++) {
+                this.clear();
+                // Get choices
+                ArrayList<Integer> choices = new ArrayList<>(
+                        Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+                Collections.shuffle(choices);
+                int counter = 0;
+                // Insert Field
+                for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
+                    for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
+                        changeField(k, j, choices.get(counter));
+                        counter++;
+                    }
                 }
             }
-        }
-        TerminalView before = new TerminalView(this);
-		before.printBoard();
-        algoXSolver algoX = new algoXSolver(); 
-		algoX.algoXManager(this);
+            TerminalView before = new TerminalView(this);
+            before.printBoard();
+            algoX.algoXManager(this);
 
-        TerminalView solved = new TerminalView(this);
-        solved.printBoard();
-        System.out.println("Solved Sudoku (Before removal)^^");
-        
-        int amountToRemove = getFieldsToRemove(this.difficultyScale);
-        Random rand = new Random();
-        int removed = 0;
-        int attempts = 0;
-        
-        while (removed < amountToRemove && attempts < size * size * 10) {
-            attempts++;
-            int x = rand.nextInt(this.size);
-            int y = rand.nextInt(this.size);
+            TerminalView solved = new TerminalView(this);
+            solved.printBoard();
+            System.out.println("Solved Sudoku (Before removal)^^");
+            
+            int amountToRemove = getFieldsToRemove(this.difficultyScale);
+            Random rand = new Random();
+            int removed = 0;
+            int attempts = 0;
+            
+            while (removed < amountToRemove && attempts < size * size * 10) {
+                attempts++;
+                int x = rand.nextInt(this.size);
+                int y = rand.nextInt(this.size);
 
-            // if chosen value is 0, try again (brute force, this is temp)
-            if (wholeBoard[x][y].getValue() == 0) {
-                continue;
+                // if chosen value is 0, try again (brute force, this is temp)
+                if (wholeBoard[x][y].getValue() == 0) {
+                    continue;
+                }
+
+                // temp removal of field
+                int tempVal = wholeBoard[x][y].getValue();
+                wholeBoard[x][y].setValue(0);
+                this.solutions = 0;
+                algoX.algoXIsUnique(this);
+                if (this.solutions > 1) {
+                    wholeBoard[x][y].setValue(tempVal);
+                } else if (this.solutions == 1) {
+                    removed++;
+                } else {
+                    wholeBoard[x][y].setValue(tempVal);
+                }
+
             }
-
-            // temp removal of field
-            int tempVal = wholeBoard[x][y].getValue();
-            wholeBoard[x][y].setValue(0);
-            this.solutions = 0;
-            uniquenessTest();
-            if (this.solutions > 1) {
-                wholeBoard[x][y].setValue(tempVal);
-            } else if (this.solutions == 1) {
-                removed++;
-            } else {
-                wholeBoard[x][y].setValue(tempVal);
-            }
-
+            System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
+            TerminalView after = new TerminalView(this);
+            after.printBoard();
+            System.out.println("Stopped initialising here");
+            long endTime = System.nanoTime();
+            long durationOfPopulate = (endTime - startTime)/1000000;
+            accumulatedTime += durationOfPopulate;
+            System.out.println("Took " + durationOfPopulate + "ms to populate.");
         }
-        System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
-        TerminalView after = new TerminalView(this);
-        after.printBoard();
-        System.out.println("Stopped initialising here");
-		long endTime = System.nanoTime();
-		long durationOfPopulate = (endTime - startTime)/1000000;
-        System.out.println("Took " + durationOfPopulate + "ms to populate.");
-        System.out.println("");
+        System.out.println("Took " + accumulatedTime/testTimes + " ms in total per");
 
        
     }
