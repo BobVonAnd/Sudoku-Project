@@ -110,10 +110,10 @@ public class SudokuBoard {
                 int tempVal = wholeBoard[x][y].getValue();
                 wholeBoard[x][y].setValue(0);
                 this.solutions = 0;
-                algoX.algoXIsUnique(this);
-                if (this.solutions > 1) {
+                boolean isUnique = algoX.algoXIsUnique(this);
+                if (!isUnique) {
                     wholeBoard[x][y].setValue(tempVal);
-                } else if (this.solutions == 1) {
+                } else if (isUnique) {
                     removed++;
                 } else {
                     wholeBoard[x][y].setValue(tempVal);
