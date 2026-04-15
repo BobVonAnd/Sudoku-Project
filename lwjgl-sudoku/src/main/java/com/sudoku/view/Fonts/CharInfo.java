@@ -22,8 +22,8 @@ public class CharInfo {
     public void calTextureCoord(int fontWidth, int fontHeight){
         float x0 = (float)x / (float)fontWidth;
         float x1 = ((float)x + width) / (float)fontWidth;
-        float y0 = (float)y / (float)fontHeight;
-        float y1 = ((float)y - height) / (float)fontHeight;
+        float y0 = ((float)y - height) / (float)fontHeight;
+        float y1 = (float)y / (float)fontHeight;
 
         textureCoord[0] = new Vector2f(x1, y0);
         textureCoord[1] = new Vector2f(x1, y1);
