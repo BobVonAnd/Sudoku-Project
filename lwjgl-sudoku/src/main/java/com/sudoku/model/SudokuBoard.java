@@ -39,15 +39,15 @@ public class SudokuBoard {
     
     public void solve() {
         algoXSolver algoX = new algoXSolver(); 
-        long startTime = System.currentTimeMillis();
+        double startTime = System.currentTimeMillis();
         boolean unique = algoX.algoXIsUnique(this);
-        long endTime = System.currentTimeMillis();
-        long sudokuBoardStartTime = System.currentTimeMillis();
+        double endTime = System.currentTimeMillis();
+        double sudokuBoardStartTime = System.currentTimeMillis();
         boolean unique2 = this.uniquenessTest();
-        long sudokuBoardEndTIme = System.currentTimeMillis();
+        double sudokuBoardEndTIme = System.currentTimeMillis();
 		algoX.algoXManager(this);
-        long duration = endTime - startTime;
-        long sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
+        double duration = endTime - startTime;
+        double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
         System.out.println("The sudoku is unique " + unique);
@@ -63,10 +63,10 @@ public class SudokuBoard {
     }
 
     public void populate(double difficultyScale) {
-        long accumulatedTime = 0;
+        double accumulatedTime = 0;
         int testTimes = 1000;
         for (int p = 0 ; p < testTimes ; p++) {
-            long startTime = System.nanoTime();
+            double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             for (int i = 0; i < this.bigFieldSize; i++) {
                 this.clear();
@@ -124,12 +124,15 @@ public class SudokuBoard {
             TerminalView after = new TerminalView(this);
             after.printBoard();
             System.out.println("Stopped initialising here");
-            long endTime = System.nanoTime();
-            long durationOfPopulate = (endTime - startTime)/1000000;
+            double endTime = System.nanoTime();
+            double durationOfPopulate = (endTime - startTime)/1000000;
             accumulatedTime += durationOfPopulate;
-            System.out.println("Took " + durationOfPopulate + "ms to populate.");
+            System.out.printf("Took %.2f ms to populate.%n", durationOfPopulate);
+            System.out.println("");
         }
-        System.out.println("Took " + accumulatedTime/testTimes + " ms in total per");
+        System.out.printf("Took %.2f ms to populate 100.%n", accumulatedTime);
+        System.out.printf("Took on avg %.2f ms to populate each.%n", accumulatedTime/testTimes);   
+
 
        
     }
