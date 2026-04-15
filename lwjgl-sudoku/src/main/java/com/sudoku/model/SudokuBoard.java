@@ -42,7 +42,7 @@ public class SudokuBoard {
         boolean unique = algoX.algoXIsUnique(this);
         double endTime = System.currentTimeMillis();
         double sudokuBoardStartTime = System.currentTimeMillis();
-        boolean unique2 = this.uniquenessTest();
+        this.uniquenessTest();
         double sudokuBoardEndTIme = System.currentTimeMillis();
 		algoX.algoXManager(this);
         double duration = endTime - startTime;
