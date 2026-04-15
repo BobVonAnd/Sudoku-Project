@@ -26,8 +26,7 @@ public class CharInfo {
         float y1 = (float)y / (float)fontHeight;
 
         textureCoord[0] = new Vector2f(x1, y0);
-        textureCoord[1] = new Vector2f(x1, y1);
-        textureCoord[2] = new Vector2f(x0, y1);
-        textureCoord[3] = new Vector2f(x0, y0);
+        textureCoord[1] = new Vector2f(x0, y1);
+      
     }
 }

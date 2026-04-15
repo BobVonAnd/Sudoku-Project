@@ -71,10 +71,10 @@ public class Window {
 
 	private float[] vertices = {
             // x, y,        r, g, b              ux, uy
-            0.5f, 0.5f,     1.0f, 0.2f, 0.11f,   1.0f, 0.0f,
-            0.5f, -0.5f,    1.0f, 0.2f, 0.11f,   1.0f, 1.0f,
-            -0.5f, -0.5f,   1.0f, 0.2f, 0.11f,   0.0f, 1.0f,
-            -0.5f, 0.5f,    1.0f, 0.2f, 0.11f,   0.0f, 0.0f
+            0.05f, 0.15f,     1.0f, 0.2f, 0.11f,   1.0f, 0.0f,
+            0.05f, -0.15f,    1.0f, 0.2f, 0.11f,   1.0f, 1.0f,
+            -0.05f, -0.15f,   1.0f, 0.2f, 0.11f,   0.0f, 1.0f,
+            -0.05f, 0.15f,    1.0f, 0.2f, 0.11f,   0.0f, 0.0f
     };
 
     private int[] indices = {
@@ -90,7 +90,7 @@ public class Window {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 	
 		init();
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 512);
+		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
 		loop();
 	
 		// Free the window callbacks and destroy the window
@@ -100,11 +100,11 @@ public class Window {
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
-		System.err.println("end");
+		
 	}
 
 	private void init() {
-		System.err.println("init start");
+	
 		//error
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
@@ -159,11 +159,10 @@ public class Window {
 		// Make the window visible
 		glfwShowWindow(window);
 		GL.createCapabilities();
-		System.out.println("init end");
 	}
 
 	private void loop() {
-		System.err.println("loop start");
+		
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
@@ -181,7 +180,7 @@ public class Window {
 		// Set the clear color
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-		Vector2f[] texCoords = font.getChar('y').textureCoord;
+		Vector2f[] texCoords = font.getChar('d').textureCoord;
         vertices[5] = texCoords[0].x; vertices[6] = texCoords[0].y;
         vertices[12] = texCoords[1].x; vertices[13] = texCoords[1].y;
         vertices[19] = texCoords[2].x; vertices[20] = texCoords[2].y;
