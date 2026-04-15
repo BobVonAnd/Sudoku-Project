@@ -28,6 +28,14 @@ public class SudokuBoard {
         }
     }
     
+    public void clear() {
+        for (int i = 0 ; i < wholeBoard.length ; i++) {
+            for (int j = 0 ; j < wholeBoard.length ; j++) {
+                wholeBoard[i][j].setValue(0);
+            }
+        }
+    }
+
     public void solve() {
         algoXSolver algoX = new algoXSolver(); 
 		algoX.algoXManager(this);
@@ -43,7 +51,8 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         long accumulatedTime = 0;
-        for (int l = 0 ; l < 100 ; l++) {
+        for (int l = 0 ; l < 1000 ; l++) {
+            this.clear();
             long startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             for (int i = 0; i < this.bigFieldSize; i++) {
@@ -107,7 +116,7 @@ public class SudokuBoard {
             accumulatedTime += durationOfPopulate;
             System.out.println("Took " + durationOfPopulate + "ms to populate.");
         }
-        System.out.println("Took " + accumulatedTime + " ms in total");
+        System.out.println("Took " + accumulatedTime/1000 + " ms in total");
 
        
     }
