@@ -38,7 +38,6 @@ public class SudokuBoard {
     }
     
     public void solve() {
-        algoXSolver algoX = new algoXSolver(); 
         double startTime = System.currentTimeMillis();
         boolean unique = algoX.algoXIsUnique(this);
         double endTime = System.currentTimeMillis();
