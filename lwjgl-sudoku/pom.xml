@@ -98,6 +98,12 @@
             <artifactId>lwjgl-opengl</artifactId>
             <classifier>natives-macos-arm64</classifier>
         </dependency>
+    
+      <dependency>
+        <groupId>org.processing</groupId>
+        <artifactId>pde</artifactId>
+        <version>3.3.7</version>
+      </dependency>
     </dependencies>
 
     <build>
