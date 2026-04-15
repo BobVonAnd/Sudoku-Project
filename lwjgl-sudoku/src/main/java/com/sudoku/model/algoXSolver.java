@@ -248,7 +248,7 @@ public class algoXSolver {
         }
         else {
             //Start with the column right of the root
-            ColumnNode columnNode = getBestColumnNode(root);
+            ColumnNode columnNode = (ColumnNode) root.right;
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
