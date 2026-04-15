@@ -222,24 +222,17 @@ public class algoXSolver {
         ColumnNode best = current;
 
         while (current != root) {
-
-            // If a column has size 0 → no solution possible
             if (current.size == 0) {
                 return current;
             }
-
             if (current.size < best.size) {
                 best = current;
-
-                // Best possible case → early exit
                 if (best.size == 1) {
                     return best;
                 }
             }
-
             current = (ColumnNode) current.right;
         }
-
         return best;
     }
     public void generateRandomBoard(SudokuBoard sudokuBoard, int n){
