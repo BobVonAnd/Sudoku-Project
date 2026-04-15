@@ -53,7 +53,7 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         long cumulatedTime = 0;
-        for (int p = 0 ; p < 100 ; p++) {
+        for (int p = 0 ; p < 1000 ; p++) {
             this.clear();
             long startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
@@ -132,7 +132,7 @@ public class SudokuBoard {
             System.out.println("");
         }
         System.out.println("Took " + cumulatedTime + "ms to populate 100.");
-        System.out.println("Took on avg " + cumulatedTime/100 + "ms to populate each.");
+        System.out.println("Took on avg " + cumulatedTime/1000 + "ms to populate each.");
 
        
     }
