@@ -67,8 +67,8 @@ public class SudokuBoard {
         for (int p = 0 ; p < testTimes ; p++) {
             double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
+            this.clear();
             for (int i = 0; i < this.bigFieldSize; i++) {
-                this.clear();
                 // Get choices
                 ArrayList<Integer> choices = new ArrayList<>(
                         Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
