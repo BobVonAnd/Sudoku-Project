@@ -265,15 +265,15 @@ public class algoXSolver {
                 }
                 //We search for a solution one depth further in
                 algoXUniqueTest(root, solution);
-
+                if (solutionCounter > 1){
+                    break;
+                }
                 //We uncover the nodes that were covered 
                 for (Node j = firstNode.left; j != firstNode; j = j.left){
                     uncover(j.column);
                 }
                 solution.remove(solution.size() - 1);
-                if (solutionCounter > 1){
-                    break;
-                }
+
                 //We go down to the next row and continue looking for multiple solutions
                 firstNode = firstNode.down;
             }
