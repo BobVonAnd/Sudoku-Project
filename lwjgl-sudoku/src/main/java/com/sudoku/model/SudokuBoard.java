@@ -58,8 +58,7 @@ public class SudokuBoard {
             double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             do {
-                setSolutions(0);
-                for (int i = 0; i < this.bigFieldSize; i++) {
+                 for (int i = 0; i < this.bigFieldSize; i++) {
                     // Get choices
                     ArrayList<Integer> choices = new ArrayList<>(
                             Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
@@ -150,31 +149,6 @@ public class SudokuBoard {
         }
     }
 
-    public Boolean isValid(int row, int col, int num) {
-        // Check row
-        for (int x = 0; x < this.size; x++) {
-            if (wholeBoard[row][x].getValue() == num) {
-                return false;
-            }
-        }
-        // Check col
-        for (int x = 0; x < this.size; x++) {
-            if (this.wholeBoard[x][col].getValue() == num) {
-                return false;
-            }
-        }
-        // Check bigfield
-        int startRow = row - row % this.bigFieldSize;
-        int startCol = col - col % this.bigFieldSize;
-        for (int i = 0; i < this.bigFieldSize; i++) {
-            for (int j = 0; j < this.bigFieldSize; j++) {
-                if (this.wholeBoard[startRow + i][startCol + j].getValue() == num) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public Boolean uniquenessTest() {
         if (this.solutions > 1) {

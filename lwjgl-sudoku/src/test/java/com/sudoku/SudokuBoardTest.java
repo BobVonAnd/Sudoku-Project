@@ -42,14 +42,6 @@ void updateLETest() {
 }
 
     @Test
-    void validityTest() {
-        SudokuBoard board2 = new SudokuBoard(2);
-        board2.readIntoBoard(new int[][] {{2,1},{3,0}});
-        assertEquals(false,board2.isValid(1,1,1));
-        assertEquals(true,board2.isValid(1,1,4));
-    }
-
-    @Test
     void uniquenessTest() {
         SudokuBoard board2 = new SudokuBoard(4);
         board2.readIntoBoard(
