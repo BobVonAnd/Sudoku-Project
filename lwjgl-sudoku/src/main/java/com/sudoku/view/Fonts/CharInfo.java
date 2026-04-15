@@ -9,7 +9,7 @@ public class CharInfo {
     public int width;
     public int height;
 
-     public Vector2f[] textureCoord = new Vector2f[4];
+    public Vector2f[] textureCoord = new Vector2f[4];
 
 
     public CharInfo(int x, int y, int width, int height){
