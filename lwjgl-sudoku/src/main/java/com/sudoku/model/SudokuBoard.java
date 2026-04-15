@@ -50,10 +50,10 @@ public class SudokuBoard {
     }
 
     public void populate(double difficultyScale) {
-        long accumulatedTime = 0;
+        double accumulatedTime = 0;
         for (int l = 0 ; l < 1000 ; l++) {
             this.clear();
-            long startTime = System.nanoTime();
+            double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             for (int i = 0; i < this.bigFieldSize; i++) {
                 // Get choices
@@ -111,12 +111,14 @@ public class SudokuBoard {
             TerminalView after = new TerminalView(this);
             after.printBoard();
             System.out.println("Stopped initialising here");
-            long endTime = System.nanoTime();
-            long durationOfPopulate = (endTime - startTime)/1000000;
+            double endTime = System.nanoTime();
+            double durationOfPopulate = (endTime - startTime)/1000000;
             accumulatedTime += durationOfPopulate;
-            System.out.println("Took " + durationOfPopulate + "ms to populate.");
+            System.out.printf("Took %.2f ms to populate.%n", durationOfPopulate);
+            System.out.println("");
         }
-        System.out.println("Took " + accumulatedTime/1000 + " ms in total");
+        System.out.printf("Took %.2f ms to populate 100.%n", accumulatedTime);
+        System.out.printf("Took on avg %.2f ms to populate each.%n", accumulatedTime/1000);   
 
        
     }
