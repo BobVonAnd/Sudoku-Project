@@ -14,7 +14,7 @@ public class SudokuBoard {
     private int size;
     private int bigFieldSize;
     private double difficultyScale;
-    private ArrayList<Field> emptyCells = new ArrayList<Field>();
+    private ArrayList<Field> emptyCells = new ArrayList<Field>(); // <-- optimization: emptycells instead of triple for loop
 
     private int solutions; // for generating the sudoku
 
@@ -52,10 +52,10 @@ public class SudokuBoard {
     }
 
     public void populate(double difficultyScale) {
-        long cumulatedTime = 0;
+        double cumulatedTime = 0;
         for (int p = 0 ; p < 1000 ; p++) {
             this.clear();
-            long startTime = System.nanoTime();
+            double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             do {
                 setSolutions(0);
@@ -125,16 +125,14 @@ public class SudokuBoard {
             TerminalView after = new TerminalView(this);
             after.printBoard();
             System.out.println("Stopped initialising here");
-            long endTime = System.nanoTime();
-            long durationOfPopulate = (endTime - startTime)/1000000;
+            double endTime = System.nanoTime();
+            double durationOfPopulate = (endTime - startTime)/1000000;
             cumulatedTime += durationOfPopulate;
-            System.out.println("Took " + durationOfPopulate + "ms to populate.");
+            System.out.printf("Took %.2f ms to populate.%n", durationOfPopulate);
             System.out.println("");
         }
-        System.out.println("Took " + cumulatedTime + "ms to populate 100.");
-        System.out.println("Took on avg " + cumulatedTime/1000 + "ms to populate each.");
-
-       
+        System.out.printf("Took %.2f ms to populate 100.%n", cumulatedTime);
+        System.out.printf("Took on avg %.2f ms to populate each.%n", cumulatedTime/1000);       
     }
 
 
