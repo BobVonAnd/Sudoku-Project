@@ -124,7 +124,7 @@ public class algoXSolver {
         }
         else {
             //Start with the column right of the root
-            ColumnNode columnNode = (ColumnNode) root.right;
+            ColumnNode columnNode = getBestColumnNode(root);
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
@@ -217,6 +217,31 @@ public class algoXSolver {
         }
         return null;
     }
+    public ColumnNode getBestColumnNode(ColumnNode root) {
+        ColumnNode current = (ColumnNode) root.right;
+        ColumnNode best = current;
+
+        while (current != root) {
+
+            // If a column has size 0 → no solution possible
+            if (current.size == 0) {
+                return current;
+            }
+
+            if (current.size < best.size) {
+                best = current;
+
+                // Best possible case → early exit
+                if (best.size == 1) {
+                    return best;
+                }
+            }
+
+            current = (ColumnNode) current.right;
+        }
+
+        return best;
+    }
     public void generateRandomBoard(SudokuBoard sudokuBoard, int n){
     }    
 
@@ -230,7 +255,7 @@ public class algoXSolver {
         }
         else {
             //Start with the column right of the root
-            ColumnNode columnNode = (ColumnNode) root.right;
+            ColumnNode columnNode = getBestColumnNode(root);
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
