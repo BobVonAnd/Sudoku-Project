@@ -34,7 +34,7 @@ public class SudokuBoard {
         boolean unique = algoX.algoXIsUnique(this);
         long endTime = System.currentTimeMillis();
         long sudokuBoardStartTime = System.currentTimeMillis();
-        this.uniquenessTest();
+        boolean unique2 = this.uniquenessTest();
         long sudokuBoardEndTIme = System.currentTimeMillis();
 		algoX.algoXManager(this);
         long duration = endTime - startTime;
@@ -42,6 +42,7 @@ public class SudokuBoard {
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
         System.out.println("The sudoku is unique " + unique);
+        System.out.println("The sudoku is unique " + this.solutions);
     }
 
     public void readIntoBoard(int[][] integerBoard) {
@@ -165,7 +166,7 @@ public class SudokuBoard {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (wholeBoard[i][j].getValue() == 0) {
-                    for (int k = 1; k <= this.size; k++) {
+                    for (int k = 0; k < this.size; k++) {
                         if (isValid(i, j, k)) {
                             changeField(i, j, k);
                             uniquenessTest();

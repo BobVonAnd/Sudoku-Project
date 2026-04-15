@@ -281,7 +281,6 @@ public class algoXSolver {
                 }
             }
         }
-        solution = new ArrayList<>();
         algoXUniqueTest(root, 0, solution);
         return solutionCounter == 1;
     }

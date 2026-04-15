@@ -33,20 +33,20 @@ public class Scenes {
     }
 
     public void initSudokuBoard(){
-        sudokuBoard = new SudokuBoard(9);
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		sudokuBoard.populate(1);
-		for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
-			for (int j = 0; j<sudokuBoard.getSize(); j++){
-				Field f = sudokuBoard.getSingleField(i, j);
-				sudokuBoard.makeEdges(f);
-				sudokuBoard.updateLegalEntriesOfField(f);
-			}
-		}
-		Solver solver = new Solver();
-		solver.solves(sudokuBoard);
+        // sudokuBoard = new SudokuBoard(9);
+		// TerminalView terminalView = new TerminalView(sudokuBoard);
+		// //sudokuBoard.populate(1);
+		// for (int i = 0; i<sudokuBoard.getSize(); i++){//Change method
+		// 	for (int j = 0; j<sudokuBoard.getSize(); j++){
+		// 		Field f = sudokuBoard.getSingleField(i, j);
+		// 		sudokuBoard.makeEdges(f);
+		// 		sudokuBoard.updateLegalEntriesOfField(f);
+		// 	}
+		// }
+		// //Solver solver = new Solver();
+		// //solver.solves(sudokuBoard);
 		
-		terminalView.printBoard();
+		// terminalView.printBoard();
     }
 
 
