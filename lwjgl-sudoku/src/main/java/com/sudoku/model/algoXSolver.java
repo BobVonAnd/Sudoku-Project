@@ -32,7 +32,7 @@ public class algoXSolver {
 
         //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
-        solution = search(root, 0, solution);
+        solution = search(root, solution);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
         System.out.println("The algo itself took "+ duration + "ms");
@@ -117,7 +117,7 @@ public class algoXSolver {
     col.size++;
 }
 
-    public ArrayList<Node> search(ColumnNode root, int k, ArrayList<Node> solution){
+    public ArrayList<Node> search(ColumnNode root, ArrayList<Node> solution){
         //If the matrix is empty, we have found a solution
         if (root.right == root ){
             return new ArrayList<>(solution);
@@ -140,7 +140,7 @@ public class algoXSolver {
                     rightNode = rightNode.right;
                 }
                 //We search for a solution one depth further in
-                ArrayList<Node> result = search(root, k+1, solution);
+                ArrayList<Node> result = search(root, solution);
                 //As we are looking for one solution we exit if we have gotten a solution
                 if (result != null){
                     return result;
@@ -238,7 +238,7 @@ public class algoXSolver {
     public void generateRandomBoard(SudokuBoard sudokuBoard, int n){
     }    
 
-    public void algoXUniqueTest(ColumnNode root, int k, ArrayList<Node> solution){
+    public void algoXUniqueTest(ColumnNode root, ArrayList<Node> solution){
         if (solutionCounter > 1){
             return;
         }
@@ -264,7 +264,7 @@ public class algoXSolver {
                     rightNode = rightNode.right;
                 }
                 //We search for a solution one depth further in
-                algoXUniqueTest(root, k+1, solution);
+                algoXUniqueTest(root, solution);
 
                 //We uncover the nodes that were covered 
                 for (Node j = firstNode.left; j != firstNode; j = j.left){
@@ -302,7 +302,7 @@ public class algoXSolver {
                 }
             }
         }
-        algoXUniqueTest(root, 0, solution);
+        algoXUniqueTest(root, solution);
         return solutionCounter == 1;
     }
 }
