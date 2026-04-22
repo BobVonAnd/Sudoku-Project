@@ -68,20 +68,25 @@ public class SudokuBoard {
             double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             this.clear();
-            for (int i = 0; i < this.bigFieldSize; i+=2) {
-                // Get choices
-                ArrayList<Integer> choices = new ArrayList<>(
-                        Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-                Collections.shuffle(choices);
-                int counter = 0;
-                // Insert Field
-                for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                    for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                        changeField(k, j, choices.get(counter));
-                        counter++;
-                    }
-                }
-            }
+            // for (int i = 0; i < this.bigFieldSize; i+=2) {
+            //     // Get choices
+            //     ArrayList<Integer> choices = new ArrayList<>(
+            //             Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+            //     Collections.shuffle(choices);
+            //     int counter = 0;
+            //     // Insert Field
+            //     for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
+            //         for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
+            //             changeField(k, j, choices.get(counter));
+            //             counter++;
+            //         }
+            //     }
+            // }
+            ArrayList<Integer> choices = new ArrayList<>(
+                            Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+            Collections.shuffle(choices);
+            Random rand = new Random(System.nanoTime());
+            changeField(rand.nextInt(size), rand.nextInt(size), choices.get(0));
             TerminalView before = new TerminalView(this);
             before.printBoard();
             algoX.algoXManager(this);
@@ -91,7 +96,6 @@ public class SudokuBoard {
             System.out.println("Solved Sudoku (Before removal)^^");
             
             int amountToRemove = getFieldsToRemove(this.difficultyScale);
-            Random rand = new Random();
             int removed = 0;
             int attempts = 0;
             
