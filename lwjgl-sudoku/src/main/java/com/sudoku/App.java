@@ -15,7 +15,7 @@ public class App {
 		// Window window = new Window();
 
 
-		SudokuBoard sudokuBoard = new SudokuBoard(9);
+		SudokuBoard sudokuBoard = new SudokuBoard(25);
 		sudokuBoard.populate(1);
 		sudokuBoard.solve();
 		TerminalView terminalView = new TerminalView(sudokuBoard);
