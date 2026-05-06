@@ -142,7 +142,9 @@ public class Window {
 		Shader fontShader = new Shader("Sudoku-Project/lwjgl-sudoku/assets/fonts/fontShader.glsl");
 		CreateString text = new CreateString(fontShader, font);
 
-
+ 		String atlasLower = "abcdefghijklmnopqrstuvwxyz";
+ 		String atlasUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZæøåÆØÅ";
+	 	String atlasSymbols = "0123456789!\"()&%.,:;?-_+=/ ";
 		
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -156,8 +158,9 @@ public class Window {
 			//scenes.playing();
 			
 			//just some texts that can be edited
-			text.makeText("y", 200, 200, 1f, new float[]{1.0f,0.0f,0.0f});
-			text.makeText("d", 210, 200, 1f, new float[]{1.0f,0.0f,0.0f});
+			text.makeText(atlasLower, 100, 100, 1f, new float[]{1.0f,0.0f,0.0f});
+			text.makeText(atlasUpper, 100, 250, 1f, new float[]{0.0f,1.0f,0.0f});
+			text.makeText(atlasSymbols,100, 400, 1f, new float[]{0.0f,0.0f,1.0f});
 			text.flush();
 			
 			glfwSwapBuffers(window); // swap the color buffers
