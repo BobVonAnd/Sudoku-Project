@@ -1,9 +1,9 @@
-package com.sudoku.view;
+package com.sudoku.controller;
 
 import java.nio.IntBuffer;
+import java.nio.file.Path;
 
 import org.lwjgl.Version;
-import java.nio.file.Path;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
@@ -44,16 +44,24 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import org.lwjgl.system.MemoryStack;
+
+import com.sudoku.view.CreateString;
+import com.sudoku.view.Scenes;
+import com.sudoku.view.Shader;
+import com.sudoku.view.fonts.CreateFont;
+
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-import com.sudoku.view.fonts.CreateFont;
 
 public class Window {
 	private CreateFont font;
     private long window;
 	private Scenes scenes = new Scenes();
+	private WindowManager wm;
 
+	public Window(WindowManager wm) {
+		this.wm = wm;
+	}
 
 	public void run() {
 	
@@ -140,7 +148,12 @@ public class Window {
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 		//creates a shader and a class that can display strings
-		Shader fontShader = new Shader("Sudoku-Project/lwjgl-sudoku/assets/fonts/fontShader.glsl");
+<<<<<<< HEAD:lwjgl-sudoku/src/main/java/com/sudoku/view/Window.java
+		Path shaderPath = Path.of("lwjgl-sudoku","assets", "fonts", "fontShader.glsl");
+    	Shader fontShader = new Shader(shaderPath.toString());
+=======
+		Shader fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
+>>>>>>> d99ccb29ff8bbee5db48438f2ee26c3933febdf6:lwjgl-sudoku/src/main/java/com/sudoku/controller/Window.java
 		CreateString text = new CreateString(fontShader, font);
 
 		glEnable(GL_BLEND);
