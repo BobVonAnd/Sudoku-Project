@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +32,8 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 
+
+//Borrowed form GamesWithGabe and edited
 public class CreateFont {
     
 
@@ -49,7 +54,8 @@ public class CreateFont {
         'æ','ø','å','Æ','Ø','Å',
         '0','1','2','3','4','5','6','7','8','9',
         '!', '"', '(', ')', '&', '%',
-        ' ', '.', ',', ':', ';', '?', '-', '_', '+', '=', '/'
+        '.', ',', ':', ';', '?', '-', '_', '+', '=', '/',
+        ' '
     };
 
     
@@ -64,6 +70,48 @@ public class CreateFont {
 
     public CharInfo getChar(char character){
         return charMap.get(character);
+    }
+
+    public void createBitMapV2(){
+        int estimatedWidth = (int)Math.sqrt(atlas.length) * fontSize + 1;
+
+        BufferedImage image = new BufferedImage(estimatedWidth, estimatedWidth, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        Font font = new Font(filePath, Font.PLAIN, fontSize);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setFont(font);
+        FontMetrics fm = g2d.getFontMetrics();
+        FontRenderContext frc = g2d.getFontRenderContext();
+        float x = 0;
+        float y = 0;
+        for(char i : atlas){
+            if(font.canDisplay(i)){
+                GlyphVector gv = font.createGlyphVector(frc, new char[]{i});
+                Rectangle2D bounds = gv.getVisualBounds();
+                g2d.drawString("" + (char)i, x, (float)bounds.getHeight());
+                //System.out.println(gv.getVisualBounds());
+                System.out.println(bounds.getY()+ " " + bounds.getHeight() + " " + i);
+                if(x+bounds.getWidth()>estimatedWidth){
+                    x = 0;
+                    y+=-1* bounds.getHeight();
+                }
+                else {
+                    x+=bounds.getWidth();
+                }
+            }
+           
+        }
+        g2d.dispose();
+
+    
+
+        //Will create a picture of the bitmap. Use for Test
+        try{
+            File file = new File("tmp2.png");
+            ImageIO.write(image, "png", file);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     //Finds the size x,y of the bitmap and inserts all char that is displayable.
@@ -102,7 +150,8 @@ public class CreateFont {
 
         //specifec chars
         for(char i : atlas){
-            if(font.canDisplay(i)){
+            if(font.canDisplay(i)){ 
+                System.out.println(fm.charWidth(i)+ " " +fm.getHeight() + " " + i);  
                 CharInfo charInfo = new CharInfo(x,y,fm.charWidth(i),fm.getHeight());
                 charMap.put(i, charInfo);
                 width = Math.max(fm.charWidth(i) + x, width);

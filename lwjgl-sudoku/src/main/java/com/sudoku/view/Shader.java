@@ -38,7 +38,7 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix3fv;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-//borrowed from GameWithGabe
+//borrowed from GamesWithGabe
 public class Shader {
 
     private int shaderProgramID;

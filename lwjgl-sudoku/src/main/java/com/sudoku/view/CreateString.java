@@ -1,16 +1,26 @@
 package com.sudoku.view;
 
+import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 
 import com.sudoku.view.fonts.CharInfo;
 import com.sudoku.view.fonts.CreateFont;
@@ -28,38 +38,102 @@ public class CreateString {
         1, 2, 3
     };
     
-    private int batchSize = 100;
+    public static int BATCH_SIZE = 100;
+    public static int VERTEX_SIZE = 7;
     private int size = 0;
-    private int vertexSize = 7;
-    private double[] verticies = new double[batchSize*vertexSize];
+    private float [] vertices = new float[BATCH_SIZE*VERTEX_SIZE];
+    private Matrix4f projection = new Matrix4f();
 
-    public void makeText(String text, int x, int y, double scale, int rgb){
 
+    public CreateString(Shader shader, CreateFont font){
+        this.shader = shader;
+        this.font = font;
+        createBatch();
+    }
+
+    public void makeText(String text, int x, int y, float  scale, float [] rgb){
         for(char i : text.toCharArray()){
             CharInfo charInfo = font.getChar(i);
-            double xPos = x;
-            double yPos = y;
+            float xPos = x;
+            float yPos = y;
+           
             processChar(charInfo, scale, xPos, yPos, rgb);
+            x += charInfo.width * scale;
         }
     }
 
-    private void processChar(CharInfo charInfo, double scale, double x, double y, int rgb){
-        //pos
-        double x0 = x;
-        double y0 = y;
-        double x1 = x + scale * charInfo.width;
-        double y1 = y + scale * charInfo.height;
+    public void flush(){
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, Float.BYTES * VERTEX_SIZE * BATCH_SIZE, GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0 , vertices);
 
-        double ux0 = charInfo.textureCoord[]
+        shader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_BUFFER, font.textureId);
+        shader.uploadTexture("uFontTexture", 0);
+        shader.uploadMat4f("uProjection", projection);
+
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, size * 6, GL_UNSIGNED_INT, 0);
+
+        size = 0;
+    }
+
+    private void processChar(CharInfo charInfo, float scale, float x, float y, float [] rgb){
+
+        if(size >= BATCH_SIZE - 4){
+            flush();
+        }
+
+        //pos
+        float x0 = x;
+        float y0 = y;
+        float x1 = x + scale * charInfo.width;
+        float y1 = y + scale * charInfo.height;
+
+        float r = rgb[0];
+        float g = rgb[1];
+        float b = rgb[2];
+        
+        float ux0 = charInfo.textureCoord[1].x;
+        float ux1 = charInfo.textureCoord[0].x;
+        float uy0 = charInfo.textureCoord[0].y;
+        float uy1 = charInfo.textureCoord[1].y;
+
+
+        int index = size * 7; 
+        vertices[index] = x1; vertices[index+1] = y0;
+        vertices[index+2] = r; vertices[index+3] = g; vertices[index+4] = b; 
+        vertices[index+5] = ux1; vertices[index+6] = uy0;
+
+        index += 7;
+        vertices[index] = x1; vertices[index+1] = y1;
+        vertices[index+2] = r; vertices[index+3] = g; vertices[index+4] = b; 
+        vertices[index+5] = ux1; vertices[index+6] = uy1;
+
+        index += 7;
+        vertices[index] = x0; vertices[index+1] = y1;
+        vertices[index+2] = r; vertices[index+3] = g; vertices[index+4] = b; 
+        vertices[index+5] = ux0; vertices[index+6] = uy1;
+
+        index += 7;
+        vertices[index] = x0; vertices[index+1] = y0;
+        vertices[index+2] = r; vertices[index+3] = g; vertices[index+4] = b; 
+        vertices[index+5] = ux0; vertices[index+6] = uy0;
+
+        size += 4; 
     }
 
     private void createBatch(){
+        projection.identity();
+        projection.ortho(0, 800, 0, 600, 1f, 100f);
+
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
 
         vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, Float.BYTES*vertexSize*batchSize, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, Float.BYTES*VERTEX_SIZE*BATCH_SIZE, GL_DYNAMIC_DRAW);
 
         generateEBO();
 
@@ -76,19 +150,16 @@ public class CreateString {
 
     private void generateEBO(){
         //batchSize * points of the triangle
-        int EboSize = batchSize * 3;
-        int[] eBuffer = new int[EboSize];
+        int eboSize = BATCH_SIZE * 3;
+        int[] eBuffer = new int[eboSize];
 
-        for(int i = 0; i < eBuffer.length; i++){
+        for(int i = 0; i < eboSize; i++){
             eBuffer[i] = indices[(i%6)] + ((i/6)*4);
         }
 
-
         int ebo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, eBuffer, GL_STATIC_DRAW);
     }
-
-   
 
 }

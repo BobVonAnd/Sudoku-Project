@@ -1,4 +1,4 @@
-#borrowed from GameWithGabe
+#Borrowed form GamesWithGabe
 #type vertex
 #version 330 core
 layout(location=0) in vec2 aPos;
@@ -7,12 +7,14 @@ layout(location=2) in vec2 aTexCoords;
 
 out vec2 fTexCoords;
 out vec3 fColor;
+ 
+uniform mat4 uProjection;
 
 void main()
 {
     fTexCoords = aTexCoords;
     fColor = aColor;
-    gl_Position = vec4(aPos, 1, 1);
+    gl_Position = uProjection * vec4(aPos, -5, 1);
 }
 
 #type fragment
