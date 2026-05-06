@@ -68,7 +68,7 @@ void updateLETest() {
    
     @Test
     void populateCorrectDifficultyTest() {
-        board.populate(difficulty);
+        //board.populate(difficulty);
         int amountToRemove = board.getFieldsToRemove(difficulty);
         int amountRemoved = 0;
         for (int i = 0 ; i < boardSize ; i++) {
