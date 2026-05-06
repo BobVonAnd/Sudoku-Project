@@ -71,7 +71,7 @@ public class sudokuWindow {
 			glfwGetWindowSize(win, width, height);
 
 			double x = (xpos[0] / width[0]) ;
-			double y = 1.0 - (ypos[0] / height[0]);
+			double y = (ypos[0] / height[0]);
 
 			int[] sudokuCoords = translateCoordinatesToFieldCoordinates(x, y, sudokuBoard.getSize());
 			Field h = sudokuBoard.getSingleField(sudokuCoords[0], sudokuCoords[1]);
@@ -139,7 +139,7 @@ public class sudokuWindow {
 			double col = f.getCoordinates()[1];
 
 			double x = -0.9 + col * size * 2 + size;
-			double y = -0.9 + row * size * 2 + size;
+			double y = 0.7 - row * size * 2 + size;
 
 				glBegin(GL_QUADS);
 
