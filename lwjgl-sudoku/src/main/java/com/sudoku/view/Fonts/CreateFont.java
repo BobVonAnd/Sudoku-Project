@@ -90,7 +90,7 @@ public class CreateFont {
                 Rectangle2D bounds = gv.getVisualBounds();
                 g2d.drawString("" + (char)i, x, (float)bounds.getHeight());
                 //System.out.println(gv.getVisualBounds());
-                System.out.println(bounds.getY()+ " " + bounds.getHeight() + " " + i);
+                //System.out.println(bounds.getY()+ " " + bounds.getHeight() + " " + i);
                 if(x+bounds.getWidth()>estimatedWidth){
                     x = 0;
                     y+=-1* bounds.getHeight();
@@ -151,7 +151,7 @@ public class CreateFont {
         //specifec chars
         for(char i : atlas){
             if(font.canDisplay(i)){ 
-                System.out.println(fm.charWidth(i)+ " " +fm.getHeight() + " " + i);  
+               // System.out.println(fm.charWidth(i)+ " " +fm.getHeight() + " " + i);  
                 CharInfo charInfo = new CharInfo(x,y,fm.charWidth(i),fm.getHeight());
                 charMap.put(i, charInfo);
                 width = Math.max(fm.charWidth(i) + x, width);
