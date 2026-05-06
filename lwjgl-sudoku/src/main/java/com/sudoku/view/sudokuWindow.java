@@ -75,9 +75,10 @@ public class sudokuWindow {
 
 			int[] sudokuCoords = translateCoordinatesToFieldCoordinates(x, y, sudokuBoard.getSize());
 			Field h = sudokuBoard.getSingleField(sudokuCoords[0], sudokuCoords[1]);
-
-			System.out.println(x+" "+y);
-			System.out.println(sudokuCoords[0] + " " + sudokuCoords[1]);
+			System.out.println("window size = " + width[0] + " " + height[0]);
+			System.out.println("Coordinates of cursor= " + xpos[0] + " " + ypos[0]);
+			System.out.println("Coordinates corresponding to window size= " + x+" "+y);
+			System.out.println("Col + rows of sudoku= " + sudokuCoords[1] + " " + sudokuCoords[0]);
 			h.changeColour(1, 0, 1);
 		}
 		});
