@@ -71,7 +71,8 @@ public class Window {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 	
 		init();
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
+		Path fontPath = Path.of("lwjgl-sudoku","assets", "fonts", "ARIAL.TTF");
+    	font = new CreateFont(fontPath.toString(),128);
 		loop();
 	
 		// Free the window callbacks and destroy the window
