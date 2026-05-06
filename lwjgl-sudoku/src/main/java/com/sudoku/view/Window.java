@@ -43,10 +43,11 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import org.lwjgl.system.MemoryStack;
+
+import com.sudoku.view.fonts.CreateFont;
+
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-import com.sudoku.view.Fonts.CreateFont;
 
 public class Window {
 	private CreateFont font;
