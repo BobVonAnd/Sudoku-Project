@@ -36,7 +36,7 @@ public class Scenes {
     public void initSudokuBoard(){
 
         sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(1);
+		//sudokuBoard.populate(1);
 		long startTime = System.nanoTime();
 		algoXSolver algoX = new algoXSolver(); 
 		algoX.algoXManager(sudokuBoard);
