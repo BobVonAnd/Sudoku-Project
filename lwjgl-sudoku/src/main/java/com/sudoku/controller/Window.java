@@ -148,12 +148,9 @@ public class Window {
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 		//creates a shader and a class that can display strings
-<<<<<<< HEAD:lwjgl-sudoku/src/main/java/com/sudoku/view/Window.java
 		Path shaderPath = Path.of("lwjgl-sudoku","assets", "fonts", "fontShader.glsl");
     	Shader fontShader = new Shader(shaderPath.toString());
-=======
-		Shader fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
->>>>>>> d99ccb29ff8bbee5db48438f2ee26c3933febdf6:lwjgl-sudoku/src/main/java/com/sudoku/controller/Window.java
+
 		CreateString text = new CreateString(fontShader, font);
 
 		glEnable(GL_BLEND);
