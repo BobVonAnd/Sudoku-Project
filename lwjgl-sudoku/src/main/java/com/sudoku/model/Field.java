@@ -9,14 +9,15 @@ public class Field {
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
     private Button button;
+    private double[] colour;
 
-
-    public Field(int x, int y, int value, int size){
+    public Field(int x, int y, int value, int size, double[] colour){
 
         this.x = x;
         this.y = y;
         this.value = value;
         this.boardSize = size;
+        this.colour = colour;
 
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
@@ -85,6 +86,18 @@ public class Field {
 
     public Button getButton(){
         return button;
+    }
+    public void changeColour(double red, double green, double blue){
+        this.colour = new double[]{red, green, blue};
+    }
+    public double getRed(){
+        return this.colour[0];
+    }
+        public double getGreen(){
+        return this.colour[1];
+    }
+        public double getBlue(){
+        return this.colour[2];
     }
 }
 

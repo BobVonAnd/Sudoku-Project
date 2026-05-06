@@ -1,6 +1,6 @@
-package com.sudoku.view.fonts;
+// package com.sudoku.view.fonts;
 
-import org.joml.Vector2f;
+// import org.joml.Vector2f;
 
 //Borrowed form GamesWithGabe and edited
 public class CharInfo {
@@ -11,7 +11,7 @@ public class CharInfo {
     public int height;
     public float yOfSet = 94.8125f - 67.875f+1;
 
-     public Vector2f[] textureCoord = new Vector2f[4];
+//      public Vector2f[] textureCoord = new Vector2f[4];
 
 
     public CharInfo(int x, int y, int width, int height){

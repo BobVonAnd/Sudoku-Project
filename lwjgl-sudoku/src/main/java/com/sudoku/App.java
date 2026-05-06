@@ -8,12 +8,13 @@ public class App {
 
 	 
 
-	public static void main(String[] args) {
+		SudokuBoard sudokuBoard = new SudokuBoard(9);
+		// sudokuBoard.populate(1);
+		sudokuBoard.solve();
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		terminalView.printBoard();
 
-	
-
-		Window window = new Window();
-		window.run();
+		window.run(sudokuBoard);
 	}
 	
 	

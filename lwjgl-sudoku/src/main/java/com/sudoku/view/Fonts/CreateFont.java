@@ -37,10 +37,10 @@ import static org.lwjgl.opengl.GL11.glTexParameteri;
 public class CreateFont {
     
 
-    public String filePath;
-    public int fontSize;
-    public Map<Character, CharInfo> charMap;
-    //public Map<Integer, CharInfo> charMap;
+//     public String filePath;
+//     public int fontSize;
+//     public Map<Character, CharInfo> charMap;
+//     //public Map<Integer, CharInfo> charMap;
 
     public int textureId;
 

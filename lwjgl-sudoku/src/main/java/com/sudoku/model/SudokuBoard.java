@@ -10,10 +10,12 @@ import com.sudoku.view.TerminalView;
 
 public class SudokuBoard {
 
+    private ArrayList<Field> fields = new ArrayList<>();
     private Field[][] wholeBoard;
     private int size;
     private int bigFieldSize;
     private double difficultyScale;
+    private algoXSolver algoX = new algoXSolver();
 
     private int solutions; // for generating the sudoku
 
@@ -23,25 +25,32 @@ public class SudokuBoard {
         this.bigFieldSize = (int) Math.sqrt(size);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                wholeBoard[i][j] = new Field(i,j, 0, size);
+                wholeBoard[i][j] = new Field(i,j, 0, size, new double[]{0,0,0});
+                fields.add(wholeBoard[i][j]);
+            }
+        }
+    }
+    
+    public void clear() {
+        for (int i = 0 ; i < wholeBoard.length ; i++) {
+            for (int j = 0 ; j < wholeBoard.length ; j++) {
+                wholeBoard[i][j].setValue(0);
             }
         }
     }
     
     public void solve() {
-        algoXSolver algoX = new algoXSolver(); 
-        long startTime = System.currentTimeMillis();
-        boolean unique = algoX.algoXIsUnique(this);
-        long endTime = System.currentTimeMillis();
-        long sudokuBoardStartTime = System.currentTimeMillis();
-        boolean unique2 = this.uniquenessTest();
-        long sudokuBoardEndTIme = System.currentTimeMillis();
+        double startTime = System.currentTimeMillis();
+        //boolean unique = algoX.algoXIsUnique(this);
+        double endTime = System.currentTimeMillis();
+        double sudokuBoardStartTime = System.currentTimeMillis();
+        //this.uniquenessTest();
 		algoX.algoXManager(this);
-        long duration = endTime - startTime;
-        long sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
+        double sudokuBoardEndTIme = System.currentTimeMillis();
+        double duration = endTime - startTime;
+        double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
-        System.out.println("The sudoku is unique " + unique);
         System.out.println("The sudoku is unique " + this.solutions);
     }
 
@@ -53,72 +62,79 @@ public class SudokuBoard {
         }
     }
 
-    public void populate(double difficultyScale) {
-        long startTime = System.nanoTime();
-        this.difficultyScale = difficultyScale;
-        for (int i = 0; i < this.bigFieldSize; i++) {
-            // Get choices
-            ArrayList<Integer> choices = new ArrayList<>(
-                    Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-            Collections.shuffle(choices);
-            int counter = 0;
-            // Insert Field
-            for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                    changeField(k, j, choices.get(counter));
-                    counter++;
-                }
-            }
-        }
-        TerminalView before = new TerminalView(this);
-		before.printBoard();
-        algoXSolver algoX = new algoXSolver(); 
-		algoX.algoXManager(this);
+    // public void populate(double difficultyScale) {
+    //     double accumulatedTime = 0;
+    //     int testTimes = 1000;
+    //     for (int p = 0 ; p < testTimes ; p++) {
+    //         double startTime = System.nanoTime();
+    //         this.difficultyScale = difficultyScale;
+    //         this.clear();
+    //         for (int i = 0; i < this.bigFieldSize; i+=2) {
+    //             // Get choices
+    //             ArrayList<Integer> choices = new ArrayList<>(
+    //                     Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+    //             Collections.shuffle(choices);
+    //             int counter = 0;
+    //             // Insert Field
+    //             for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
+    //                 for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
+    //                     changeField(k, j, choices.get(counter));
+    //                     counter++;
+    //                 }
+    //             }
+    //         }
+    //         TerminalView before = new TerminalView(this);
+    //         before.printBoard();
+    //         algoX.algoXManager(this);
 
-        TerminalView solved = new TerminalView(this);
-        solved.printBoard();
-        System.out.println("Solved Sudoku (Before removal)^^");
-        
-        int amountToRemove = getFieldsToRemove(this.difficultyScale);
-        Random rand = new Random();
-        int removed = 0;
-        int attempts = 0;
-        
-        while (removed < amountToRemove && attempts < size * size * 10) {
-            attempts++;
-            int x = rand.nextInt(this.size);
-            int y = rand.nextInt(this.size);
+    //         TerminalView solved = new TerminalView(this);
+    //         solved.printBoard();
+    //         System.out.println("Solved Sudoku (Before removal)^^");
+            
+    //         int amountToRemove = getFieldsToRemove(this.difficultyScale);
+    //         Random rand = new Random();
+    //         int removed = 0;
+    //         int attempts = 0;
+            
+    //         while (removed < amountToRemove && attempts < size * size * 10) {
+    //             attempts++;
+    //             int x = rand.nextInt(this.size);
+    //             int y = rand.nextInt(this.size);
 
-            // if chosen value is 0, try again (brute force, this is temp)
-            if (wholeBoard[x][y].getValue() == 0) {
-                continue;
-            }
+    //             // if chosen value is 0, try again (brute force, this is temp)
+    //             if (wholeBoard[x][y].getValue() == 0) {
+    //                 continue;
+    //             }
 
-            // temp removal of field
-            int tempVal = wholeBoard[x][y].getValue();
-            wholeBoard[x][y].setValue(0);
-            this.solutions = 0;
-            uniquenessTest();
-            if (this.solutions > 1) {
-                wholeBoard[x][y].setValue(tempVal);
-            } else if (this.solutions == 1) {
-                removed++;
-            } else {
-                wholeBoard[x][y].setValue(tempVal);
-            }
+    //             // temp removal of field
+    //             int tempVal = wholeBoard[x][y].getValue();
+    //             wholeBoard[x][y].setValue(0);
+    //             boolean isUnique = algoX.algoXIsUnique(this);
+    //             if (!isUnique) {
+    //                 wholeBoard[x][y].setValue(tempVal);
+    //             } else if (isUnique) {
+    //                 removed++;
+    //             } else {
+    //                 wholeBoard[x][y].setValue(tempVal);
+    //             }
 
-        }
-        System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
-        TerminalView after = new TerminalView(this);
-        after.printBoard();
-        System.out.println("Stopped initialising here");
-		long endTime = System.nanoTime();
-		long durationOfPopulate = (endTime - startTime)/1000000;
-        System.out.println("Took " + durationOfPopulate + "ms to populate.");
-        System.out.println("");
+    //         }
+    //         System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
+    //         TerminalView after = new TerminalView(this);
+    //         after.printBoard();
+    //         System.out.println("Stopped initialising here");
+    //         double endTime = System.nanoTime();
+    //         double durationOfPopulate = (endTime - startTime)/1000000;
+    //         accumulatedTime += durationOfPopulate;
+    //         System.out.printf("Took %.2f ms to populate.%n", durationOfPopulate);
+    //         System.out.println("");
+    //     }
+    //     System.out.printf("Took %.2f ms to populate 100.%n", accumulatedTime);
+    //     System.out.printf("Took on avg %.2f ms to populate each.%n", accumulatedTime/testTimes);   
+
 
        
-    }
+    // }
 
 
     public int getFieldsToRemove(double difficultyScale/* hard to easy aka 0 to 1 (decimal) */) {
@@ -288,6 +304,9 @@ public class SudokuBoard {
     public Field getSingleField(int x, int y) {
         Field f = this.wholeBoard[x][y];
         return f;
+    }
+    public ArrayList<Field> getFields(){
+        return fields;
     }
 
 }

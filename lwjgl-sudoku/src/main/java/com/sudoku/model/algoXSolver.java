@@ -1,5 +1,6 @@
 package com.sudoku.model;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class algoXSolver {
     private ColumnNode root;
@@ -32,7 +33,7 @@ public class algoXSolver {
 
         //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
-        solution = search(root, 0, solution);
+        solution = search(root, solution);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
         System.out.println("The algo itself took "+ duration + "ms");
@@ -117,14 +118,17 @@ public class algoXSolver {
     col.size++;
 }
 
-    public ArrayList<Node> search(ColumnNode root, int k, ArrayList<Node> solution){
+    public ArrayList<Node> search(ColumnNode root, ArrayList<Node> solution){
         //If the matrix is empty, we have found a solution
         if (root.right == root ){
             return new ArrayList<>(solution);
         }
         else {
             //Start with the column right of the root
-            ColumnNode columnNode = (ColumnNode) root.right;
+            ColumnNode columnNode = getBestColumnNode(root);
+            if (columnNode.size == 0){
+                return null;
+            }
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
@@ -140,7 +144,7 @@ public class algoXSolver {
                     rightNode = rightNode.right;
                 }
                 //We search for a solution one depth further in
-                ArrayList<Node> result = search(root, k+1, solution);
+                ArrayList<Node> result = search(root, solution);
                 //As we are looking for one solution we exit if we have gotten a solution
                 if (result != null){
                     return result;
@@ -217,10 +221,26 @@ public class algoXSolver {
         }
         return null;
     }
-    public void generateRandomBoard(SudokuBoard sudokuBoard, int n){
-    }    
+    public ColumnNode getBestColumnNode(ColumnNode root) {
+        ColumnNode current = (ColumnNode) root.right;
+        ColumnNode best = current;
 
-    public void algoXUniqueTest(ColumnNode root, int k, ArrayList<Node> solution){
+        while (current != root) {
+            if (current.size == 0) {
+                return current;
+            }
+            if (current.size < best.size) {
+                best = current;
+                if (best.size == 1) {
+                    return best;
+                }
+            }
+            current = (ColumnNode) current.right;
+        }
+        return best;
+    }
+
+    public void algoXUniqueTest(ColumnNode root, ArrayList<Node> solution){
         if (solutionCounter > 1){
             return;
         }
@@ -230,7 +250,7 @@ public class algoXSolver {
         }
         else {
             //Start with the column right of the root
-            ColumnNode columnNode = (ColumnNode) root.right;
+            ColumnNode columnNode = getBestColumnNode(root);
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
@@ -246,7 +266,7 @@ public class algoXSolver {
                     rightNode = rightNode.right;
                 }
                 //We search for a solution one depth further in
-                algoXUniqueTest(root, k+1, solution);
+                algoXUniqueTest(root, solution);
                 if (solutionCounter > 1){
                     break;
                 }
@@ -255,6 +275,7 @@ public class algoXSolver {
                     uncover(j.column);
                 }
                 solution.remove(solution.size() - 1);
+
                 //We go down to the next row and continue looking for multiple solutions
                 firstNode = firstNode.down;
             }
@@ -262,6 +283,8 @@ public class algoXSolver {
         }
     }
     public boolean algoXIsUnique(SudokuBoard sudokuBoard){
+        solutionCounter = 0;
+        solution = new ArrayList<>();
         int size = sudokuBoard.getSize();
         root = initializeNodes(size);
         for (int i = 0; i < size; i++){
@@ -281,7 +304,58 @@ public class algoXSolver {
                 }
             }
         }
-        algoXUniqueTest(root, 0, solution);
+        algoXUniqueTest(root, solution);
         return solutionCounter == 1;
+    }
+    public ArrayList<Node> algoXCreateUnique(ColumnNode root, ArrayList<Node> solution){
+    //If the matrix is empty, we have found a solution
+    Random rand = new Random();
+        if (root.right == root ){
+            return new ArrayList<>(solution);
+        }
+        else {
+            //Start with the column right of the root
+            ColumnNode columnNode = getBestColumnNode(root);
+            if (columnNode.size == 0){
+                return null;
+            }
+            int size = columnNode.size;
+            int randint = rand.nextInt(size);
+            //Cover the first column to start
+            cover(columnNode);
+            //Go down into the matrix
+            Node firstNode = columnNode.down;
+            //While the node we went into isn't the original node
+            int i = 0;
+            while (i < randint){
+                firstNode = firstNode.down;
+                i++;
+            }
+            while (firstNode != columnNode){
+                //We try to add the row to the solution
+                solution.add(firstNode);
+                Node rightNode = firstNode.right;
+                //We cover the entire row
+                while (rightNode != firstNode){
+                    cover(rightNode.column);
+                    rightNode = rightNode.right;
+                }
+                //We search for a solution one depth further in
+                ArrayList<Node> result = algoXCreateUnique(root, solution);
+                //As we are looking for one solution we exit if we have gotten a solution
+                if (result != null){
+                    return result;
+                }
+                solution.remove(solution.size() - 1);
+                //We get ready to uncover the nodes that were covered
+                for (Node j = firstNode.left; j != firstNode; j = j.left){
+                    uncover(j.column);
+                }
+                //We go down to the next row
+                firstNode = firstNode.down;
+            }
+            uncover(columnNode);
+        }
+        return null;
     }
 }
