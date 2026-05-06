@@ -1,6 +1,7 @@
 package com.sudoku.view;
 
 import java.nio.IntBuffer;
+import java.nio.file.Path;
 
 import org.lwjgl.Version;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -139,7 +140,8 @@ public class Window {
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 		//creates a shader and a class that can display strings
-		Shader fontShader = new Shader("Sudoku-Project/lwjgl-sudoku/assets/fonts/fontShader.glsl");
+		Path shaderPath = Path.of("lwjgl-sudoku","assets", "fonts", "fontShader.glsl");
+    	Shader fontShader = new Shader(shaderPath.toString());
 		CreateString text = new CreateString(fontShader, font);
 
 		glEnable(GL_BLEND);
