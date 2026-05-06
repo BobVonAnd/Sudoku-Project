@@ -1,4 +1,4 @@
-package com.sudoku.view;
+package com.sudoku.controller;
 
 import java.nio.IntBuffer;
 
@@ -44,6 +44,9 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import org.lwjgl.system.MemoryStack;
 
+import com.sudoku.view.CreateString;
+import com.sudoku.view.Scenes;
+import com.sudoku.view.Shader;
 import com.sudoku.view.fonts.CreateFont;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -53,7 +56,11 @@ public class Window {
 	private CreateFont font;
     private long window;
 	private Scenes scenes = new Scenes();
+	private WindowManager wm;
 
+	public Window(WindowManager wm) {
+		this.wm = wm;
+	}
 
 	public void run() {
 	
@@ -140,7 +147,7 @@ public class Window {
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 		//creates a shader and a class that can display strings
-		Shader fontShader = new Shader("Sudoku-Project/lwjgl-sudoku/assets/fonts/fontShader.glsl");
+		Shader fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
 		CreateString text = new CreateString(fontShader, font);
 
 		glEnable(GL_BLEND);
