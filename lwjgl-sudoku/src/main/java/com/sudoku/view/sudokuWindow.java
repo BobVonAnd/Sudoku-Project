@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.controller.WindowManager;
 import com.sudoku.model.Field;
 
 import java.nio.*;
@@ -20,6 +21,15 @@ public class sudokuWindow {
 
 	// The window handle
 	private long window;
+
+	private int h = 700; // Initial
+	private int w = 900; // Initial
+
+	private WindowManager wm;
+
+	public sudokuWindow(WindowManager wm) {
+		this.wm = wm;
+	}
 
 	public void run(SudokuBoard sudokuBoard) {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -51,13 +61,31 @@ public class sudokuWindow {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
 		// Create the window
-		window = glfwCreateWindow(900, 700, "Hello World!", NULL, NULL);
+		// window = glfwCreateWindow(w, h, "Sudoku!", NULL, NULL);
+		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		
+		this.h = vidMode.height();
+		this.w = vidMode.width();
+		
+		window = glfwCreateWindow(
+			this.w,
+			this.h,
+			"Sudoku!",
+			glfwGetPrimaryMonitor(),
+			NULL
+		);
+		
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+		});
+		glfwSetWindowSizeCallback(window, (win, w, h) -> {
+			this.h = h;
+			this.w = w;
+			glViewport(0, 0, this.w, this.h);
 		});
 		glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -118,7 +146,7 @@ public class sudokuWindow {
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
-
+		glViewport(0, 0, this.w, this.h);
 		// Set the clear color
 		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
@@ -134,11 +162,11 @@ public class sudokuWindow {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			for (Field f : sudokuBoard.getFields()) {
-			double row = f.getCoordinates()[0];
-			double col = f.getCoordinates()[1];
+				double row = f.getCoordinates()[0];
+				double col = f.getCoordinates()[1];
 
-			double x = -0.9 + col * size * 2 + size;
-			double y = -0.9 + row * size * 2 + size;
+				double x = -0.9 + col * size * 2 + size;
+				double y = -0.9 + row * size * 2 + size;
 
 				glBegin(GL_QUADS);
 
@@ -155,6 +183,7 @@ public class sudokuWindow {
 			glfwPollEvents();
 		}
 	}
+	
 	public int[] translateCoordinatesToFieldCoordinates(double x, double y, int gridSize) {
 		int[] coords = new int[2];
 
@@ -162,8 +191,7 @@ public class sudokuWindow {
 		double glX = x * 1.8 - 0.9;
 		double glY = y * 1.8 - 0.9;
 
-		double cellSize = (1.8) / gridSize;
-
+		double cellSize = 1.8 / gridSize;
 		int col = (int)((glX + 0.9) / cellSize);
 		int row = (int)((glY + 0.9) / cellSize);
 
@@ -176,5 +204,4 @@ public class sudokuWindow {
 
 		return coords;
 	}
-
 }

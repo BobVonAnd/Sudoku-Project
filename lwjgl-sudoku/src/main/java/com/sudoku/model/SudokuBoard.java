@@ -302,8 +302,8 @@ public class SudokuBoard {
         this.solutions = sol;
     }
 
-    public Field getSingleField(int x, int y) {
-        Field f = this.wholeBoard[x][y];
+    public Field getSingleField(double x, double y) {
+        Field f = this.wholeBoard[(int)x][(int)y];
         return f;
     }
     public ArrayList<Field> getFields(){
