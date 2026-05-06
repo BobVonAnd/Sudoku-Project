@@ -18,7 +18,7 @@ public class App {
 
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		// sudokuBoard.populate(1);
-		//sudokuBoard.solve();
+		sudokuBoard.solve();
 		TerminalView terminalView = new TerminalView(sudokuBoard);
 		terminalView.printBoard();
 

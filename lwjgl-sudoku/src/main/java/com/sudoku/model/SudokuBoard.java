@@ -41,17 +41,16 @@ public class SudokuBoard {
     
     public void solve() {
         double startTime = System.currentTimeMillis();
-        boolean unique = algoX.algoXIsUnique(this);
+        //boolean unique = algoX.algoXIsUnique(this);
         double endTime = System.currentTimeMillis();
         double sudokuBoardStartTime = System.currentTimeMillis();
-        this.uniquenessTest();
-        double sudokuBoardEndTIme = System.currentTimeMillis();
+        //this.uniquenessTest();
 		algoX.algoXManager(this);
+        double sudokuBoardEndTIme = System.currentTimeMillis();
         double duration = endTime - startTime;
         double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
-        System.out.println("The sudoku is unique " + unique);
         System.out.println("The sudoku is unique " + this.solutions);
     }
 
