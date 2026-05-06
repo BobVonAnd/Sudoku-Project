@@ -46,7 +46,7 @@ import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.Fonts.CreateFont;
 
 public class Window {
 	private CreateFont font;

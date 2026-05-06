@@ -1,4 +1,4 @@
-package com.sudoku.view.fonts;
+package com.sudoku.view.Fonts;
 
 import org.joml.Vector2f;
 

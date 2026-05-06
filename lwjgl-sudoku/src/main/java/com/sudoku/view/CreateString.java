@@ -22,8 +22,8 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 
-import com.sudoku.view.fonts.CharInfo;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.Fonts.CharInfo;
+import com.sudoku.view.Fonts.CreateFont;
 
 //borrowed from GamesWithGabe
 public class CreateString {
