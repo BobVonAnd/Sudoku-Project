@@ -1,4 +1,4 @@
-package com.sudoku.view;
+package com.sudoku.controller.windows;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -6,6 +6,9 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.controller.Window;
+import com.sudoku.controller.WindowInterface;
+import com.sudoku.controller.WindowManager;
 import com.sudoku.model.Field;
 
 import java.nio.*;
@@ -16,10 +19,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class sudokuWindow {
+public class sudokuWindow extends Window {
 
 	// The window handle
 	private long window;
+	private WindowManager wm;
+
+	public sudokuWindow(WindowManager wm) {
+		super(wm);
+	}
 
 	public void run(SudokuBoard sudokuBoard) {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
