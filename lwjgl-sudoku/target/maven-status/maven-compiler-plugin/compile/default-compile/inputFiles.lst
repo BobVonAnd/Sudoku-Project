@@ -1,9 +1,22 @@
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\App.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\algoXSolver.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\columnNode.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Field.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Node.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Solver.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\SudokuBoard.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\Button.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\TerminalView.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/App.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/Window.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/WindowInterface.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/WindowManager.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/windows/sudokuWindow.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/windows/textWindow.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/controller/windows/windowTemplate.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/Field.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/Node.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/Solver.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/SudokuBoard.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/algoXSolver.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/model/columnNode.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/Button.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/CreateString.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/Scenes.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/Shader.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/TerminalView.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/elements/Element.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/elements/FieldButton.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/fonts/CharInfo.java
+/Users/frederikhalskov/Sudoku-Project/lwjgl-sudoku/src/main/java/com/sudoku/view/fonts/CreateFont.java

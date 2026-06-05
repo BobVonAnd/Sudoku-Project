@@ -24,10 +24,10 @@ public class textWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
+		font = new CreateFont("assets/fonts/ARIAL.TTF", 128);
 
 		//creates a shader and a class that can display strings
-		Shader fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
+		Shader fontShader = new Shader("assets/fonts/fontShader.glsl");
 		text = new CreateString(fontShader, font);
     }
 
