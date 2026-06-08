@@ -3,195 +3,137 @@ import java.util.ArrayList;
 
 public class Solver {
     private boolean progress = true;
-    private int counter = 0;
+    ArrayList<String> moves = new ArrayList<>();
     public void solves(SudokuBoard sudokuboard) {
-    
-    while (progress) {
+    humanSolverBoardHelper boardManager = new humanSolverBoardHelper();
+    boardManager.BoardHelper(sudokuboard);
+    while(progress){
         progress = false;
-        int x = 0;
-        int y = 0;
-        for ( x = 0; x < sudokuboard.getSize(); x++){
-            for ( y = 0; y < sudokuboard.getSize(); y++){
-                Field f = sudokuboard.getSingleField(x, y);
-                
-                int candidate = lookAtNeighbours(f);
-                if (f.getValue() == 0 && f.getLeSize() == 1) {
-                    sudokuboard.changeField(
-                        f.getCoordinates()[0],
-                        f.getCoordinates()[1],
-                        f.getLegalEntries().get(0)
-                    );
-                    sudokuboard.updateLegalEntriesOfField(f);
-                    f.removeValueFromLegalEntriesOfNeighbours();
-                    progress = true;
-                }
-                else if (candidate != 0 && f.getValue() == 0){
-                    sudokuboard.changeField(
-                        f.getCoordinates()[0],
-                        f.getCoordinates()[1],
-                        candidate
-                    );
-                    sudokuboard.updateLegalEntriesOfField(f);
-                    f.removeValueFromLegalEntriesOfNeighbours();
-                    progress = true;
-                }
-                
-                if (f.getValue() == 0 && f.getLeSize() == 2){
-                    progress = nakedPair(f, progress);
-                    System.out.println("Used naked pair");
-                }
-                if (f.getValue() == 0 && f.getLegalEntries().isEmpty()) {
-                    System.out.println("HOLE at: " + x + "," + y);
-                }
-                if (x >=sudokuboard.getSize() && y == sudokuboard.getSize()-1 && progress == false && counter == 0){
-                    System.out.println("Trying more complex algorithms");
-                    counter = 1;
-                }
+        for (Field f : sudokuboard.getFields()){
+            if (!f.getEdges().isEmpty()){
+                edgeSolver(f);
             }
         }
     }
 }
-
-    public Boolean nakedPair(Field f, boolean bool){   
-        ArrayList<Field> edges = f.getEdges();
-        ArrayList<Field> boxEdges = new ArrayList<>();
-        ArrayList<Field> yEdges = new ArrayList<>();
-        ArrayList<Field> xEdges = new ArrayList<>();
-        for (Field g : edges){
-            if (isBoxEdge(f, g)){//Same box
-                boxEdges.add(g);
+    public void edgeSolver(Field field){
+        if (field.getLegalEntries().size() == 1){
+            progress = true;
+            int value = field.getLegalEntries().get(0);
+            moves.add("Single in field [" + field.getCoordinates()[0] + "," + field.getCoordinates()[1] + "] value: " + value);
+            field.updateField(value);
+        }
+        else {
+            if (field.getLegalEntries().size() == 2){
+                Field pairField = nakedBoxPair(field);
+                if (pairField != null){
+                    for (Field boxField : field.getBoxEdges()){
+                        if (boxField != field && boxField != pairField){
+                            int boxFieldLeSizePre = boxField.getLeSize();
+                            boxField.removeLEs(field.getLegalEntries());
+                            if (boxFieldLeSizePre - boxField.getLeSize() != 0){
+                                moves.add("Found naked pair between " + field.getStringCoords() + " and " + pairField.getStringCoords());
+                                progress = true;
+                            }
+                        }
+                    }
+                }
+                pairField = nakedRowPair(field);
+                if (pairField != null){
+                    for (Field rowField : field.getRowEdges()){
+                        if (rowField != field && rowField != pairField){
+                            int rowFieldLeSizePre = rowField.getLeSize();
+                            rowField.removeLEs(field.getLegalEntries());
+                            if (rowFieldLeSizePre - rowField.getLeSize() != 0){
+                                moves.add("Found naked pair between " + field.getStringCoords() + " and " + pairField.getStringCoords());
+                                progress = true;
+                            }
+                        }
+                    }
+                }
+                pairField = nakedColumnPair(field);
+                if (pairField != null){
+                    for (Field columnField : field.getColumnEdges()){
+                        if (columnField != field && columnField != pairField){
+                            int columnFieldLeSizePre = columnField.getLeSize();
+                            columnField.removeLEs(field.getLegalEntries());
+                            if (columnFieldLeSizePre - columnField.getLeSize() != 0){
+                                moves.add("Found naked pair between " + field.getStringCoords() + " and " + pairField.getStringCoords());
+                                progress = true;
+                            }
+                        }
+                    }
+                }
+                
             }
-            if (isRowEdge(f, g)){//Same row
-                xEdges.add(g);
-            }
-            if (isColumnEdge(f, g)){//Same column
-                yEdges.add(g);
+            int candidate = hiddenSingle(field);
+            if (candidate != 0){
+                moves.add("Hidden single found at " + field.getStringCoords());
+                field.updateField(candidate);
             }
         }
-        for (Field g : edges){
-            if ((g.getLeSize() == 2 && g.getLegalEntries().equals(f.getLegalEntries())) && g.equals(f) == false){
-                if (isBoxEdge(f, g)){
-                    for (Field h : boxEdges){
-                        if (h.getValue() == 0 && h!=g && h!=f){ 
-                            for (Integer i : f.getLegalEntries()){
-                                h.removeLE(i);
-                                bool = true;
-                            }
-                        }
-                    }
-                }
-                else if (isRowEdge(f, g)){
-                    for (Field h : xEdges){
-                        if (h.getValue() == 0 && h!=g && h!=f){ 
-                            for (Integer i : f.getLegalEntries()){
-                                h.removeLE(i);
-                                bool = true;
-                            }
-                        }
-                    }
-                }
-                else {
-                    for (Field h : yEdges){
-                        if (h.getValue() == 0 && h!=g && h!=f){ 
-                            for (Integer i : f.getLegalEntries()){
-                                h.removeLE(i);
-                                bool = true;
-                            }
-                        }
-                    }
-                }
-            }
+    }
+    public Field nakedBoxPair(Field field) {
+    for (Field f : field.getBoxEdges()) {
+        if (f != field && f.getLegalEntries().equals(field.getLegalEntries())) {
+            return f;
         }
-        return bool;
+    }
+    return null;
     }
 
-    public Integer lookAtNeighbours(Field f){
-        if (f.getValue() != 0) return 0;
-        ArrayList<Field> edges = f.getEdges();
-        ArrayList<Field> boxEdges = new ArrayList<>();
-        ArrayList<Field> yEdges = new ArrayList<>();
-        ArrayList<Field> xEdges = new ArrayList<>();
-        for (Field g : edges){
-            if (isBoxEdge(f, g)){//Same box
-                boxEdges.add(g);
-            }
-            if (isRowEdge(f, g)){//Same row
-                xEdges.add(g);
-            }
-            if (isColumnEdge(f, g)){//Same column
-                yEdges.add(g);
+    public Field nakedRowPair(Field field) {
+        for (Field f : field.getRowEdges()) {
+            if (f != field && f.getLegalEntries().equals(field.getLegalEntries())) {
+                return f;
             }
         }
-        for (int candidate : f.getLegalEntries()){
-            boolean candidateInBox = false;
-            //If there are no boxedges
-            if (boxEdges.isEmpty() == true){
-                candidateInBox = true;
-            }
-            for (Field k : boxEdges){
-                if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
-                    candidateInBox = true;
-                    break;
-                }
-            }
-            if (!candidateInBox) return candidate;
+        return null;
+    }
 
-            boolean candidateInRow = false;
-            if (xEdges.isEmpty() == true){
-                candidateInRow = true;
+    public Field nakedColumnPair(Field field) {
+        for (Field f : field.getColumnEdges()) {
+            if (f != field && f.getLegalEntries().equals(field.getLegalEntries())) {
+                return f;
             }
-            for (Field k : xEdges){
-                if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
+        }
+        return null;
+    }
+
+    public int hiddenSingle(Field field){
+        int candidate = 0;
+        for (int i : field.getLegalEntries()){
+        boolean candidateInRow = false;
+        boolean candidateInBox = false;
+        boolean candidateInColumn = false;
+            for (Field rowEdge : field.getRowEdges()){
+                if (rowEdge.getLegalEntries().contains(i)){
                     candidateInRow = true;
                     break;
                 }
             }
-            if (!candidateInRow) return candidate;
-
-            boolean candidateInColumn = false;
-            if (yEdges.isEmpty() == true){
-                candidateInColumn = true;
+            for (Field boxEdge : field.getBoxEdges()){
+                if (boxEdge.getLegalEntries().contains(i)){
+                    candidateInBox = true;
+                    break;
+                }
             }
-            for (Field k : yEdges){
-                if (k.getLegalEntries().contains(candidate) && k.getValue() == 0){
+            for (Field columnEdge : field.getColumnEdges()){
+                if (columnEdge.getLegalEntries().contains(i)){
                     candidateInColumn = true;
                     break;
                 }
             }
-            if (!candidateInColumn) return candidate;
-        }
-        return 0;
-    }
-    public Boolean isBoxEdge(Field f, Field otherField){
-        int x_coordinate = f.getCoordinates()[0];
-        int y_coordinate = f.getCoordinates()[1];
-
-        int cornerX = x_coordinate-f.getPosition()[0];
-        int cornerY = y_coordinate-f.getPosition()[1];
-
-        int otherField_x = otherField.getCoordinates()[0];
-        int otherField_y = otherField.getCoordinates()[1];
-        if (otherField_x == x_coordinate && otherField_y == y_coordinate){
-            return false;
-        }
-
-        for (int j = 0; j<3 ; j++){
-            for (int k = 0; k<3; k++){
-                if(cornerX+j == otherField_x && cornerY+k == otherField_y ){
-                    return true;
-                }
+            if (candidateInBox == false || candidateInRow == false || candidateInColumn == false){
+                candidate = i;
+                break;
             }
         }
-        return false;
         
+        return candidate;
     }
-    public Boolean isRowEdge(Field f, Field otherField){
-        return otherField.getCoordinates()[0]!=f.getCoordinates()[0] && otherField.getCoordinates()[1] == f.getCoordinates()[1];
-        
+    public ArrayList<String> getMoves(){
+        return moves;
     }
-    public Boolean isColumnEdge(Field f, Field otherField){
-        return otherField.getCoordinates()[1]!=f.getCoordinates()[1] && otherField.getCoordinates()[0] == f.getCoordinates()[0];
-        
-    }
-
 }
+

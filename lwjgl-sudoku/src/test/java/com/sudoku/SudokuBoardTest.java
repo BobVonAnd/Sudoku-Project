@@ -32,7 +32,7 @@ void updateLETest() {
     });
 
     Field f = board2.getSingleField(1,1);
-    board2.updateLegalEntriesOfField(f);
+    //board2.updateLegalEntriesOfField(f);
 
     System.out.println(f.getValue()); // 0
     ArrayList<Integer> LE = f.getLegalEntries();

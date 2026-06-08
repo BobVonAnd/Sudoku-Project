@@ -32,11 +32,7 @@ public class algoXSolver {
         }
 
         //We start the solving of the sudoku using the search method. 
-        long startTime = System.nanoTime();
         solution = search(root, solution);
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000;
-        System.out.println("The algo itself took "+ duration + "ms");
         //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
         for (Node n : solution){
             int i = n.getRow();

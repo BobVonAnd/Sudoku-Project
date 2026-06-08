@@ -2,21 +2,86 @@ package com.sudoku;
 
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.TerminalView;
+
+import java.util.ArrayList;
+
 import com.sudoku.controller.WindowManager;
+import com.sudoku.controller.windows.sudokuWindow;
 import com.sudoku.controller.windows.textWindow;
+import com.sudoku.model.Solver;
+import com.sudoku.model.algoXSolver;
+import com.sudoku.model.humanSolverBoardHelper;
 
 
 public class App {
-	private static WindowManager wm = new WindowManager();
+	//private static WindowManager wm = new WindowManager();
+	private static Solver solver = new Solver();
+	private static algoXSolver xSolver = new algoXSolver();
+	private static humanSolverBoardHelper boardHelper = new humanSolverBoardHelper();
 	public static void main(String[] args) {
-		textWindow window = new textWindow(wm);
+		//textWindow window = new textWindow(wm);
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		// sudokuBoard.populate(1);
-		sudokuBoard.solve();
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
+		SudokuBoard sudokuBoard2 = new SudokuBoard(9);
+		sudokuBoard.readIntoBoard(new int[][] {
+			{0,7,0,0,6,0,2,9,0},
+			{0,0,5,1,0,0,0,0,7},
+			{0,9,0,0,7,0,0,0,4},
 
-		wm.run();
+			{0,1,0,8,3,0,5,0,9},
+			{5,0,8,0,0,9,0,3,6},
+			{0,0,9,0,2,0,0,0,8},
+
+			{0,4,0,0,8,0,6,0,0},
+			{0,0,0,0,4,0,9,0,3},
+			{0,0,3,9,0,2,0,4,0}
+		});
+		sudokuBoard2.readIntoBoard(new int[][] {
+			{0,7,0,0,6,0,2,9,0},
+			{0,0,5,1,0,0,0,0,7},
+			{0,9,0,0,7,0,0,0,4},
+
+			{0,1,0,8,3,0,5,0,9},
+			{5,0,8,0,0,9,0,3,6},
+			{0,0,9,0,2,0,0,0,8},
+
+			{0,4,0,0,8,0,6,0,0},
+			{0,0,0,0,4,0,9,0,3},
+			{0,0,3,9,0,2,0,4,0}
+		});
+		boolean bool = xSolver.algoXIsUnique(sudokuBoard);
+		long startTime = System.currentTimeMillis();
+		solver.solves(sudokuBoard2);
+		long endTime = System.currentTimeMillis();
+		long totaltime = endTime-startTime;
+		System.out.println("The human solver took " + totaltime + "ms");
+		startTime = System.currentTimeMillis();
+		xSolver.algoXManager(sudokuBoard);
+		endTime = System.currentTimeMillis();
+		totaltime = endTime-startTime;
+		System.out.println("The algoX solver took " + totaltime + "ms");
+		TerminalView terminalView2 = new TerminalView(sudokuBoard2);
+		TerminalView terminalView = new TerminalView(sudokuBoard);
+		ArrayList<String> moves = solver.getMoves();
+		for (String move : moves){
+			System.out.println(move);
+		}
+		if (bool) {
+			System.out.println("It is unique");
+		}
+		else {
+			System.out.println("It is not unique");
+		}
+		terminalView2.printBoard();
+		System.out.println("________________________________________");
+		System.out.println("AlgoX:");
+		terminalView.printBoard();
+		if (boardHelper.sameBoardCheck(sudokuBoard, sudokuBoard2)){
+			System.out.println("The sudokus are the same");
+		}
+		else{
+			System.out.println("The sudokus are not the same");
+		}
+		//wm.run();
 	}
 	
 }

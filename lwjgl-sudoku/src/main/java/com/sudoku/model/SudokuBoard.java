@@ -16,6 +16,7 @@ public class SudokuBoard {
     private int bigFieldSize;
     private double difficultyScale;
     private algoXSolver algoX = new algoXSolver();
+    private Solver solver = new Solver();
 
     private int solutions; // for generating the sudoku
 
@@ -37,21 +38,6 @@ public class SudokuBoard {
                 wholeBoard[i][j].setValue(0);
             }
         }
-    }
-    
-    public void solve() {
-        double startTime = System.currentTimeMillis();
-        //boolean unique = algoX.algoXIsUnique(this);
-        double endTime = System.currentTimeMillis();
-        double sudokuBoardStartTime = System.currentTimeMillis();
-        //this.uniquenessTest();
-		algoX.algoXManager(this);
-        double sudokuBoardEndTIme = System.currentTimeMillis();
-        double duration = endTime - startTime;
-        double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
-        System.out.println("It took " + duration + " ms to check if it is unique with algox");
-        System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
-        System.out.println("The sudoku is unique " + this.solutions);
     }
 
     public void readIntoBoard(int[][] integerBoard) {
@@ -216,73 +202,10 @@ public class SudokuBoard {
         field.setValue(value);
         if (value != 0) {
             field.clearLe();
+            field.removeEdges();
         }
         field.removeValueFromLegalEntriesOfNeighbours();
         //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
-    }
-
-    public void updateLegalEntriesOfField(Field field) {
-        int x_coordinate = field.getCoordinates()[0];
-        int y_coordinate = field.getCoordinates()[1];
-
-        int cornerX = x_coordinate - field.getPosition()[0];
-        int cornerY = y_coordinate - field.getPosition()[1];
-
-        for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
-            if (field != fields) {
-                field.removeLE(fields.getValue());
-            }
-
-        }
-        for (int i = 0; i < this.size; i++) {
-            if (field != wholeBoard[i][y_coordinate]) {
-                field.removeLE(wholeBoard[i][y_coordinate].getValue());
-            }
-
-        }
-
-        for (int j = 0; j < this.bigFieldSize; j++) {
-            for (int k = 0; k < this.bigFieldSize; k++) {
-                Field f = wholeBoard[cornerX + j][cornerY + k];
-                if (field != f) {
-                    field.removeLE(f.getValue());
-                }
-            }
-        }
-
-    }
-
-    public void makeEdges(Field field) {
-        int x_coordinate = field.getCoordinates()[0];
-        int y_coordinate = field.getCoordinates()[1];
-
-        int cornerX = x_coordinate - field.getPosition()[0];
-        int cornerY = y_coordinate - field.getPosition()[1];
-
-        for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
-            if (fields.getValue() == 0 && field != fields && field.notcontainsEdge(fields)) {
-                field.addEdge(fields);
-            }
-
-        }
-        for (int i = 0; i < this.size; i++) {
-            if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate]
-                    && field.notcontainsEdge(wholeBoard[i][y_coordinate])) {
-                field.addEdge(wholeBoard[i][y_coordinate]);
-            }
-
-        }
-
-        for (int j = 0; j < this.bigFieldSize; j++) {
-            for (int k = 0; k < this.bigFieldSize; k++) {
-                Field f = wholeBoard[cornerX + j][cornerY + k];
-                if (f.getValue() == 0 && field.notcontainsEdge(f)) {
-                    field.addEdge(f);
-                }
-
-            }
-        }
-
     }
 
     public Field[][] getWholeBoard() {
@@ -308,6 +231,6 @@ public class SudokuBoard {
     public ArrayList<Field> getFields(){
         return fields;
     }
-
+    
 }
 
