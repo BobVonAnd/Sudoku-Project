@@ -27,7 +27,9 @@ import com.sudoku.view.fonts.CreateFont;
 
 //borrowed from GamesWithGabe
 public class CreateString {
-    
+    private final float WINDOWX = 1280f;
+    private final float WINDOWY = 720f;
+
     private CreateFont font;
     private Shader shader;
     private int vao;
@@ -51,14 +53,14 @@ public class CreateString {
         createBatch();
     }
 
-    public void makeText(String text, int x, int y, float  scale, float [] rgb){
+    public void makeText(String text, float x, float y, float  scale, float [] rgb){
         for(char i : text.toCharArray()){
             CharInfo charInfo = font.getChar(i);
             float xPos = x;
             float yPos = y;
            
             processChar(charInfo, scale, xPos, yPos, rgb);
-            x += charInfo.width * scale;
+            x += (charInfo.width/WINDOWX) * scale;
         }
     }
 
@@ -88,8 +90,8 @@ public class CreateString {
         //pos
         float x0 = x;
         float y0 = y;
-        float x1 = x + scale * charInfo.width;
-        float y1 = y + scale * charInfo.height;
+        float x1 = x + scale * (charInfo.width/WINDOWX);
+        float y1 = y + scale * (charInfo.height/WINDOWY);
 
         float r = rgb[0];
         float g = rgb[1];
@@ -126,7 +128,7 @@ public class CreateString {
 
     private void createBatch(){
         projection.identity();
-        projection.ortho(0, 800, 0, 600, 1f, 100f);
+        projection.ortho(0f, 1f, 0f, 1f, 1f, 100f);
 
         vao = glGenVertexArrays();
         glBindVertexArray(vao);

@@ -37,11 +37,18 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -62,7 +69,7 @@ public class Window {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 	
 		init();
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 64);
+		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
 		loop();
 	
 		// Free the window callbacks and destroy the window
@@ -154,13 +161,23 @@ public class Window {
 		while ( !glfwWindowShouldClose(window) ) {
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		
+			fontShader.detach();
 			//scenes.playing();
-			
+			glColor3f(1, 0, 0);
+			glBegin(GL_QUADS);
+			glVertex2f(-0.5f, -0.5f);
+			glVertex2f( 0.5f, -0.5f);
+			glVertex2f( 0.5f,  0.5f);
+			glVertex2f(-0.5f,  0.5f);
+			glEnd();
 			//just some texts that can be edited
-			text.makeText("1 2 3 4 5 6 7 8 9", 250, 350, 0.15f, new float[]{1.0f,1.0f,0.0f});
+
+			text.makeText("1 2 3 4 5 6 7 8 9", 0.9f, 0.8f, 0.09f, new float[]{1.0f,1.0f,0.0f});
+			text.makeText("1 2 3 4 5 6 7 8 9", 0.1f, 0.2f, 0.09f, new float[]{1.0f,1.0f,0.0f});
+			
 			// text.makeText(atlasUpper, 100, 250, 1f, new float[]{0.0f,1.0f,0.0f});
 			// text.makeText(atlasSymbols,100, 400, 1f, new float[]{0.0f,0.0f,1.0f});
+			
 			text.flush();
 			
 			glfwSwapBuffers(window); // swap the color buffers
