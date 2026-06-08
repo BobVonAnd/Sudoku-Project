@@ -19,35 +19,18 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class WindowManager {
-    private ArrayList<WindowInterface> Windows = new ArrayList<>();
     private WindowInterface activeWindow;
     private long window;
     private int h = 700; // Initial
 	private int w = 900; // Initial
 	private boolean fullscreen = false;
 
-    public void addWindow(WindowInterface e) {
-        Windows.add(e);
-    }
-    
-    public void setActiveWindow(WindowInterface window, long w) {
-        this.window = w;
-        this.activeWindow = window;
-    }
-
-    public boolean removeWindow(WindowInterface e) {
-        if (Windows.contains(e)) {
-            Windows.remove(e);
-            e = null;
-            return true;
-        }
-        return false;
-        
-    }
-
-    public void step() {
-      Windows.forEach(e -> e.step());
-    }
+    public void setActiveWindow(WindowInterface window) {
+		this.activeWindow = window;
+		if (this.window != NULL) { // GLFW window already exists
+			this.activeWindow.create();
+		}
+	}
 	
     public void init() {
 	

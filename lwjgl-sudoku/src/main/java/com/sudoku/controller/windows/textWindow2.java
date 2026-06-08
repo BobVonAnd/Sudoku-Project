@@ -11,13 +11,13 @@ import com.sudoku.view.Shader;
 import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.fonts.CreateFont;
 
-public class textWindow extends Window implements WindowInterface {
+public class textWindow2 extends Window implements WindowInterface {
     
     private WindowManager wm;
 	private CreateFont font;
 	private CreateString text;
 
-    public textWindow(WindowManager wm) {
+    public textWindow2(WindowManager wm) {
         super(wm);
         this.wm = wm;
 		wm.setActiveWindow(this);
@@ -34,14 +34,14 @@ public class textWindow extends Window implements WindowInterface {
 
     public void step() {
 		// This code runs every frame
-        text.makeText("Text1", 200, 200, 1f, new float[]{1.0f,0.0f,0.0f});
+        text.makeText("Text2", 200, 200, 1f, new float[]{1.0f,0.0f,0.0f});
 		text.flush();
     }
 
     @Override // If you don't need a key callback, just delete this
     public void keyCallback(int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-            new textWindow2(wm); // Switch to textwindow2
+            new textWindow(wm); // Switch to textwindow
         }
     }
 

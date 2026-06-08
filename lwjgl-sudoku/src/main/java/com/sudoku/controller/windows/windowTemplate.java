@@ -13,7 +13,7 @@ public class windowTemplate extends Window implements WindowInterface {
     public windowTemplate(WindowManager wm) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this, super.getWindow());
+        wm.setActiveWindow(this);
     }
 
     public void create() {
