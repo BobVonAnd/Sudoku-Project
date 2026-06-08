@@ -102,7 +102,9 @@ public class mainMenuWindow extends Window implements WindowInterface {
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i] == playButton) {
-                    new textWindow(wm);
+                    new playSudokuWindow(wm);
+                } else if (Buttons[i] == createButton) {
+                    new playSudokuWindow(wm);
                 } else if (Buttons[i] == exitButton) {
                     System.exit(0);
                 }
