@@ -23,7 +23,7 @@ public class WindowManager {
     private long window;
     private int h = 700; // Initial
 	private int w = 900; // Initial
-	private boolean fullscreen = false;
+	private boolean fullscreen = false; // Initial
 
     public void setActiveWindow(WindowInterface window) {
 		this.activeWindow = window;
