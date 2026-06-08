@@ -1,5 +1,6 @@
 package com.sudoku.model;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Solver {
     private boolean progress = true;
@@ -68,9 +69,12 @@ public class Solver {
             }
             int candidate = hiddenSingle(field);
             if (candidate != 0){
-                moves.add("Hidden single found at " + field.getStringCoords());
+                moves.add("Hidden single found at " + field.getStringCoords() + " number is " + candidate);
                 field.updateField(candidate);
+                progress = true;
             }
+            hiddenPair(field);
+            
         }
     }
     public Field nakedBoxPair(Field field) {
@@ -132,6 +136,85 @@ public class Solver {
         
         return candidate;
     }
+
+    public void hiddenPair(Field field){
+        //Fixes:
+        //Maybe check if you can find a partner once and then check also if you can find other fields that hold one of the candidates
+        //Remember, if they are the only two fields that hold those numbers you remove all other legal entries from those fields
+        //Generally look at this function/method again
+
+        
+        ArrayList<Integer> legalEntries = field.getLegalEntries();
+        Field boxPartner = null;
+        Field rowPartner = null;
+        Field columnPartner = null;
+        for (int i : legalEntries){
+            for (int j : legalEntries){
+                if (j == i){
+                    break;
+                }
+                int boxCounter = 0;
+                int rowCounter = 0;
+                int columnCounter = 0;
+                ArrayList<Integer> candidate = new ArrayList<>();
+                candidate.add(i);
+                candidate.add(j);
+                ArrayList<Field> boxEdges = field.getBoxEdges();
+                ArrayList<Field> rowEdges = field.getRowEdges();
+                ArrayList<Field> columnEdges = field.getColumnEdges();
+                for (Field boxEdge : boxEdges){
+                    if (!Collections.disjoint(candidate, boxEdge.getLegalEntries())){
+                        boxCounter+=1;
+                        boxPartner = boxEdge;
+                    }
+                }
+                for (Field rowEdge : rowEdges){
+                    if (!Collections.disjoint(candidate, rowEdge.getLegalEntries())){
+                        rowCounter+=1;
+                        rowPartner = rowEdge;
+                    }
+                }
+                for (Field columnEdge : columnEdges){
+                    if (!Collections.disjoint(candidate, columnEdge.getLegalEntries())){
+                        columnCounter+=1;
+                        columnPartner = columnEdge;
+                    }
+                }
+                if (boxCounter == 1){
+                    for (Field otherBoxEdge : field.getBoxEdges()){
+                        if (otherBoxEdge == boxPartner){
+                            continue;
+                        }
+                        progress = true;
+                        otherBoxEdge.removeLEs(candidate);
+                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + boxPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
+                    }
+                }
+                if (rowCounter == 1){
+                    for (Field otherRowEdge : field.getRowEdges()){
+                        if (otherRowEdge == rowPartner){
+                            continue;
+                        }
+                        progress = true;
+                        otherRowEdge.removeLEs(candidate);
+                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + rowPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
+                    }
+                }
+                if (columnCounter == 1){
+                    for (Field otherColumnEdge : field.getColumnEdges()){
+                        if (otherColumnEdge == columnPartner){
+                            continue;
+                        }
+                        progress = true;
+                        otherColumnEdge.removeLEs(candidate);
+                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + columnPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
+                    }
+                }
+            }
+        }
+    }
+
+
     public ArrayList<String> getMoves(){
         return moves;
     }
