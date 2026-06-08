@@ -1,6 +1,15 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
@@ -18,10 +27,23 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        
     }
 
     public void step() {
         // This code runs every frame
+
+
+        //don't need can be deleted
+        wm.getFontShader().detach();
+        glColor3f(1, 0, 0);
+
+        glBegin(GL_QUADS);
+        glVertex2f(-0.5f, -0.5f);
+        glVertex2f( 0.5f, -0.5f);
+        glVertex2f( 0.5f,  0.5f);
+        glVertex2f(-0.5f,  0.5f);
+        glEnd();
     }
 
     @Override // If you don't need a key callback, just delete this

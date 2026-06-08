@@ -54,6 +54,7 @@ import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.sudoku.view.Shader;
 import com.sudoku.view.fonts.CreateFont;
 
 public class WindowManager {
@@ -63,6 +64,7 @@ public class WindowManager {
 	private int w; // Initial
 	private boolean fullscreen = false; // Initial
 	private CreateFont font;
+	private Shader fontShader;
 
 	public WindowManager(int width, int height) {
 		this.h = height;
@@ -73,6 +75,9 @@ public class WindowManager {
 
 	public CreateFont getFont(){
 		return font;
+	}
+	public Shader getFontShader(){
+		return fontShader;
 	}
 
     public void setActiveWindow(WindowInterface window) {
@@ -192,7 +197,9 @@ public class WindowManager {
 		glfwShowWindow(window);
 		GL.createCapabilities();
 		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
+		fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
 	}
+
 
     public void run() {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");

@@ -26,6 +26,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     public void step() {
         // This code runs every frame
+        
     }
 
     @Override // If you don't need a key callback, just delete this
