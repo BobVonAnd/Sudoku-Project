@@ -90,7 +90,7 @@ public class CreateFont {
                 Rectangle2D bounds = gv.getVisualBounds();
                 g2d.drawString("" + (char)i, x, (float)bounds.getHeight());
                 //System.out.println(gv.getVisualBounds());
-                //System.out.println(bounds.getY()+ " " + bounds.getHeight() + " " + i);
+                System.out.println(bounds.getY()+ " " + bounds.getHeight() + " " + fm.getHeight() + i);
                 if(x+bounds.getWidth()>estimatedWidth){
                     x = 0;
                     y+=-1* bounds.getHeight();
@@ -122,7 +122,7 @@ public class CreateFont {
         g2d.setFont(font);
         FontMetrics fm = g2d.getFontMetrics();
 
-
+        
         //estimate the size of bitmap
         //we want the bitmap to be squard 
         //int estimatedWidth = (int)Math.sqrt(font.getNumGlyphs()) * fontSize + 1;
@@ -148,11 +148,20 @@ public class CreateFont {
         //     }
         // }
 
+        FontRenderContext frc = g2d.getFontRenderContext();
         //specifec chars
         for(char i : atlas){
             if(font.canDisplay(i)){ 
-               // System.out.println(fm.charWidth(i)+ " " +fm.getHeight() + " " + i);  
-                CharInfo charInfo = new CharInfo(x,y,fm.charWidth(i),fm.getHeight());
+                GlyphVector gv = font.createGlyphVector(frc, new char[]{i});
+                Rectangle2D bounds = gv.getVisualBounds();
+                
+                
+                // System.out.println(fm.charWidth(i)+ " " +fm.getHeight() + " " + i);  
+
+                //!!!!!!!!!!!!find the hightst hight and the lovetst y and parse them as fm.gethight and ofset!!!!!!!!!!!!!!!!!!!
+                float ofset = (float)(bounds.getY() + bounds.getHeight());
+                System.out.println(bounds.getY() + " " + bounds.getHeight() + " " + ofset + " " + i);
+                CharInfo charInfo = new CharInfo(x,y,fm.charWidth(i), fm.getHeight() ,(float) bounds.getY());
                 charMap.put(i, charInfo);
                 width = Math.max(fm.charWidth(i) + x, width);
                 x += charInfo.width;

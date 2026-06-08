@@ -62,7 +62,7 @@ public class Window {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
 	
 		init();
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
+		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 64);
 		loop();
 	
 		// Free the window callbacks and destroy the window
@@ -136,13 +136,13 @@ public class Window {
 	private void loop() {
 
 		// Set the clear color
-		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 		//creates a shader and a class that can display strings
 		Shader fontShader = new Shader("Sudoku-Project/lwjgl-sudoku/assets/fonts/fontShader.glsl");
 		CreateString text = new CreateString(fontShader, font);
 
- 		String atlasLower = "abcdefghijklmnopqrstuvwxyz";
+ 		String atlasLower = "Hej med dig";
  		String atlasUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZæøåÆØÅ";
 	 	String atlasSymbols = "0123456789!\"()&%.,:;?-_+=/ ";
 		
@@ -158,9 +158,9 @@ public class Window {
 			//scenes.playing();
 			
 			//just some texts that can be edited
-			text.makeText(atlasLower, 100, 100, 1f, new float[]{1.0f,0.0f,0.0f});
-			text.makeText(atlasUpper, 100, 250, 1f, new float[]{0.0f,1.0f,0.0f});
-			text.makeText(atlasSymbols,100, 400, 1f, new float[]{0.0f,0.0f,1.0f});
+			text.makeText("1 2 3 4 5 6 7 8 9", 250, 350, 0.15f, new float[]{1.0f,1.0f,0.0f});
+			// text.makeText(atlasUpper, 100, 250, 1f, new float[]{0.0f,1.0f,0.0f});
+			// text.makeText(atlasSymbols,100, 400, 1f, new float[]{0.0f,0.0f,1.0f});
 			text.flush();
 			
 			glfwSwapBuffers(window); // swap the color buffers
