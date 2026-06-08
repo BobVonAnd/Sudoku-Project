@@ -19,13 +19,13 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class sudokuWindow extends Window {
+public class depricatedsudokuWindow extends Window {
 
 	// The window handle
 	private long window;
 	private WindowManager wm;
 
-	public sudokuWindow(WindowManager wm) {
+	public depricatedsudokuWindow(WindowManager wm) {
 		super(wm);
 	}
 

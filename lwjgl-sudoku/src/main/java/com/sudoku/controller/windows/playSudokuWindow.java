@@ -6,11 +6,11 @@ import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
-public class windowTemplate extends Window implements WindowInterface {
+public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
 
-    public windowTemplate(WindowManager wm) {
+    public playSudokuWindow(WindowManager wm) {
         super(wm);
         this.wm = wm;
         wm.setActiveWindow(this);

@@ -21,9 +21,14 @@ import static org.lwjgl.opengl.GL11.*;
 public class WindowManager {
     private WindowInterface activeWindow;
     private long window;
-    private int h = 700; // Initial
-	private int w = 900; // Initial
+    private int h; // Initial
+	private int w; // Initial
 	private boolean fullscreen = false; // Initial
+
+	public WindowManager(int width, int height) {
+		this.h = height;
+		this.w = width;
+	}
 
     public void setActiveWindow(WindowInterface window) {
 		this.activeWindow = window;
@@ -84,6 +89,14 @@ public class WindowManager {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 				glfwSetWindowShouldClose(win, true);
 			}
+		});
+
+		glfwSetCursorPosCallback(window, (win, xpos, ypos) -> {
+
+			if (activeWindow != null) {
+				activeWindow.cursorPosCallback(xpos, ypos);
+			}
+
 		});
 
 		glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
@@ -195,8 +208,8 @@ public class WindowManager {
             NULL,
             100,
             100,
-            900,
-            700,
+			1280,
+            720,
             GLFW_DONT_CARE
         );
     }
