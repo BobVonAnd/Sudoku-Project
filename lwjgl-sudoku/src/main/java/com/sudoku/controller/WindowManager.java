@@ -24,6 +24,7 @@ public class WindowManager {
     private long window;
     private int h = 700; // Initial
 	private int w = 900; // Initial
+	private boolean fullscreen = false;
 
     public void addWindow(WindowInterface e) {
         Windows.add(e);
@@ -47,7 +48,7 @@ public class WindowManager {
     public void step() {
       Windows.forEach(e -> e.step());
     }
-
+	
     public void init() {
 	
 		//error
@@ -68,31 +69,58 @@ public class WindowManager {
 
 		// Create the window
 		// window = glfwCreateWindow(w, h, "Sudoku!", NULL, NULL);
-		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		
-		this.h = vidMode.height();
-		this.w = vidMode.width();
+		if (fullscreen) {
+			GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			
+			this.h = vidMode.height();
+			this.w = vidMode.width();
+		}
 		
 		window = glfwCreateWindow(
 			this.w,
 			this.h,
 			"Sudoku!",
-			glfwGetPrimaryMonitor(),
+			fullscreen ? glfwGetPrimaryMonitor() : NULL,
 			NULL
 		);
 		
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+		// Key callbacks!
+		glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+
+			if (activeWindow != null) {
+				activeWindow.keyCallback(key, scancode, action, mods);
+			}
+
+			if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
+				toggleFullscreen();
+			}
+
+			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+				glfwSetWindowShouldClose(win, true);
+			}
 		});
-        glfwSetWindowSizeCallback(window, (win, w, h) -> {
-			this.h = h;
-			this.w = w;
-			glViewport(0, 0, this.w, this.h);
+
+		glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
+
+			if (activeWindow != null) {
+				activeWindow.mouseButtonCallback(button, action, mods);
+			}
+
+		});
+
+		glfwSetWindowSizeCallback(window, (win, width, height) -> {
+
+			this.w = width;
+			this.h = height;
+
+			glViewport(0, 0, width, height);
+
+			if (activeWindow != null) {
+				activeWindow.resizeCallback(width, height);
+			}
 		});
 
 		// Get the thread stack and push a new frame
@@ -161,8 +189,33 @@ public class WindowManager {
 			glfwPollEvents();
 		}
 	}
-    // Den skal kunne
-    /// Holde styr på alt hvad der sker i hvert vindue
-    /// kunne draw hvad der er i det CURRENT vindue
-    /// tilføje og remove i det current vindue
+
+	public void toggleFullscreen() {
+    fullscreen = !fullscreen;
+
+    if (fullscreen) {
+        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        glfwSetWindowMonitor(
+            window,
+            glfwGetPrimaryMonitor(),
+            0,
+            0,
+            vidMode.width(),
+            vidMode.height(),
+            vidMode.refreshRate()
+        );
+
+    } else {
+        glfwSetWindowMonitor(
+            window,
+            NULL,
+            100,
+            100,
+            900,
+            700,
+            GLFW_DONT_CARE
+        );
+    }
+}
 }

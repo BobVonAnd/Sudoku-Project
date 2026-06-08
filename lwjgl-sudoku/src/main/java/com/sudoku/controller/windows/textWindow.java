@@ -1,5 +1,6 @@
 package com.sudoku.controller.windows;
 
+import static org.lwjgl.glfw.GLFW.*;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.model.SudokuBoard;
