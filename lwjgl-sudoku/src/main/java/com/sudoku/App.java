@@ -1,10 +1,9 @@
 package com.sudoku;
 
-import com.sudoku.model.SudokuBoard;
-import com.sudoku.view.TerminalView;
 import com.sudoku.controller.WindowManager;
 import com.sudoku.controller.windows.mainMenuWindow;
-import com.sudoku.controller.windows.textWindow;
+import com.sudoku.model.SudokuBoard;
+import com.sudoku.view.TerminalView;
 
 
 public class App {

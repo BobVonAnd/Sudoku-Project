@@ -1,9 +1,26 @@
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\App.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\algoXSolver.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\columnNode.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Field.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Node.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Solver.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\SudokuBoard.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\Button.java
-C:\Users\victo\Documents\DTU_Kurser\Software Technology Project\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\TerminalView.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\App.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\Window.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\WindowInterface.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\WindowManager.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\CreateMenuWindow.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\depricatedsudokuWindow.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\mainMenuWindow.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\playSudokuWindow.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\textWindow.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\textWindow2.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\controller\windows\windowTemplate.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\algoXSolver.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\columnNode.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Field.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Node.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\Solver.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\model\SudokuBoard.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\Button.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\CreateString.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\elements\Element.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\elements\FieldButton.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\elements\MenuButton.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\fonts\CharInfo.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\fonts\CreateFont.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\Shader.java
+C:\Users\Nikolaj\Desktop\Fag Projekt\Sudoku-Project\lwjgl-sudoku\src\main\java\com\sudoku\view\TerminalView.java
