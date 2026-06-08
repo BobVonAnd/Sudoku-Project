@@ -40,6 +40,10 @@ public class MenuButton implements Element {
         this.heldOver = isIt;
     }
 
+    public boolean isHeldOver() {
+        return heldOver;
+    }
+
     public void draw() {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
