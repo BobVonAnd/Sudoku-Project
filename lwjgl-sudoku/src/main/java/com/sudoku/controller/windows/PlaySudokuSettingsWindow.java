@@ -112,6 +112,17 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
                 Buttons[i].heldOver(false);
             }
         }
+        if (textField.getValidity() && sb.getSize() != Integer.valueOf(textField.getInput())) {
+            sb = null;
+            sb = new SudokuBoard(Integer.valueOf(textField.getInput()));
+        }
+
+        if (!textField.getValidity() && !textField.isSelected()) {
+            textField.setInput("Input a valid size here...");
+        }  else if (textField.getInput() == "Input a valid size here...") {
+            textField.setInput("");
+        }
+
         sb.setDifficultyScale(1-difficultySlider.getValue());
         difficultySlider.setOverrideValueString(sb.getDifficultyString());
         difficultySlider.updateSuffix(" (Removes "+sb.getFieldsToRemove(1-difficultySlider.getValue())+" Fields)");
