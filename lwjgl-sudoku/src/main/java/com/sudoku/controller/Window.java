@@ -1,39 +1,58 @@
 package com.sudoku.controller;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.sudoku.controller.Window;
 import com.sudoku.view.elements.Element;
 
 
 public abstract class Window {
-
     private ArrayList<Element> Elements = new ArrayList<>();
+    private Map<Double, ArrayList<Element>> dictionary = new TreeMap<>();
     private WindowManager wm;
-    private long window;
 
     public Window(WindowManager wm) {
 		this.wm = wm;
 	}
 
-    public void addElement(Element e) {
-        Elements.add(e);
+    public void addElement(Element e, double depth) {
+        ArrayList<Element> list = dictionary.get(depth);
+        if (list != null) {
+            list.add(e);
+        } else {
+            ArrayList<Element> l = new ArrayList<Element>();
+            l.add(e);
+            dictionary.put(depth, l);
+        }
     }
 
     public boolean removeElement(Element e) {
-        if (Elements.contains(e)) {
-            Elements.remove(e);
-            e = null;
+    for (Map.Entry<Double, ArrayList<Element>> entry : dictionary.entrySet()) {
+        ArrayList<Element> list = entry.getValue();
+
+        if (list.remove(e)) {
+            if (list.isEmpty()) {
+                dictionary.remove(entry.getKey());
+            }
             return true;
         }
-        return false;
-        
+    }
+    return false;
+}
+
+    public void changeElementDepth(Element e, double depth) {
+        removeElement(e);
+        addElement(e, depth);
     }
 
     public void draw() {
-      Elements.forEach(e -> e.draw());
-    }
-
-    public long getWindow() {
-        return window;
+        for (Map.Entry<Double, ArrayList<Element>> entry : dictionary.entrySet()) {
+            ArrayList<Element> list = entry.getValue();
+            for (int i = 0 ; i < list.size() ; i++) {
+                list.get(i).draw();
+            }
+        }
     }
 }

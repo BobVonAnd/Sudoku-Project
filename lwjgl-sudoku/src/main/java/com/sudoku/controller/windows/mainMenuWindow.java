@@ -41,15 +41,15 @@ public class mainMenuWindow extends Window implements WindowInterface {
 		text = new CreateString(fontShader, font);
 
         playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
-        addElement(playButton);
+        addElement(playButton,0);
         Buttons[0] = playButton;
 
         createButton = new MenuButton(0,0.6,0.4,text,fontShader,"Create");
-        addElement(createButton);
+        addElement(createButton,0);
         Buttons[1] = createButton;
 
         exitButton = new MenuButton(0,-.6,0.4,text,fontShader,"Exit");
-        addElement(exitButton);
+        addElement(exitButton,0);
         Buttons[2] = exitButton;
 
         

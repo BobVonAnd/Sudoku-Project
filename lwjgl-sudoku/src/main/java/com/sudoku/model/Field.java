@@ -2,13 +2,10 @@ package com.sudoku.model;
 
 import java.util.ArrayList;
 
-import com.sudoku.view.Button;
-
 public class Field {
     private int value, x, y, boardSize;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
-    private Button button;
     private double[] colour;
 
     public Field(int x, int y, int value, int size, double[] colour){
@@ -82,10 +79,6 @@ public class Field {
     }
     public ArrayList<Integer> getLegalEntries(){
         return legalEntries;
-    }
-
-    public Button getButton(){
-        return button;
     }
     public void changeColour(double red, double green, double blue){
         this.colour = new double[]{red, green, blue};
