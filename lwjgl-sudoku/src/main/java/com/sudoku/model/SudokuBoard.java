@@ -39,6 +39,10 @@ public class SudokuBoard {
         }
     }
     
+    public void setDifficultyScale(double difficultyScale) {
+        this.difficultyScale = difficultyScale;
+    }
+    
     public void solve() {
         double startTime = System.currentTimeMillis();
         //boolean unique = algoX.algoXIsUnique(this);

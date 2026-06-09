@@ -53,6 +53,14 @@ public class Slider implements Element {
         this.mbLeftHeld = mbLeftHeld;
     }
 
+    public void updateSuffix(String t) {
+        this.suffixTextString = t;
+    }
+
+    public void updatePrefix(String t) {
+        this.prefixTextString = t;
+    }
+
     public double[] getPos() {
         return new double[] {this.x,this.y};
     }

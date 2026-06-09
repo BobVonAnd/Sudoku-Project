@@ -8,6 +8,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.MenuButton;
@@ -15,25 +16,27 @@ import com.sudoku.view.elements.Slider;
 import com.sudoku.view.fonts.CreateFont;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
-public class SliderExample extends Window implements WindowInterface {
+public class PlaySudokuSettingsWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
-    private MenuButton playButton, createButton, exitButton;
+    private MenuButton startButton, backButton;
     private Slider difficultySlider;
-    private MenuButton[] Buttons = new MenuButton[3];
+    private MenuButton[] Buttons = new MenuButton[2];
     private double mouseX;
     private double mouseY;
     private int width, height;
     private CreateFont font;
 	private CreateString text;
     private boolean mbLeftHeld;
+    private SudokuBoard sb;
 
-    public SliderExample(WindowManager wm, int width, int height) {
+    public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
         wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
+        this.sb = new SudokuBoard(0);
     }
 
     public void create() {
@@ -43,17 +46,13 @@ public class SliderExample extends Window implements WindowInterface {
 		Shader fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font);
 
-        playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
-        // addElement(playButton,0);
-        Buttons[0] = playButton;
+        startButton = new MenuButton(.5,-.5,0.4,text,fontShader,"Start");
+        addElement(startButton,0);
+        Buttons[0] = startButton;
 
-        createButton = new MenuButton(0,0.6,0.4,text,fontShader,"Create");
-        //addElement(createButton,0);
-        Buttons[1] = createButton;
-
-        exitButton = new MenuButton(0,-.6,0.4,text,fontShader,"Exit");
-        //addElement(exitButton,0);
-        Buttons[2] = exitButton;
+        backButton = new MenuButton(-.5,-.5,0.4,text,fontShader,"Back");
+        addElement(backButton,0);
+        Buttons[1] = backButton;
 
         difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, "Difficulty: ", " (easy)");
         addElement(difficultySlider, 0);
@@ -89,6 +88,9 @@ public class SliderExample extends Window implements WindowInterface {
                 Buttons[i].heldOver(false);
             }
         }
+        sb.setDifficultyScale(difficultySlider.getValue());
+        difficultySlider.updateSuffix(sb.getDifficultyString());
+
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -106,12 +108,10 @@ public class SliderExample extends Window implements WindowInterface {
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver()) {
-                    if (Buttons[i] == playButton) {
+                    if (Buttons[i] == startButton) {
                         new playSudokuWindow(wm);
-                    } else if (Buttons[i] == createButton) {
-                        new playSudokuWindow(wm);
-                    } else if (Buttons[i] == exitButton) {
-                        System.exit(0);
+                    } else if (Buttons[i] == backButton) {
+                        new mainMenuWindow(wm, width, height);
                     }
                 }
             }
