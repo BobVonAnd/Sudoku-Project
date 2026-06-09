@@ -1,0 +1,156 @@
+package com.sudoku.view.elements;
+
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glColor3d;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2d;
+
+import com.sudoku.view.CreateString;
+import com.sudoku.view.Shader;
+
+public class NumPadButton implements Element{
+    
+    private CreateString text;
+    private Shader fontShader;
+    private String startString = "";
+    private String input = "";
+    private float x;
+    private float y;
+    private float scale = 0.4f;
+    private float[] rgb = new float[]{1.0f,0.0f,0.0f};
+
+    private float width;
+    private float height;
+
+    private float textOfSetY;
+    private float textOfSetX;
+
+    private boolean[] selected = new boolean[]{false,true,false,true,false,true,false,true,false};
+
+    public NumPadButton(float x, float y, float width, float height, CreateString text, Shader fontShader){
+        this.text = text;
+        this.fontShader = fontShader;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        textOfSetY = -0.03777778f + height;
+        textOfSetX = -0.066f + width;
+
+    }
+
+    public float getWidth(){
+        return width;
+    }
+    public float getHeight(){
+        return height;
+    }
+    public float getX(){
+        return x;
+    }
+    public float getY(){
+        return y;
+    }
+
+
+    public void draw(){
+        fontShader.detach();
+        makeQuads();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        makeTexts();
+        
+    }
+    
+    public void setSelected(int index, boolean isSelected){
+        selected[index] = isSelected;
+    }
+
+    private void makeTexts(){
+        text.makeText("1", x+textOfSetX, y-textOfSetY, scale, rgb);
+        text.flush();
+        text.makeText("2", x+textOfSetX + width, y-textOfSetY, scale, rgb);
+        text.flush();
+        text.makeText("3", x+textOfSetX + width*2, y-textOfSetY, scale, rgb);
+        text.flush();
+        text.makeText("4", x+textOfSetX, y-textOfSetY - height, scale, rgb);
+        text.flush();
+        text.makeText("5", x+textOfSetX + width, y-textOfSetY - height, scale, rgb);
+        text.flush();
+        text.makeText("6", x+textOfSetX + width*2, y-textOfSetY - height, scale, rgb);
+        text.flush();
+        text.makeText("7", x+textOfSetX, y-textOfSetY - height*2, scale, rgb);
+        text.flush();
+        text.makeText("8", x+textOfSetX + width, y-textOfSetY - height*2, scale, rgb);
+        text.flush();
+        text.makeText("9", x+textOfSetX + width*2, y-textOfSetY - height*2, scale, rgb);
+        text.flush();
+    }
+
+    private void makeQuads(){
+        glBegin(GL_QUADS);
+        //first layer
+        glColor3d(selected[0] ? 0.5f: 0.82745f, selected[0] ? 0.5f : 0.82745f, selected[0] ? 0.5f : 0.82745f);
+        glVertex2d(x, y);
+        glVertex2d(x, y-height);
+        glVertex2d(x+width, y-height);
+        glVertex2d(x+width, y);
+
+        glColor3d(selected[1] ? 0.5f: 0.82745f, selected[1] ? 0.5f : 0.82745f, selected[1] ? 0.5f : 0.82745f);
+        glVertex2d(x+width, y);
+        glVertex2d(x+width, y-height);
+        glVertex2d(x+(width*2), y-height);
+        glVertex2d(x+(width*2), y);
+
+        glColor3d(selected[2] ? 0.5f: 0.82745f, selected[2] ? 0.5f : 0.82745f, selected[2] ? 0.5f : 0.82745f);
+        glVertex2d(x+(width*2), y);
+        glVertex2d(x+(width*2), y-height);
+        glVertex2d(x+(width*3), y-height);
+        glVertex2d(x+(width*3), y);
+        //secend layer
+        glColor3d(selected[3] ? 0.5f: 0.82745f, selected[3] ? 0.5f : 0.82745f, selected[3] ? 0.5f : 0.82745f);
+        glVertex2d(x, y-height);
+        glVertex2d(x, y-(height*2));
+        glVertex2d(x+width, y-(height*2));
+        glVertex2d(x+width, y-height);
+
+        glColor3d(selected[4] ? 0.5f: 0.82745f, selected[4] ? 0.5f : 0.82745f, selected[4] ? 0.5f : 0.82745f);
+        glVertex2d(x+width, (y-height));
+        glVertex2d(x+width, y-(height*2));
+        glVertex2d(x+(width*2), y-(height*2));
+        glVertex2d(x+(width*2), y-height);
+
+        glColor3d(selected[5] ? 0.5f: 0.82745f, selected[5] ? 0.5f : 0.82745f, selected[5] ? 0.5f : 0.82745f);
+        glVertex2d(x+(width*2), y-height);
+        glVertex2d(x+(width*2), y-(height*2));
+        glVertex2d(x+(width*3), y-(height*2));
+        glVertex2d(x+(width*3), y-height);
+
+        //third layer
+        glColor3d(selected[6] ? 0.5f: 0.82745f, selected[6] ? 0.5f : 0.82745f, selected[6] ? 0.5f : 0.82745f);
+        glVertex2d(x, y-(height*2));
+        glVertex2d(x, y-(height*3));
+        glVertex2d(x+width, y-(height*3));
+        glVertex2d(x+width, y-(height*2));
+
+        glColor3d(selected[7] ? 0.5f: 0.82745f, selected[7] ? 0.5f : 0.82745f, selected[7] ? 0.5f : 0.82745f);
+        glVertex2d(x+width, y-(height*2));
+        glVertex2d(x+width, y-(height*3));
+        glVertex2d(x+(width*2),y-(height*3));
+        glVertex2d(x+(width*2), y-(height*2));
+
+        glColor3d(selected[8] ? 0.5f: 0.82745f, selected[8] ? 0.5f : 0.82745f, selected[8] ? 0.5f : 0.82745f);
+        glVertex2d(x+(width*2), y-(height*2));
+        glVertex2d(x+(width*2), y-(height*3));
+        glVertex2d(x+(width*3), y-(height*3));
+        glVertex2d(x+(width*3), y-(height*2));
+
+        glEnd();
+    }
+}

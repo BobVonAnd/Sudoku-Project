@@ -25,8 +25,6 @@ public class TextFieldButton implements Element{
     private float scale;
     private float[] rgb;
 
-    private float width;
-    private float hight;
     private boolean heldOver;
     private boolean selected = false;
 
@@ -41,8 +39,7 @@ public class TextFieldButton implements Element{
         this.yPos = yPos;
         this.scale = scale;
         this.rgb = rgb;
-        this.width = width;
-        this.hight = hight;
+
 
         //perameter for textField outline
         quadPos[0] = -(xPos-0.01f);
