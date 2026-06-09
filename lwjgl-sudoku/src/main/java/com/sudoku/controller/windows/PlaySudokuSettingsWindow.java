@@ -4,6 +4,11 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -13,6 +18,7 @@ import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.Slider;
+import com.sudoku.view.elements.TextFieldButton;
 import com.sudoku.view.fonts.CreateFont;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
@@ -24,11 +30,15 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     private MenuButton[] Buttons = new MenuButton[2];
     private double mouseX;
     private double mouseY;
+    private CreateString textInfo;
     private int width, height;
     private CreateFont font;
 	private CreateString text;
     private boolean mbLeftHeld;
     private SudokuBoard sb;
+    private TextFieldButton textField;
+    private float[] textFieldPrime = new float[]{-0.6f, 0.7f,0.3f, 0.0f, 0.1f};
+    private String output = "Size: ";
 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -36,7 +46,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
-        this.sb = new SudokuBoard(0);
+        this.sb = new SudokuBoard(9);
     }
 
     public void create() {
@@ -56,7 +66,22 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
         difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, "Difficulty: ", " (easy)");
         addElement(difficultySlider, 0);
+
+        textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
+            textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
+        addElement(textField, 0);
+        textInfo = new CreateString(fontShader, font);
         
+    }
+
+    private void textFieldHover(double mouseXt, double mouseYt){
+        if(mouseXt < textField.quadPos[0] && mouseXt > textField.quadPos[4]
+            && mouseYt > textField.quadPos[1] && mouseYt < textField.quadPos[3]
+        ){
+            textField.heldOver(true);
+        }else{
+            textField.heldOver(false);
+        }
     }
 
     @Override
@@ -89,8 +114,11 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             }
         }
         sb.setDifficultyScale(difficultySlider.getValue());
-        difficultySlider.updateSuffix(sb.getDifficultyString());
+        difficultySlider.updateSuffix(" "+sb.getDifficultyString());
+        textFieldHover(mouseXt, mouseYt);
 
+        textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25",(textFieldPrime[0]-0.005f), (textFieldPrime[1]-0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
+        textInfo.flush();
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -98,6 +126,17 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
             System.out.println("Space pressed!");
         }
+        if (action == GLFW_PRESS) {
+                if (textField.isSelected()) {
+                    if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+                    char c = (char) ('0' + (key - GLFW_KEY_0));
+                    textField.updateInput(c);
+                    }
+                    else if(key == GLFW_KEY_BACKSPACE){
+                        textField.updateInput();
+                    }
+                }
+            }
     }
 
     @Override // If you don't need a mouse button callback, just delete this
@@ -124,6 +163,17 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             }
             
         }
+
+        if (button == GLFW_MOUSE_BUTTON_LEFT &&
+            action == GLFW_PRESS) {
+            if(textField.isHeldOver()){
+                textField.setSelected(true);
+            }else{
+                textField.setSelected(false);
+            }
+
+        }
+        
     }
 
 }

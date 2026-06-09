@@ -128,8 +128,8 @@ public class Slider implements Element {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
         double overSpd = 0.15;
-        double xOffset = (heldOver || pickerHeldOver ? (Math.sin(currentTime * spd)) : 0) / 500 ;
-        double yOffset = (heldOver || pickerHeldOver ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
+        double xOffset = (heldOver || pickerHeldOver || pickerDragging ? (Math.sin(currentTime * spd)) : 0) / 500 ;
+        double yOffset = (heldOver || pickerHeldOver || pickerDragging  ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
         if (mbLeftHeld && pickerHeldOver) {
             pickerDragging = true;
         } else if (mbLeftHeld == false) {
