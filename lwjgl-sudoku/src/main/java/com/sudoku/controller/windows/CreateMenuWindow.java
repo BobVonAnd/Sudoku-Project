@@ -84,7 +84,6 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         float yNP = numPad.getY();
         float widthNP = numPad.getWidth();
         float heightNP = numPad.getHeight();
-        System.out.println(xNP+ " " +(xNP+widthNP) +" "+ yNP + " " +(yNP-heightNP) + " " + mouseXt+ " " +mouseYt);
 
         //first layer
         numPad.setSelected(0,mouseXt > xNP && mouseXt < xNP+widthNP && mouseYt > yNP-heightNP && mouseYt < yNP);
@@ -135,8 +134,14 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             }else{
                 textField.setSelected(false);
             }
+
+            if(numPad.isSelected()[numPad.getIndexSelec()]){
+                System.out.println(numPad.getIndexSelec()+1+ " is pressed");
+            }
             
         }
+
+     
 
         // if (button == GLFW_MOUSE_BUTTON_RIGHT &&
         //     action == GLFW_PRESS) {
