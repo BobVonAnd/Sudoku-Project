@@ -1,18 +1,32 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.view.CreateString;
+import com.sudoku.view.Shader;
+import com.sudoku.view.elements.TextFieldButton;
+import com.sudoku.view.fonts.CreateFont;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
 public class CreateMenuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
+    private CreateFont font;
+    private Shader fontShader;
+    private CreateString text;
+    private CreateString textInfo;
+    private TextFieldButton textField;
+
+    private String output = "Size: ";
+    //x, y, scale, width, hight  
+    private float[] textFieldPrime = new float[]{-0.6f, 0.7f,0.3f, 0.0f, 0.1f};
 
     public CreateMenuWindow(WindowManager wm) {
         super(wm);
@@ -22,17 +36,47 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        font = wm.getFont();
+		//creates a shader and a class that can display strings
+		fontShader = wm.getFontShader();
+		text = new CreateString(fontShader, font);
+
+        //creates a String and a box, with xyPos, color, width, hight
+        textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
+            textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
+        textInfo = new CreateString(fontShader, font);
     }
 
     public void step() {
         // This code runs every frame
-        
+        double mouseXt = mouseX/(1280/2)-1;
+        double mouseYt = -mouseY/(720/2)+1;
+        if(mouseXt < textField.quadPos[0] && mouseXt > textField.quadPos[4]
+            && mouseYt > textField.quadPos[1] && mouseYt < textField.quadPos[3]
+        ){
+            textField.heldOver(true);
+        }else{
+            textField.heldOver(false);
+        }
+       
+        textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25",(textFieldPrime[0]-0.005f), (textFieldPrime[1]-0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
+        textInfo.flush();
+        textField.draw();
+      
     }
 
     @Override // If you don't need a key callback, just delete this
     public void keyCallback(int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-            System.out.println("Space pressed!");
+        if (action == GLFW_PRESS) {
+            if (textField.isSelected()) {
+                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+                char c = (char) ('0' + (key - GLFW_KEY_0));
+                textField.updateInput(c);
+                }
+                else if(key == GLFW_KEY_BACKSPACE){
+                    textField.updateInput();
+                }
+            }
         }
     }
     
@@ -46,15 +90,19 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
             action == GLFW_PRESS) {
-
-            System.out.println("Left click!");
+            if(textField.isHeldOver()){
+                textField.setSelected(true);
+            }else{
+                textField.setSelected(false);
+            }
+            
         }
 
-        if (button == GLFW_MOUSE_BUTTON_RIGHT &&
-            action == GLFW_PRESS) {
+        // if (button == GLFW_MOUSE_BUTTON_RIGHT &&
+        //     action == GLFW_PRESS) {
 
-            System.out.println("Right click!");
-        }
+        //     System.out.println("Right click!");
+        // }
     }
 
     private double mouseX;
