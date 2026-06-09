@@ -21,7 +21,6 @@ import com.sudoku.view.elements.Slider;
 import com.sudoku.view.elements.TextFieldButton;
 import com.sudoku.view.fonts.CreateFont;
 
-/// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
 public class PlaySudokuSettingsWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
@@ -113,11 +112,12 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
                 Buttons[i].heldOver(false);
             }
         }
-        sb.setDifficultyScale(difficultySlider.getValue());
-        difficultySlider.updateSuffix(" "+sb.getDifficultyString());
+        sb.setDifficultyScale(1-difficultySlider.getValue());
+        difficultySlider.setOverrideValueString(sb.getDifficultyString());
+        difficultySlider.updateSuffix(" (Removes "+sb.getFieldsToRemove(1-difficultySlider.getValue())+" Fields)");
         textFieldHover(mouseXt, mouseYt);
 
-        textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25",(textFieldPrime[0]-0.005f), (textFieldPrime[1]-0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
+        textInfo.makeText("You Can Customize a 4x4, 9x9, 16x16, 25x25",(textFieldPrime[0]-0.005f), (textFieldPrime[1]-0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
         textInfo.flush();
     }
 
