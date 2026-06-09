@@ -15,6 +15,10 @@ public class Solver {
                 edgeSolver(f);
             }
         }
+        if (!progress){
+            System.out.println("No more progress");
+        }
+
     }
 }
     public void edgeSolver(Field field){
@@ -23,8 +27,23 @@ public class Solver {
             int value = field.getLegalEntries().get(0);
             moves.add("Single in field [" + field.getCoordinates()[0] + "," + field.getCoordinates()[1] + "] value: " + value);
             field.updateField(value);
+            Field nextEdge = chooseNextEdge(field);
+            if (nextEdge != null) {
+                edgeSolver(nextEdge);
+            }
         }
         else {
+            int candidate = hiddenSingle(field);
+            if (candidate != 0){
+                moves.add("Hidden single found at " + field.getStringCoords() + " number is " + candidate);
+                field.updateField(candidate);
+                progress = true;
+                Field nextEdge = chooseNextEdge(field);
+                if (nextEdge != null) {
+                    edgeSolver(nextEdge);
+                }
+            }
+            pointingSingleInBox(field);
             if (field.getLegalEntries().size() == 2){
                 Field pairField = nakedBoxPair(field);
                 if (pairField != null){
@@ -64,19 +83,47 @@ public class Solver {
                             }
                         }
                     }
+                } 
+            }
+            if (field.getLeSize() > 2){
+                Field boxPair = hiddenBoxPair(field);
+                if (boxPair != null){
+                    moves.add("Hidden box pair found at " + field.getStringCoords() + " and " + boxPair.getStringCoords());
+                    progress = true;
+                    Field nextEdge = chooseNextEdge(field);
+                    if (nextEdge != null) {
+                        edgeSolver(nextEdge);
+                    }
                 }
-                
             }
-            int candidate = hiddenSingle(field);
-            if (candidate != 0){
-                moves.add("Hidden single found at " + field.getStringCoords() + " number is " + candidate);
-                field.updateField(candidate);
-                progress = true;
+            if (field.getLeSize() > 2 ){
+                Field rowPair = hiddenRowPair(field);
+                if (rowPair != null){
+                    moves.add("Hidden row pair found at " + field.getStringCoords() + " and " + rowPair.getStringCoords());
+                    progress = true;
+                    Field nextEdge = chooseNextEdge(field);
+                    if (nextEdge != null) {
+                        edgeSolver(nextEdge);
+                    }
+                }
             }
-            hiddenPair(field);
-            
+            if (field.getLeSize() > 2){
+                Field columnPair = hiddenColumnPair(field);
+                if (columnPair != null){
+                    moves.add("Hidden column pair found at " + field.getStringCoords() + " and " + columnPair.getStringCoords());
+                    progress = true;
+                    Field nextEdge = chooseNextEdge(field);
+                    if (nextEdge != null) {
+                        edgeSolver(nextEdge);
+                    }
+                }
+            }
         }
+
+
     }
+
+
     public Field nakedBoxPair(Field field) {
     for (Field f : field.getBoxEdges()) {
         if (f != field && f.getLegalEntries().equals(field.getLegalEntries())) {
@@ -137,86 +184,176 @@ public class Solver {
         return candidate;
     }
 
-    public void hiddenPair(Field field){
-        //Fixes:
-        //Maybe check if you can find a partner once and then check also if you can find other fields that hold one of the candidates
-        //Remember, if they are the only two fields that hold those numbers you remove all other legal entries from those fields
-        //Generally look at this function/method again
+    public Field hiddenBoxPair(Field field) {
+    ArrayList<Integer> legalEntries = field.getLegalEntries();
+    for (int i = 0; i < legalEntries.size() - 1; i++) {
+        for (int j = i + 1; j < legalEntries.size(); j++) {
+            int candidate1 = legalEntries.get(i);
+            int candidate2 = legalEntries.get(j);
 
-        
-        ArrayList<Integer> legalEntries = field.getLegalEntries();
-        Field boxPartner = null;
-        Field rowPartner = null;
-        Field columnPartner = null;
-        for (int i : legalEntries){
-            for (int j : legalEntries){
-                if (j == i){
-                    break;
-                }
-                int boxCounter = 0;
-                int rowCounter = 0;
-                int columnCounter = 0;
-                ArrayList<Integer> candidate = new ArrayList<>();
-                candidate.add(i);
-                candidate.add(j);
-                ArrayList<Field> boxEdges = field.getBoxEdges();
-                ArrayList<Field> rowEdges = field.getRowEdges();
-                ArrayList<Field> columnEdges = field.getColumnEdges();
-                for (Field boxEdge : boxEdges){
-                    if (!Collections.disjoint(candidate, boxEdge.getLegalEntries())){
-                        boxCounter+=1;
-                        boxPartner = boxEdge;
+            Field matchingField = null;
+            int matchingcandidate1 = 0;
+            int matchingcandidate2 = 0;
+            int boxCount = 0;
+
+            for (Field boxEdge : field.getBoxEdges()) {
+                ArrayList<Integer> boxEntries = boxEdge.getLegalEntries();
+                if (boxEntries.contains(candidate1) || boxEntries.contains(candidate2)) {
+                    boxCount++;
+                    if (boxEntries.contains(candidate1) && boxEntries.contains(candidate2)) {
+                        matchingField = boxEdge;
+                        matchingcandidate1 = candidate1;
+                        matchingcandidate2 = candidate2;
                     }
                 }
-                for (Field rowEdge : rowEdges){
-                    if (!Collections.disjoint(candidate, rowEdge.getLegalEntries())){
-                        rowCounter+=1;
-                        rowPartner = rowEdge;
+            }
+
+            if (boxCount == 1 && matchingField != null) {
+                field.clearLe();
+                field.addLegalEntry(matchingcandidate1);
+                field.addLegalEntry(matchingcandidate2);
+                matchingField.clearLe();
+                matchingField.addLegalEntry(matchingcandidate1);
+                matchingField.addLegalEntry(matchingcandidate2);
+                return matchingField;
+            }
+        }
+    }
+    return null;
+} 
+
+    public Field hiddenRowPair(Field field) {
+    ArrayList<Integer> legalEntries = field.getLegalEntries();
+    for (int i = 0; i < legalEntries.size() - 1; i++) {
+        for (int j = i + 1; j < legalEntries.size(); j++) {
+            int candidate1 = legalEntries.get(i);
+            int candidate2 = legalEntries.get(j);
+
+            Field matchingField = null;
+            int matchingcandidate1 = 0;
+            int matchingcandidate2 = 0;
+            int rowCount = 0;
+
+            for (Field rowEdge : field.getRowEdges()) {
+                ArrayList<Integer> rowEntries = rowEdge.getLegalEntries();
+                if (rowEntries.contains(candidate1) || rowEntries.contains(candidate2)) {
+                    rowCount++;
+                    if (rowEntries.contains(candidate1) && rowEntries.contains(candidate2)) {
+                        matchingField = rowEdge;
+                        matchingcandidate1 = candidate1;
+                        matchingcandidate2 = candidate2;
                     }
                 }
-                for (Field columnEdge : columnEdges){
-                    if (!Collections.disjoint(candidate, columnEdge.getLegalEntries())){
-                        columnCounter+=1;
-                        columnPartner = columnEdge;
+            }
+
+            if (rowCount == 1 && matchingField != null) {
+                field.clearLe();
+                field.addLegalEntry(matchingcandidate1);
+                field.addLegalEntry(matchingcandidate2);
+                matchingField.clearLe();
+                matchingField.addLegalEntry(matchingcandidate1);
+                matchingField.addLegalEntry(matchingcandidate2);
+                return matchingField;
+            }
+        }
+    }
+    return null;
+} 
+
+    public Field hiddenColumnPair(Field field) {
+    ArrayList<Integer> legalEntries = field.getLegalEntries();
+    for (int i = 0; i < legalEntries.size() - 1; i++) {
+        for (int j = i + 1; j < legalEntries.size(); j++) {
+            int candidate1 = legalEntries.get(i);
+            int candidate2 = legalEntries.get(j);
+
+            Field matchingField = null;
+            int matchingcandidate1 = 0;
+            int matchingcandidate2 = 0;
+            int columnCount = 0;
+
+            for (Field columnEdge : field.getColumnEdges()) {
+                ArrayList<Integer> columnEntries = columnEdge.getLegalEntries();
+                if (columnEntries.contains(candidate1) || columnEntries.contains(candidate2)) {
+                    columnCount++;
+                    if (columnEntries.contains(candidate1) && columnEntries.contains(candidate2)) {
+                        matchingField = columnEdge;
+                        matchingcandidate1 = candidate1;
+                        matchingcandidate2 = candidate2;
                     }
                 }
-                if (boxCounter == 1){
-                    for (Field otherBoxEdge : field.getBoxEdges()){
-                        if (otherBoxEdge == boxPartner){
-                            continue;
-                        }
+            }
+
+            if (columnCount == 1 && matchingField != null) {
+                field.clearLe();
+                field.addLegalEntry(matchingcandidate1);
+                field.addLegalEntry(matchingcandidate2);
+                matchingField.clearLe();
+                matchingField.addLegalEntry(matchingcandidate1);
+                matchingField.addLegalEntry(matchingcandidate2);
+                return matchingField;
+            }
+        }
+    }
+    return null;
+}
+
+    public void pointingSingleInBox(Field field) {
+    for (int candidate : field.getLegalEntries()) {
+        boolean onlyInThisRow = true;
+        boolean onlyInThisColumn = true;
+
+        for (Field boxEdge : field.getBoxEdges()) {
+            if (boxEdge.getLegalEntries().contains(candidate)) {
+                if (!Field.isRowEdge(field, boxEdge)) {
+                    onlyInThisRow = false;
+                }
+                if (!Field.isColumnEdge(field, boxEdge)) {
+                    onlyInThisColumn = false;
+                }
+            }
+        }
+
+        if (onlyInThisRow) {
+            for (Field rowEdge : field.getRowEdges()) {
+                if (!field.getBoxEdges().contains(rowEdge)) {
+                    int before = rowEdge.getLeSize();
+                    rowEdge.removeLE(candidate);
+
+                    if (rowEdge.getLeSize() != before) {
+                        moves.add("Pointing candidate " + candidate + " from box removes from row at " + rowEdge.getStringCoords());
                         progress = true;
-                        otherBoxEdge.removeLEs(candidate);
-                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + boxPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
                     }
                 }
-                if (rowCounter == 1){
-                    for (Field otherRowEdge : field.getRowEdges()){
-                        if (otherRowEdge == rowPartner){
-                            continue;
-                        }
+            }
+        }
+
+        if (onlyInThisColumn) {
+            for (Field columnEdge : field.getColumnEdges()) {
+                if (!field.getBoxEdges().contains(columnEdge)) {
+                    int before = columnEdge.getLeSize();
+                    columnEdge.removeLE(candidate);
+
+                    if (columnEdge.getLeSize() != before) {
+                        moves.add("Pointing candidate " + candidate + " from box removes from column at " + columnEdge.getStringCoords());
                         progress = true;
-                        otherRowEdge.removeLEs(candidate);
-                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + rowPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
-                    }
-                }
-                if (columnCounter == 1){
-                    for (Field otherColumnEdge : field.getColumnEdges()){
-                        if (otherColumnEdge == columnPartner){
-                            continue;
-                        }
-                        progress = true;
-                        otherColumnEdge.removeLEs(candidate);
-                        moves.add("Found hidden pair between "+ field.getStringCoords() + " and " + columnPartner.getStringCoords() + " consisting of [" + candidate.get(0) +","+ candidate.get(1)+"]");
                     }
                 }
             }
         }
     }
+}
 
 
     public ArrayList<String> getMoves(){
         return moves;
     }
+    public Field chooseNextEdge(Field field){
+    for (Field edge : field.getEdges()){
+        field.removeEdge(edge);
+        return edge;
+    }
+    return null;    
+    }  
 }
 

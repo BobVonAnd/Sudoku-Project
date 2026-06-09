@@ -26,6 +26,9 @@ public class Field {
             legalEntries.add(i);
         }
     }
+    public void addLegalEntry(int entry){
+        this.legalEntries.add(entry);
+    }
     public void setValue(int value){
         this.value = value;
     }
@@ -126,7 +129,7 @@ public class Field {
     public ArrayList<Field> getColumnEdges(){
         return this.yEdges;
     }
-    public Boolean isBoxEdge(Field f, Field otherField){
+    public static Boolean isBoxEdge(Field f, Field otherField){
     int x_coordinate = f.getCoordinates()[0];
     int y_coordinate = f.getCoordinates()[1];
 
@@ -148,17 +151,33 @@ public class Field {
     }
     return false;    
     }
-    public Boolean isRowEdge(Field f, Field otherField){
+    public static Boolean isRowEdge(Field f, Field otherField){
         return otherField.getCoordinates()[1]!=f.getCoordinates()[1] && otherField.getCoordinates()[0] == f.getCoordinates()[0];
     }
-    public Boolean isColumnEdge(Field f, Field otherField){
+    public static Boolean isColumnEdge(Field f, Field otherField){
         return otherField.getCoordinates()[0]!=f.getCoordinates()[0] && otherField.getCoordinates()[1] == f.getCoordinates()[1];
     }
     public void updateField(int number){
         this.setValue(number);
         this.removeValueFromLegalEntriesOfNeighbours();
-        this.removeEdges();
         this.clearLe();
+    }
+    public static ArrayList<Integer> getUnionOfFieldsLegalEntries(ArrayList<Field> fields){
+        ArrayList<Integer> union = new ArrayList<>();
+        for (Field field : fields){
+            union.addAll(field.getLegalEntries());
+        }
+        return union;
+    }
+    public static ArrayList<Integer> getIntersectionOfFieldsLegalEntries(ArrayList<Field> fields){
+        ArrayList<Integer> intersection = new ArrayList<>();
+        int size = fields.size();
+        intersection.addAll(fields.get(0).getLegalEntries());
+        for (int i = 1; i< size; i++){
+            ArrayList<Integer> legalEntries = fields.get(i).getLegalEntries();
+            intersection.retainAll(legalEntries);
+        }
+        return intersection;
     }
 }
 

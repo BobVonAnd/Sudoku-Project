@@ -23,42 +23,43 @@ public class App {
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		SudokuBoard sudokuBoard2 = new SudokuBoard(9);
 		sudokuBoard.readIntoBoard(new int[][] {
-			{0,0,6,9,0,0,0,0,0},
-			{0,0,1,8,0,0,3,0,0},
-			{0,0,5,0,0,4,6,1,0},
+			{8,2,0,5,0,0,0,0,0},
+			{0,0,0,0,3,0,2,5,7},
+			{0,0,0,6,7,0,9,0,0},
 
-			{2,0,0,7,0,0,4,0,0},
-			{3,0,0,0,0,9,0,0,7},
-			{0,0,0,0,0,0,0,9,6},
-
-			{8,0,0,4,0,0,1,0,0},
+			{4,0,6,1,0,0,0,3,0},
 			{0,0,0,0,0,0,0,0,0},
-			{0,0,3,0,5,0,7,0,0}
+			{0,5,0,0,8,4,1,9,0},
+
+			{9,0,2,0,1,0,0,0,0},
+			{0,0,5,7,0,0,0,2,0},
+			{0,0,0,0,0,0,5,6,1}
 		});
 		sudokuBoard2.readIntoBoard(new int[][] {
-			{0,0,6,9,0,0,0,0,0},
-			{0,0,1,8,0,0,3,0,0},
-			{0,0,5,0,0,4,6,1,0},
+			{8,2,0,5,0,0,0,0,0},
+			{0,0,0,0,3,0,2,5,7},
+			{0,0,0,6,7,0,9,0,0},
 
-			{2,0,0,7,0,0,4,0,0},
-			{3,0,0,0,0,9,0,0,7},
-			{0,0,0,0,0,0,0,9,6},
-
-			{8,0,0,4,0,0,1,0,0},
+			{4,0,6,1,0,0,0,3,0},
 			{0,0,0,0,0,0,0,0,0},
-			{0,0,3,0,5,0,7,0,0}
+			{0,5,0,0,8,4,1,9,0},
+
+			{9,0,2,0,1,0,0,0,0},
+			{0,0,5,7,0,0,0,2,0},
+			{0,0,0,0,0,0,5,6,1}
 		});
 		boolean bool = xSolver.algoXIsUnique(sudokuBoard);
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
 		solver.solves(sudokuBoard2);
-		long endTime = System.currentTimeMillis();
+		long endTime = System.nanoTime();
 		long totaltime = endTime-startTime;
-		System.out.println("The human solver took " + totaltime + "ms");
-		startTime = System.currentTimeMillis();
+		System.out.println("The human solver took " + totaltime + "ns");
+		startTime = System.nanoTime();
 		xSolver.algoXManager(sudokuBoard);
-		endTime = System.currentTimeMillis();
-		totaltime = endTime-startTime;
-		System.out.println("The algoX solver took " + totaltime + "ms");
+		endTime = System.nanoTime();
+		long algoXtotaltime = endTime-startTime;
+		System.out.println("The algoX solver took " + algoXtotaltime + "ns");
+		System.out.println("Algox is " + totaltime / algoXtotaltime + " faster");
 		TerminalView terminalView2 = new TerminalView(sudokuBoard2);
 		TerminalView terminalView = new TerminalView(sudokuBoard);
 		ArrayList<String> moves = solver.getMoves();
