@@ -1,10 +1,6 @@
 package com.sudoku.view;
 
 import org.joml.Matrix4f;
-
-import com.sudoku.view.fonts.CharInfo;
-import com.sudoku.view.fonts.CreateFont;
-
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
@@ -25,6 +21,9 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
+
+import com.sudoku.view.fonts.CharInfo;
+import com.sudoku.view.fonts.CreateFont;
 
 //borrowed from GamesWithGabe
 public class CreateString {
@@ -77,7 +76,7 @@ public class CreateString {
         shader.uploadMat4f("uProjection", projection);
 
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, size * 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (size/4) * 6, GL_UNSIGNED_INT, 0);
 
         size = 0;
     }

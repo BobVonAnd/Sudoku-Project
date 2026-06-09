@@ -23,6 +23,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
     private int width, height;
     private CreateFont font;
 	private CreateString text;
+    private Shader fontShader;
 
     public mainMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -36,7 +37,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
         // This code runs once
         font = wm.getFont();
 		//creates a shader and a class that can display strings
-		Shader fontShader = wm.getFontShader();
+		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font);
 
         playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
@@ -104,7 +105,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
                     if (Buttons[i] == playButton) {
                         new playSudokuWindow(wm);
                     } else if (Buttons[i] == createButton) {
-                        new playSudokuWindow(wm);
+                        new CreateMenuWindow(wm);
                     } else if (Buttons[i] == exitButton) {
                         System.exit(0);
                     }
