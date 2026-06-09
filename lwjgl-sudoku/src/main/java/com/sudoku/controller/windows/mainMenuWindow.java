@@ -35,9 +35,8 @@ public class mainMenuWindow extends Window implements WindowInterface {
     public void create() {
         // This code runs once
         font = wm.getFont();
-
 		//creates a shader and a class that can display strings
-		Shader fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
+		Shader fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font);
 
         playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");

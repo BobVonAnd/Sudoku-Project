@@ -69,7 +69,6 @@ public class WindowManager {
 	public WindowManager(int width, int height) {
 		this.h = height;
 		this.w = width;
-		init();
 	}
 
 
@@ -88,7 +87,7 @@ public class WindowManager {
 	}
 	
     public void init() {
-	
+
 		//error
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
@@ -203,7 +202,7 @@ public class WindowManager {
 
     public void run() {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
-        
+        init();
         activeWindow.create();
 		loop();
 	
@@ -230,7 +229,7 @@ public class WindowManager {
 		while ( !glfwWindowShouldClose(window) ) {
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
+			glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
             ((Window) activeWindow).draw();
 			activeWindow.step();
 			

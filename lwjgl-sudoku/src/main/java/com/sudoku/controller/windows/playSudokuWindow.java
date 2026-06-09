@@ -34,7 +34,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         // This code runs every frame
 
 
-        //don't need can be deleted
+       // don't need can be deleted
         wm.getFontShader().detach();
         glColor3f(1, 0, 0);
 
