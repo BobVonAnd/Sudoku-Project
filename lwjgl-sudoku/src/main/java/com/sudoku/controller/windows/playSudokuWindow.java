@@ -13,11 +13,25 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.SudokuBoard;
+import com.sudoku.view.CreateString;
+import com.sudoku.view.Shader;
+import com.sudoku.view.elements.FieldButton;
+import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.model.Field;
 
-/// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
 public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
+    private SudokuBoard sudokuBoard;
+    private int size = 4;
+    private double mouseX;
+    private double mouseY;
+    private int width, height;
+    private CreateFont font;
+	private CreateString text;
+    private Shader fontShader;
+    private FieldButton[][] buttonArray;
 
     public playSudokuWindow(WindowManager wm) {
         super(wm);
@@ -27,6 +41,20 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        font = wm.getFont();
+		//creates a shader and a class that can display strings
+		fontShader = wm.getFontShader();
+		text = new CreateString(fontShader, font); 
+        sudokuBoard = new SudokuBoard(size);
+        buttonArray = new FieldButton[size][size];
+        for (int i = 0; i > size; i++) {
+            for (int j = 0; j > size; j++) {
+                //buttonArray[i][j] = FieldButton(sudokuBoard.getSingleField(i,j), double x, double y, double size, sudokuBoard, text, fontShader);
+            }
+        }
+
+
+        
         
     }
 
@@ -73,9 +101,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
             System.out.println("Right click!");
         }
     }
-
-    private double mouseX;
-    private double mouseY;
 
     @Override
     public void cursorPosCallback(double x, double y) {
