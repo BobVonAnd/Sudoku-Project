@@ -110,6 +110,28 @@
         <plugins>
             <!-- Allows: mvn compile exec:java -->
             <plugin>
+                <groupId>de.elnarion.maven</groupId>
+                <artifactId>plantuml-generator-maven-plugin</artifactId>
+                <version>3.0.1</version>
+
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <outputFilename>target/uml/domain-model.puml</outputFilename>
+
+                    <scanPackages>
+                        <package>com.sudoku</package>
+                    </scanPackages>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>

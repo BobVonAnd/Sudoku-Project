@@ -1,0 +1,52 @@
+@startuml
+left to right direction
+
+class App {
+    -height : int
+    -width : int
+
+    +main(args : String[]) : void
+}
+
+abstract class Window {
+    -dictionary : Map
+
+    +addElement(element : Element, depth : double) : void
+    +changeElementDepth(element : Element, depth : double) : void
+    +draw() : void
+    +removeElement(element : Element) : boolean
+}
+
+interface WindowInterface {
+    +create() : void
+    +step() : void
+    +cursorPosCallback(x : double, y : double) : void
+    +keyCallback(key : int, scancode : int, action : int, mods : int) : void
+    +mouseButtonCallback(button : int, action : int, mods : int) : void
+    +resizeCallback(width : int, height : int) : void
+}
+
+class WindowManager {
+    -fullscreen : boolean
+    -h : int
+    -w : int
+    -window : long
+
+    +init() : void
+    +run() : void
+    +toggleFullscreen() : void
+
+    -loop() : void
+}
+
+interface Element {
+    +draw() : void
+}
+
+App --> WindowManager : wm
+
+Window "1" o-- "0..*" Element : Elements
+Window --> WindowManager : wm
+WindowManager --> WindowInterface : activeWindow
+
+@enduml
