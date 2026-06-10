@@ -24,7 +24,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
     private SudokuBoard sudokuBoard;
-    private int size = 4;
+    private int size;
     private double mouseX;
     private double mouseY;
     private int width, height;
@@ -46,27 +46,25 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
+        size = 4;
         sudokuBoard = new SudokuBoard(size);
         buttonArray = new FieldButton[size][size];
         double x;
         double y;
-        double xStart = -1;
-        double yStart = -1;        
+        double xStart = -0.8;
+        double yStart = 0.8;        
 
-        fieldsize = 0.4;
-        for (int i = 0; i > size; i++) {
+        fieldsize = 1.6 / size ;
+        for (int i = 0; i < size; i++) {
             x = xStart;
-            for (int j = 0; j > size; j++) {
+            for (int j = 0; j < size; j++) {
                 y = yStart;
                 buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsize, sudokuBoard, text, fontShader);
-                y += fieldsize;
+                addElement(buttonArray[i][j], 0);
+                y -= fieldsize;
             }
             x += fieldsize;
         }
-
-
-        
-        
     }
 
     public void step() {

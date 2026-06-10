@@ -22,30 +22,29 @@ public class FieldButton implements Element {
         this.size = size;
         this.x = x;
         this.y = y;        
-        colour = new double[] {1.0f,1.0f,1.0f};
+        colour = new double[] {1.0f,0f,0f};
         this.text = text;
         this.fontShader = fontShader;
-        selected = true;
     }
 
     public void draw() {
-        System.out.println("TEST");
+        System.out.println("TEST"+ field.getCoordinates()[0] + field.getCoordinates()[1]);
         
         fontShader.detach();
         glBegin(GL_QUADS);
         setColour();
         glColor3d(colour[0], colour[1], colour[2]);
         glVertex2d(x, y - size); //Bottom left
-        glVertex2d(x - size, y - size); //Bottom right
-        glVertex2d(x - size, y ); //Top Right
+        glVertex2d(x + size, y - size); //Bottom right
+        glVertex2d(x + size, y ); //Top Right
         glVertex2d(x, y); //Top Left
         glEnd();
-        value = field.getValue();
+        //value = field.getValue();
         if (value!= 0){
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            text.makeText(""+value, (float)(x+size/2),(float)(y+size/2), (float)(1.5*1.75*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
-		    text.flush();
+            //glEnable(GL_BLEND);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            //text.makeText(""+value, (float)(x+size/2),(float)(y+size/2), (float)(1.5*1.75*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+		    //text.flush();
         }
     }
 
@@ -63,13 +62,13 @@ public class FieldButton implements Element {
 
     private void setColour(){
         if (selected) {
-            colour[0] = 0.733333333;
-            colour[1] = 0.870588235; 
-            colour[2] = 0.984313725;
+            colour[0] = 0.733333333f;
+            colour[1] = 0.870588235f; 
+            colour[2] = 0.984313725f;
         } else {
-            colour[0] = 1;
-            colour[1] = 1; 
-            colour[2] = 1;
+            colour[0] = 1.0f;
+            colour[1] = 0.0f; 
+            colour[2] = 0.0f;
         }
     }
 
