@@ -287,8 +287,7 @@ public class SudokuBoard {
     }
 
     public Field getSingleField(int x, int y) {
-        Field f = this.wholeBoard[x][y];
-        return f;
+        return wholeBoard[x][y];
     }
     public ArrayList<Field> getFields(){
         return fields;
