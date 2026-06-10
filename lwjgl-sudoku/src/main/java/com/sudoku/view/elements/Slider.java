@@ -24,6 +24,7 @@ public class Slider implements Element {
     private long lastFrameTime = System.nanoTime();
     private double deltaTime = 0.0;
     private double pickerBarWidth;
+    private String overrideValueString = "";
 
     public Slider(double x, double y, double mouseX, double mouseY, double screenWidth, double screenHeight, double width, double size, CreateString text, Shader fontShader, String prefixTextString, String suffixTextString) {   
         ///                          MOUSE POS SHOULD BE SCREEN POS
@@ -53,6 +54,14 @@ public class Slider implements Element {
         this.mbLeftHeld = mbLeftHeld;
     }
 
+    public void updateSuffix(String t) {
+        this.suffixTextString = t;
+    }
+
+    public void updatePrefix(String t) {
+        this.prefixTextString = t;
+    }
+
     public double[] getPos() {
         return new double[] {this.x,this.y};
     }
@@ -76,6 +85,10 @@ public class Slider implements Element {
             value = 0;
         }
         return value;
+    }
+
+    public void setOverrideValueString(String overrideValueString) {
+        this.overrideValueString = overrideValueString;
     }
 
     public void draw() {
@@ -120,8 +133,8 @@ public class Slider implements Element {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
         double overSpd = 0.15;
-        double xOffset = (heldOver || pickerHeldOver ? (Math.sin(currentTime * spd)) : 0) / 500 ;
-        double yOffset = (heldOver || pickerHeldOver ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
+        double xOffset = (heldOver || pickerHeldOver || pickerDragging ? (Math.sin(currentTime * spd)) : 0) / 500 ;
+        double yOffset = (heldOver || pickerHeldOver || pickerDragging  ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
         if (mbLeftHeld && pickerHeldOver) {
             pickerDragging = true;
         } else if (mbLeftHeld == false) {
@@ -192,7 +205,8 @@ public class Slider implements Element {
         glEnd();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        text.makeText(prefixTextString + String.valueOf(getValue()) + suffixTextString, (float)(x-pickerBarWidth/2),(float)(y+.05), (float)(size*.5), new float[]{0.0f,0.0f,0.0f} );
+        String v = overrideValueString == "" ? String.valueOf(getValue()) : overrideValueString;
+        text.makeText(prefixTextString + String.valueOf(overrideValueString) + suffixTextString, (float)(x-pickerBarWidth/2),(float)(y+.05), (float)(size*.5), new float[]{0.0f,0.0f,0.0f} );
 		text.flush();
     }
 }

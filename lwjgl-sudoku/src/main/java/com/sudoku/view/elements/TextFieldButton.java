@@ -25,10 +25,9 @@ public class TextFieldButton implements Element{
     private float scale;
     private float[] rgb;
 
-    private float width;
-    private float hight;
     private boolean heldOver;
     private boolean selected = false;
+    private boolean isValid;
 
     //even = x, odd = y
     public float[] quadPos = new float[8];
@@ -41,8 +40,7 @@ public class TextFieldButton implements Element{
         this.yPos = yPos;
         this.scale = scale;
         this.rgb = rgb;
-        this.width = width;
-        this.hight = hight;
+
 
         //perameter for textField outline
         quadPos[0] = -(xPos-0.01f);
@@ -73,6 +71,18 @@ public class TextFieldButton implements Element{
         return selected;
     }
 
+    public String getInput() {
+        return input;
+    }
+
+    public boolean getValidity() {
+        return isValid;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
     public void updateInput(char input){
         this.input += input;
     }
@@ -101,8 +111,10 @@ public class TextFieldButton implements Element{
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         if(input.equals("4") || input.equals("9") ||input.equals("16")|| input.equals("25")){
             text.makeText(startString+input, xPos, yPos, scale, new float[]{0.0f,1.0f,0.0f});
+            isValid = true;
         }else{
             text.makeText(startString+input, xPos, yPos, scale, rgb);
+            isValid = false;
         }
     
         text.flush();

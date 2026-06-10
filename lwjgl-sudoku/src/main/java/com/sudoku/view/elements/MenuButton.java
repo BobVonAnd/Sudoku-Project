@@ -55,15 +55,15 @@ public class MenuButton implements Element {
         glBegin(GL_QUADS);
 
         glColor3d(0.0, 0.0, heldOver ? 0.8 : 0.3);
-        glVertex2d(x - half + ten + xOffset, y - half + ten - yOffset);
+        glVertex2d(x - half - ten*2 + ten + xOffset, y - half + ten - yOffset);
         glVertex2d(x + half + ten - xOffset, y - half + ten + yOffset);
-        glVertex2d(x + half + ten + xOffset, y + half + ten - yOffset);
+        glVertex2d(x + half + ten*2 + ten + xOffset, y + half + ten - yOffset);
         glVertex2d(x - half + ten - xOffset, y + half + ten + yOffset);
 
         glColor3d(0.2, 0.3, 0.7);
-        glVertex2d(x - half + xOffset *overSpd, y - half - yOffset *overSpd);
+        glVertex2d(x - half - ten*2 + xOffset *overSpd, y - half - yOffset *overSpd);
         glVertex2d(x + half - xOffset *overSpd, y - half + yOffset *overSpd); 
-        glVertex2d(x + half + xOffset *overSpd, y + half - yOffset *overSpd);
+        glVertex2d(x + half + ten*2 + xOffset *overSpd, y + half - yOffset *overSpd);
         glVertex2d(x - half - xOffset *overSpd, y + half + yOffset *overSpd);
 
         glEnd();

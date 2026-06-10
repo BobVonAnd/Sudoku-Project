@@ -38,6 +38,10 @@ public class SudokuBoard {
             }
         }
     }
+
+    public void setDifficultyScale(double difficultyScale) {
+        this.difficultyScale = difficultyScale;
+    }
     
     public void solve() {
         double startTime = System.currentTimeMillis();
@@ -132,6 +136,10 @@ public class SudokuBoard {
                 double fraction = 0.55 - 0.2 * scale;
                 return (int) (totalCells * fraction);
         }
+    }
+
+    public double getDifficultyScale() {
+        return difficultyScale;
     }
 
     public Boolean isValid(int row, int col, int num) {
