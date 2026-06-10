@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class FieldButton implements Element {
     private Field field;
     private int value;
-    private double x,y,size,half;
+    private double x,y,size;
     private boolean selected;
     private double[] colour;
     private CreateString text;
@@ -25,7 +25,7 @@ public class FieldButton implements Element {
         colour = new double[] {1.0f,1.0f,1.0f};
         this.text = text;
         this.fontShader = fontShader;
-		half = size/2;
+        selected = true;
     }
 
     public void draw() {
@@ -35,16 +35,16 @@ public class FieldButton implements Element {
         glBegin(GL_QUADS);
         setColour();
         glColor3d(colour[0], colour[1], colour[2]);
-        glVertex2d(x - half, y - half-size/100); //Bottom left
-        glVertex2d(x + half, y - half-size/100); //Bottom right
-        glVertex2d(x + half, y + half); //Top Right
-        glVertex2d(x - half, y + half); //Top Left
+        glVertex2d(x, y - size); //Bottom left
+        glVertex2d(x - size, y - size); //Bottom right
+        glVertex2d(x - size, y ); //Top Right
+        glVertex2d(x, y); //Top Left
         glEnd();
         value = field.getValue();
         if (value!= 0){
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            text.makeText(""+value, (float)(x+half+size/4.3),(float)(y+half+size/8), (float)(1.5*1.75*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+            text.makeText(""+value, (float)(x+size/2),(float)(y+size/2), (float)(1.5*1.75*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
 		    text.flush();
         }
     }

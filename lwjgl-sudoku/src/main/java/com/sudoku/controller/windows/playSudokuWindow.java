@@ -32,6 +32,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
+    private double fieldsize;
 
     public playSudokuWindow(WindowManager wm) {
         super(wm);
@@ -47,10 +48,20 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		text = new CreateString(fontShader, font); 
         sudokuBoard = new SudokuBoard(size);
         buttonArray = new FieldButton[size][size];
+        double x;
+        double y;
+        double xStart = -1;
+        double yStart = -1;        
+
+        fieldsize = 0.4;
         for (int i = 0; i > size; i++) {
+            x = xStart;
             for (int j = 0; j > size; j++) {
-                //buttonArray[i][j] = FieldButton(sudokuBoard.getSingleField(i,j), double x, double y, double size, sudokuBoard, text, fontShader);
+                y = yStart;
+                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsize, sudokuBoard, text, fontShader);
+                y += fieldsize;
             }
+            x += fieldsize;
         }
 
 
@@ -61,17 +72,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void step() {
         // This code runs every frame
 
-
-       // don't need can be deleted
-        wm.getFontShader().detach();
-        glColor3f(1, 0, 0);
-
-        glBegin(GL_QUADS);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f( 0.5f, -0.5f);
-        glVertex2f( 0.5f,  0.5f);
-        glVertex2f(-0.5f,  0.5f);
-        glEnd();
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -90,9 +90,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
-            action == GLFW_PRESS) {
-
+            action == GLFW_PRESS) { 
             System.out.println("Left click!");
+            for (int i = 0; i > size; i++) {
+                for (int j = 0; j > size; j++) {
+                    //buttonArray[i][j] = 
+                }
+            }
+            
+
+            
         }
 
         if (button == GLFW_MOUSE_BUTTON_RIGHT &&
