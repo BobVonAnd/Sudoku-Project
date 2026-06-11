@@ -28,8 +28,6 @@ public class FieldButton implements Element {
     }
 
     public void draw() {
-        System.out.println("TEST"+ field.getCoordinates()[0] + field.getCoordinates()[1]);
-        
         fontShader.detach();
         glBegin(GL_QUADS);
         setColour();
@@ -39,12 +37,12 @@ public class FieldButton implements Element {
         glVertex2d(x + size, y ); //Top Right
         glVertex2d(x, y); //Top Left
         glEnd();
-        //value = field.getValue();
+        value = field.getValue();
         if (value!= 0){
-            //glEnable(GL_BLEND);
-            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            //text.makeText(""+value, (float)(x+size/2),(float)(y+size/2), (float)(1.5*1.75*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
-		    //text.flush();
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+		    text.flush();
         }
     }
 
@@ -67,26 +65,31 @@ public class FieldButton implements Element {
             colour[2] = 0.984313725f;
         } else {
             colour[0] = 1.0f;
-            colour[1] = 0.0f; 
-            colour[2] = 0.0f;
+            colour[1] = 1.0f; 
+            colour[2] = 1.0f;
         }
     }
 
     private void fieldIsTouching(){
-        colour[0] = 0.882352941;
-        colour[1] = 0.921568627; 
-        colour[2] = 0.952941176;
+        colour[0] = 0.882352941f;
+        colour[1] = 0.921568627f; 
+        colour[2] = 0.952941176f;
     }
 
     private void samenumber(){
-        colour[0] = 0.764705882;
-        colour[1] = 0.843137255; 
-        colour[2] = 0.917647059;
+        colour[0] = 0.764705882f;
+        colour[1] = 0.843137255f; 
+        colour[2] = 0.917647059f;
     }
 
     public boolean isSelected(){  
         return selected;
     }
+
+    public Field getField(){
+        return field;
+    }
+
     // What we wanna do
     // Be able to paste a image on it with clipping mask
     // Be able to paste text on it
