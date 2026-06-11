@@ -88,21 +88,30 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void step() {
         // This code runs every frame
         fontShader.detach();
-        glLineWidth(1.0f);
         glBegin(GL_LINES);
-
-        glColor3d(0.20392157f,0.27842137f,0.38039216f);
 
         float x = (float)xStart;
         float boardlenth = (float)(size * fieldsize);
+        int bigfield = (int)Math.sqrt(size);
         for (int i = 0; i <= size; i++){
+            if (i % bigfield == 0){
+                bigfieldline();
+            } else {
+                regularline();
+            }
             glVertex2f(x, (float)yStart);
             glVertex2f(x, (float)yStart-boardlenth);
+
             x += (float)fieldsize;
         }
 
         float y = (float)yStart;
         for (int i = 0; i <= size; i++){
+            if (i % bigfield == 0){
+                bigfieldline();
+            } else {
+                regularline();
+            }
             glVertex2f((float)xStart, y);
             glVertex2f((float)xStart+boardlenth, y);
             y -= (float)fieldsize;
@@ -110,6 +119,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
 
         glEnd();
+    }
+
+    private void bigfieldline(){
+        glLineWidth(2.5f);
+        glColor3d(0.20392157f,0.27842137f,0.38039216f);
+    }
+
+    private void regularline(){
+        glLineWidth(1.5f);
+        glColor3d(0.84705882f,0.88235294f,0.91764706f);
     }
 
     @Override // If you don't need a key callback, just delete this
