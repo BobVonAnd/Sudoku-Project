@@ -16,6 +16,8 @@ public class FieldButton implements Element {
     private double[] colour;
     private CreateString text;
     private Shader fontShader;
+    private boolean touching;
+    private boolean snumber;
 
     public FieldButton(Field f, double x, double y, double size, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
@@ -64,28 +66,36 @@ public class FieldButton implements Element {
 
     private void setColour(){
         if (selected) {
-            colour[0] = 0.733333333f;
-            colour[1] = 0.870588235f; 
-            colour[2] = 0.984313725f;
+            selectedcolour();
+        } else if (snumber){ 
+            samenumber();
+        } else if (touching){ 
+            fieldIsTouching();
         } else {
-            colour[0] = 1.0f;
-            colour[1] = 1.0f; 
-            colour[2] = 1.0f;
+            whiteColour();
         }
     }
-
-    private void fieldIsTouching(){
-        colour[0] = 0.882352941f;
-        colour[1] = 0.921568627f; 
-        colour[2] = 0.952941176f;
+    
+    private void selectedcolour(){
+        colour[0] = 0.733333333f;
+        colour[1] = 0.870588235f; 
+        colour[2] = 0.984313725f;
     }
-
     private void samenumber(){
         colour[0] = 0.764705882f;
         colour[1] = 0.843137255f; 
         colour[2] = 0.917647059f;
     }
-
+    private void fieldIsTouching(){
+        colour[0] = 0.882352941f;
+        colour[1] = 0.921568627f; 
+        colour[2] = 0.952941176f;
+    }
+    private void whiteColour(){
+        colour[0] = 1.0f;
+        colour[1] = 1.0f; 
+        colour[2] = 1.0f;
+    }
     public boolean isSelected(){  
         return selected;
     }

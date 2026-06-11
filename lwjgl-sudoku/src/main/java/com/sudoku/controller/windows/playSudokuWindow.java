@@ -13,10 +13,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3d;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import com.sudoku.controller.Window;
@@ -42,6 +45,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private Shader fontShader;
     private FieldButton[][] buttonArray;
     private double fieldsize;
+    private double yStart = 0.8;        
+    private double xStart = -0.8;
     private int[] selectedField = new int[2];
 
     public playSudokuWindow(WindowManager wm, int width, int height) {
@@ -58,15 +63,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
-        size = 36;
+        size = 9;
         sudokuBoard = new SudokuBoard(size);
         sudokuBoard.populate(1);
         buttonArray = new FieldButton[size][size];
         double y;
-        double x = -0.8;
-        double yStart = 0.8;        
+        double x;
+
 
         fieldsize = 1.6 / size ;
+        x = xStart; 
         for (int i = 0; i < size; i++) {
             y = yStart;
             for (int j = 0; j < size; j++) {
@@ -81,7 +87,29 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void step() {
         // This code runs every frame
+        fontShader.detach();
+        glLineWidth(1.0f);
+        glBegin(GL_LINES);
 
+        glColor3d(0.20392157f,0.27842137f,0.38039216f);
+
+        float x = (float)xStart;
+        float boardlenth = (float)(size * fieldsize);
+        for (int i = 0; i <= size; i++){
+            glVertex2f(x, (float)yStart);
+            glVertex2f(x, (float)yStart-boardlenth);
+            x += (float)fieldsize;
+        }
+
+        float y = (float)yStart;
+        for (int i = 0; i <= size; i++){
+            glVertex2f((float)xStart, y);
+            glVertex2f((float)xStart+boardlenth, y);
+            y -= (float)fieldsize;
+        }
+
+
+        glEnd();
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -117,6 +145,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
             System.out.println("Space pressed!");
+
         }
     }
     
