@@ -58,7 +58,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
-        size = 9;
+        size = 36;
         sudokuBoard = new SudokuBoard(size);
         sudokuBoard.populate(1);
         buttonArray = new FieldButton[size][size];

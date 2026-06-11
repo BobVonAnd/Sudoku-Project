@@ -41,7 +41,11 @@ public class FieldButton implements Element {
         if (value!= 0){
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+            if (value < 10){
+                text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+            } else {
+                text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+            }
 		    text.flush();
         }
     }
