@@ -86,13 +86,10 @@ public class playSudokuWindow extends Window implements WindowInterface {
             }
             x += fieldsizeX;
         }
-<<<<<<< HEAD
 
         //return to last window
         returnButton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
         addElement(returnButton, 0);
-=======
->>>>>>> Utestet_kode
     }
 
     public void step() {
