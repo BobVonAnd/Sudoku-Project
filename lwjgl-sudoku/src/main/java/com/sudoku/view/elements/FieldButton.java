@@ -1,12 +1,20 @@
 package com.sudoku.view.elements;
 
-import com.sudoku.model.Field;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glColor3d;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2d;
 
+import com.sudoku.model.Field;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class FieldButton implements Element {
     private Field field;
@@ -19,7 +27,10 @@ public class FieldButton implements Element {
     private boolean touching;
     private boolean snumber;
 
-    public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
+    private boolean notValid = false;
+    private boolean error = false;
+
+    public FieldButton(Field f, double x, double y, double size, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -28,6 +39,10 @@ public class FieldButton implements Element {
         colour = new double[] {1.0f,0f,0f};
         this.text = text;
         this.fontShader = fontShader;
+    }
+
+    public void setError(boolean isError){
+        error = isError;
     }
 
     public void draw() {
@@ -44,10 +59,26 @@ public class FieldButton implements Element {
         if (value!= 0){
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            
             if (value < 10){
-                text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                if (error) {
+                     text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                } else if(notValid){
+                    text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                } else{
+                     text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                } 
+               
             } else {
-                text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                 if (error) {
+                     text.makeText(""+value, (float)(x+sizeX/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                } else if(notValid){
+                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                } else{
+                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                } 
+                
             }
 		    text.flush();
         }
