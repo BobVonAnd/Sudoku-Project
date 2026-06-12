@@ -14,10 +14,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLineWidth;
 import static org.lwjgl.opengl.GL11.glVertex2f;
@@ -29,8 +27,8 @@ import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.FieldButton;
+import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.fonts.CreateFont;
-import com.sudoku.model.Field;
 
 public class playSudokuWindow extends Window implements WindowInterface {
     
@@ -48,6 +46,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private double yStart = 0.8;        
     private double xStart = -0.8;
     private int[] selectedField = new int[2];
+    private MenuButton returnButton;
 
     public playSudokuWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -83,6 +82,9 @@ public class playSudokuWindow extends Window implements WindowInterface {
             x += fieldsize;
         }
 
+        //return to last window
+        returnButton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
+        addElement(returnButton, 0);
     }
 
     public void step() {
@@ -119,6 +121,18 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
 
         glEnd();
+        double mouseXt = mouseX/(width/2)-1;
+        double mouseYt = -mouseY/(height/2)+1;
+        //wiggle physics
+        if (returnButton.getPos()[0] - returnButton.getSize()/2 < mouseXt & 
+                returnButton.getPos()[0] + returnButton.getSize()/2 > mouseXt &
+
+                returnButton.getPos()[1] - returnButton.getSize()/2 < mouseYt & 
+                returnButton.getPos()[1] + returnButton.getSize()/2 > mouseYt) {
+                returnButton.heldOver(true);
+            } else {
+                returnButton.heldOver(false);
+            }
     }
 
     private void bigfieldline(){
@@ -197,6 +211,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
                         fieldButton.selected(false);
                     }
                 }
+            }
+
+            //return button
+            if (returnButton.isHeldOver() && elementExists(returnButton)) {
+                new PlaySudokuSettingsWindow(wm, width, height);
             }
             
 
