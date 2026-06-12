@@ -45,9 +45,9 @@ public class FieldButton implements Element {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             if (value < 10){
-                text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
             } else {
-                text.makeText(""+value, (float)(x+sizeX/5),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
             }
 		    text.flush();
         }
@@ -109,6 +109,11 @@ public class FieldButton implements Element {
     public void setXY(double[] xy){
         this.x = xy[0];
         this.y = xy[1];
+    }
+
+    public void setFieldSize(double[] xy){
+        this.sizeX = xy[0];
+        this.sizeY = xy[1];
     }
 
     // What we wanna do

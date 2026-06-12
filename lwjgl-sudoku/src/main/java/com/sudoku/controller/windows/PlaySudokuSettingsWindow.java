@@ -159,7 +159,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver()) {
                     if (Buttons[i] == startButton) {
-                        new playSudokuWindow(wm, width, height, sb);
+                        new playSudokuWindow(wm, width, height, sb.getSize(), sb.getDifficultyScale());
                     } else if (Buttons[i] == backButton) {
                         new mainMenuWindow(wm, width, height);
                     }

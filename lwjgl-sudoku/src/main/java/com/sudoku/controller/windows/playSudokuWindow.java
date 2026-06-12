@@ -42,19 +42,19 @@ public class playSudokuWindow extends Window implements WindowInterface {
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
-    private double fieldsizeX, fieldsizeY, aspect;
+    private double fieldsizeX, fieldsizeY, aspect, xAspect, yAspect, difficulty;
     private double yStart = 0.8;        
     private double xStart = -0.8;
     private int[] selectedField = new int[2];
 
-    public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
+    public playSudokuWindow(WindowManager wm, int width, int height, int size, double difficulty) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
-        sudokuBoard = sb;
-        size = sudokuBoard.getSize();
+        this.size = size;
+        this.difficulty = difficulty;
+        wm.setActiveWindow(this);
     }
 
     public void create() {
@@ -63,19 +63,21 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
-        sudokuBoard.populate();
+        
+        sudokuBoard = new SudokuBoard(size);
+        sudokuBoard.populate(difficulty);
         buttonArray = new FieldButton[size][size];
-        
-        aspect = (double)width/(double)height;
-        xStart *= aspect;
-        
+
+        aspect = (double) height/(double)width;
+        xAspect = xStart * aspect;
+
         fieldsizeY = 1.6 / size ;
         fieldsizeX = fieldsizeY*aspect;
 
         double y;
         double x;
 
-        x = xStart; 
+        x = xAspect; 
         for (int i = 0; i < size; i++) {
             y = yStart;
             for (int j = 0; j < size; j++) {
@@ -96,7 +98,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         int bigfield = (int)Math.sqrt(size);
 
         regularline();
-        float x = (float)xStart;
+        float x = (float)xAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield != 0){
                 glVertex2f(x, (float)yStart);
@@ -109,15 +111,15 @@ public class playSudokuWindow extends Window implements WindowInterface {
         float y = (float)yStart;
         for (int i = 0; i <= size; i++){
             if (i % bigfield != 0){
-                glVertex2f((float)xStart, y);
-                glVertex2f((float)xStart+boardlenth, y);
+                glVertex2f((float)xAspect, y);
+                glVertex2f((float)xAspect+boardlenth, y);
             }
             y -= (float)fieldsizeY;
         }
 
         boardlenth = (float)(size * fieldsizeY);
         bigfieldline();
-        x = (float)xStart;
+        x = (float)xAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield == 0){
                 glVertex2f(x, (float)yStart);
@@ -130,8 +132,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
         y = (float)yStart;
         for (int i = 0; i <= size; i++){
             if (i % bigfield == 0){
-                glVertex2f((float)xStart, y);
-                glVertex2f((float)xStart+boardlenth, y);
+                glVertex2f((float)xAspect, y);
+                glVertex2f((float)xAspect+boardlenth, y);
             }
             y -= (float)fieldsizeY;
         }
@@ -192,8 +194,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.height = height;
         System.out.println("New size: " + width + "x" + height);
         
-        aspect = (double)width/(double)height;
-        xStart *= aspect;
+        aspect = (double)height/(double)width;
+        xAspect = xStart * aspect;
         
         fieldsizeY = 1.6 / size ;
         fieldsizeX = fieldsizeY*aspect;
@@ -201,12 +203,15 @@ public class playSudokuWindow extends Window implements WindowInterface {
         double y;
         double x;
 
-        x = xStart; 
+        x = xAspect; 
         for (int i = 0; i < size; i++) {
             y = yStart;
             for (int j = 0; j < size; j++) {
                 double[] xy = {x,y}; 
                 buttonArray[i][j].setXY(xy);
+                xy[0] = fieldsizeX;
+                xy[1] = fieldsizeY;
+                buttonArray[i][j].setFieldSize(xy);
                 y -= fieldsizeY;
             }
             x += fieldsizeX;
