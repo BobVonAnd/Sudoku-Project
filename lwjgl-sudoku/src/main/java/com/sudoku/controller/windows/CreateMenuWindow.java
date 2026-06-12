@@ -27,6 +27,7 @@ import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.FieldButton;
+import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.NumPadButton;
 import com.sudoku.view.elements.TextFieldButton;
 import com.sudoku.view.fonts.CreateFont;
@@ -59,6 +60,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     private boolean sudokuCreated = false;
 
+    private MenuButton returnButton;
+
     public CreateMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
@@ -83,6 +86,10 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         numPad = new NumPadButton(0.65f, 0.6f, 0.1f, 0.1f * aspect, text, fontShader);
         addElement(numPad, 0);
         addElement(textField, 0);
+
+        // return to menu button
+        returnButton = new MenuButton(-0.8, 0.8, 0.2, text, fontShader, "Menu");
+        addElement(returnButton, 0);
     }
 
     public void step() {
@@ -90,13 +97,23 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
+        // button juggle
+        if (returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+                returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+
+                returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
+                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) {
+            returnButton.heldOver(true);
+        } else {
+            returnButton.heldOver(false);
+        }
+
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
 
         textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f),
                 (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
-        
 
         // sudokuBoard
         if (textField.getValidity()) {
@@ -189,13 +206,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if (textField.getValidity() && sudokuCreated) {
                 // sudokuBoard
-                
+
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-                if(value>0 && key == GLFW_KEY_0 && action == GLFW_PRESS){
+                if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
                     value = value * 10 + 0;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("0 pressed!");
-                }else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+                } else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
                     value = value * 10 + 1;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("1 pressed!");
@@ -231,13 +248,14 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     value = value * 10 + 9;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("9 pressed!");
-                }  if (key == GLFW_KEY_BACKSPACE){
+                }
+                if (key == GLFW_KEY_BACKSPACE) {
                     System.out.println();
-                    value = value/10;
+                    value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
                 if (!(value < 100)) {
-                    value = value/10;
+                    value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
                 buttonArray[selectedField[0]][selectedField[1]].setError(value > sudokuBoard.getSize());
@@ -302,7 +320,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     }
 
-    private void clearSelectField(){
+    private void clearSelectField() {
         selectedField[0] = 0;
         selectedField[1] = 0;
     }
@@ -349,6 +367,10 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                         }
                     }
                 }
+            }
+
+            if(returnButton.isHeldOver()){
+                new mainMenuWindow(wm, width, height);
             }
 
         }
