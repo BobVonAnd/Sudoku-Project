@@ -41,6 +41,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private CreateString textInfo;
     private TextFieldButton textField;
     private NumPadButton numPad;
+    private boolean unique, solveable;
 
     private String output = "Size: ";
     // x, y, scale, width, hight
@@ -93,7 +94,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
 
-        textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f),
+        textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f),
                 (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
         
@@ -241,7 +242,19 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
                 buttonArray[selectedField[0]][selectedField[1]].setError(value > sudokuBoard.getSize());
-
+                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], 0);
+                    if (sudokuBoard.isValid(selectedField[0], selectedField[1], value)) {
+                        solveable = (sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard) ? false : true) || sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
+                        unique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
+                        System.out.println("Solveable: " + String.valueOf(solveable) + "\n Unique: " + String.valueOf(unique));
+                    } else {
+                        solveable = false;
+                        unique = false;
+                        System.out.println("Invalid!");
+                    }
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                }
             }
 
             if (textField.isSelected()) {
