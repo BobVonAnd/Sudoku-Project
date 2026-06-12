@@ -104,6 +104,11 @@ public class FieldButton implements Element {
         return field;
     }
 
+    public void setXY(double[] xy){
+        this.x = xy[0];
+        this.y = xy[1];
+    }
+
     // What we wanna do
     // Be able to paste a image on it with clipping mask
     // Be able to paste text on it

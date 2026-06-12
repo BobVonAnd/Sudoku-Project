@@ -187,6 +187,21 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         System.out.println("New size: " + width + "x" + height);
+        
+        double y;
+        double x;
+
+        fieldsize = 1.6 / size ;
+        x = xStart; 
+        for (int i = 0; i < size; i++) {
+            y = yStart;
+            for (int j = 0; j < size; j++) {
+                double[] xy = {x,y}; 
+                buttonArray[i][j].setXY(xy);
+                y -= fieldsize;
+            }
+            x += fieldsize;
+        }
     }
 
     @Override // If you don't need a mouse button callback, just delete this
