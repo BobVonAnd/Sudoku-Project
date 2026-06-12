@@ -49,12 +49,13 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private double xStart = -0.8;
     private int[] selectedField = new int[2];
 
-    public playSudokuWindow(WindowManager wm, int width, int height) {
+    public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
         super(wm);
         this.wm = wm;
         wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
+        sudokuBoard = sb;
     }
 
     public void create() {
@@ -64,8 +65,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
         size = 9;
-        sudokuBoard = new SudokuBoard(size);
-        sudokuBoard.populate(1);
+        //sudokuBoard = new SudokuBoard(size);
+        //sudokuBoard.populate(1);
         buttonArray = new FieldButton[size][size];
         double y;
         double x;
