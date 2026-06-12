@@ -19,7 +19,7 @@ import com.sudoku.view.Shader;
 public class FieldButton implements Element {
     private Field field;
     private int value;
-    private double x,y,size;
+    private double x,y,sizeX,sizeY;
     private boolean selected;
     private double[] colour;
     private CreateString text;
@@ -30,9 +30,10 @@ public class FieldButton implements Element {
     private boolean notValid = false;
     private boolean error = false;
 
-    public FieldButton(Field f, double x, double y, double size, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
+    public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
-        this.size = size;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
         this.x = x;
         this.y = y;        
         colour = new double[] {1.0f,0f,0f};
@@ -49,9 +50,9 @@ public class FieldButton implements Element {
         glBegin(GL_QUADS);
         setColour();
         glColor3d(colour[0], colour[1], colour[2]);
-        glVertex2d(x, y - size); //Bottom left
-        glVertex2d(x + size, y - size); //Bottom right
-        glVertex2d(x + size, y ); //Top Right
+        glVertex2d(x, y - sizeY); //Bottom left
+        glVertex2d(x + sizeX, y - sizeY); //Bottom right
+        glVertex2d(x + sizeX, y ); //Top Right
         glVertex2d(x, y); //Top Left
         glEnd();
         value = field.getValue();
@@ -62,20 +63,20 @@ public class FieldButton implements Element {
             
             if (value < 10){
                 if (error) {
-                     text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                     text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f,0f,1f});
                 } else if(notValid){
-                    text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                    text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{1f,0f,0f});
                 } else{
-                     text.makeText(""+value, (float)(x+size/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                     text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
                 } 
                
             } else {
                  if (error) {
-                     text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                     text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f,0f,1f});
                 } else if(notValid){
-                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                    text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{1f,0f,0f});
                 } else{
-                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                    text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
                 } 
                 
             }
@@ -87,8 +88,9 @@ public class FieldButton implements Element {
         return new double[] {this.x,this.y};
     }
 
-    public double getSize() {
-        return this.size;
+    public double[] getSize() {
+        double[] size = {sizeX, sizeY};
+        return size;
     }
 
     public void selected(boolean isIt) {
@@ -133,6 +135,16 @@ public class FieldButton implements Element {
 
     public Field getField(){
         return field;
+    }
+
+    public void setXY(double[] xy){
+        this.x = xy[0];
+        this.y = xy[1];
+    }
+
+    public void setFieldSize(double[] xy){
+        this.sizeX = xy[0];
+        this.sizeY = xy[1];
     }
 
     // What we wanna do
