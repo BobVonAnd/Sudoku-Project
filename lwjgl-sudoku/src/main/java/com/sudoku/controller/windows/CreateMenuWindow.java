@@ -46,7 +46,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     // x, y, scale, width, hight
     private float[] textFieldPrime = new float[] { -0.6f, 0.7f, 0.3f, 0.0f, 0.1f };
 
-    private SudokuBoard sudokuBoard;
+    private SudokuBoard sudokuBoard = new SudokuBoard(0);
     private int standardSize = 9;
     private int size = standardSize;
     private int width;
@@ -189,9 +189,9 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if (textField.getValidity() && sudokuCreated) {
                 // sudokuBoard
+                
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
                 if(value>0 && key == GLFW_KEY_0 && action == GLFW_PRESS){
-                    System.out.println("hej");
                     value = value * 10 + 0;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("0 pressed!");
@@ -248,8 +248,10 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
                     char c = (char) ('0' + (key - GLFW_KEY_0));
                     textField.updateInput(c);
+                    clearSelectField();
                 } else if (key == GLFW_KEY_BACKSPACE) {
                     textField.updateInput();
+                    clearSelectField();
                 }
                 if (textField.getValidity()) {
                     size = Integer.parseInt(textField.getInput());
@@ -298,6 +300,11 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         }
 
+    }
+
+    private void clearSelectField(){
+        selectedField[0] = 0;
+        selectedField[1] = 0;
     }
 
     @Override // If you don't need a resize callback, just delete this
