@@ -56,6 +56,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         sudokuBoard = sb;
+        size = sudokuBoard.getSize();
     }
 
     public void create() {
@@ -64,9 +65,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
-        size = 9;
-        //sudokuBoard = new SudokuBoard(size);
-        //sudokuBoard.populate(1);
+        sudokuBoard.populate();
         buttonArray = new FieldButton[size][size];
         double y;
         double x;
@@ -243,7 +242,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void cursorPosCallback(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
-
     }
 
 }

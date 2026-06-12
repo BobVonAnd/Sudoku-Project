@@ -65,9 +65,13 @@ public class SudokuBoard {
             }
         }
     }
-
+    
     public void populate(double difficultyScale) {
-        this.difficultyScale = difficultyScale;
+        this.difficultyScale = difficultyScale;    
+        populate();
+    }
+
+    public void populate() {
         this.clear();
         for (int i = 0; i < this.bigFieldSize; i+=2) {
             // Get choices
