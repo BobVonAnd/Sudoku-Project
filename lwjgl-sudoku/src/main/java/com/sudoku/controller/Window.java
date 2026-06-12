@@ -9,7 +9,6 @@ import com.sudoku.view.elements.Element;
 
 
 public abstract class Window {
-    private ArrayList<Element> Elements = new ArrayList<>();
     private Map<Double, ArrayList<Element>> dictionary = new TreeMap<>();
     private WindowManager wm;
 
@@ -26,6 +25,15 @@ public abstract class Window {
             l.add(e);
             dictionary.put(depth, l);
         }
+    }
+
+    public boolean elementExists(Element e) {
+        for (ArrayList<Element> list : dictionary.values()) {
+            if (list.contains(e)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean removeElement(Element e) {
