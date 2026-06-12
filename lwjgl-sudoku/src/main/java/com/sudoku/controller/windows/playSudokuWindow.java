@@ -36,15 +36,13 @@ public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
     private SudokuBoard sudokuBoard;
-    private int size;
-    private double mouseX;
-    private double mouseY;
-    private int width, height;
+    private int size, width, height;
+    private double mouseX, mouseY;
     private CreateFont font;
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
-    private double fieldsize;
+    private double fieldsizeX, fieldsizeY, aspect;
     private double yStart = 0.8;        
     private double xStart = -0.8;
     private int[] selectedField = new int[2];
@@ -67,22 +65,26 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		text = new CreateString(fontShader, font); 
         sudokuBoard.populate();
         buttonArray = new FieldButton[size][size];
+        
+        aspect = (double)width/(double)height;
+        xStart *= aspect;
+        
+        fieldsizeY = 1.6 / size ;
+        fieldsizeX = fieldsizeY*aspect;
+
         double y;
         double x;
 
-
-        fieldsize = 1.6 / size ;
         x = xStart; 
         for (int i = 0; i < size; i++) {
             y = yStart;
             for (int j = 0; j < size; j++) {
-                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsize, sudokuBoard, text, fontShader);
+                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader);
                 addElement(buttonArray[i][j], 0);
-                y -= fieldsize;
+                y -= fieldsizeY;
             }
-            x += fieldsize;
+            x += fieldsizeX;
         }
-
     }
 
     public void step() {
@@ -90,7 +92,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         fontShader.detach();
         glBegin(GL_LINES);
 
-        float boardlenth = (float)(size * fieldsize);
+        float boardlenth = (float)(size * fieldsizeY);
         int bigfield = (int)Math.sqrt(size);
 
         regularline();
@@ -100,8 +102,9 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 glVertex2f(x, (float)yStart);
                 glVertex2f(x, (float)yStart-boardlenth);
             }
-            x += (float)fieldsize;
+            x += (float)fieldsizeX;
         }
+        boardlenth = (float)(size * fieldsizeX);
 
         float y = (float)yStart;
         for (int i = 0; i <= size; i++){
@@ -109,9 +112,10 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 glVertex2f((float)xStart, y);
                 glVertex2f((float)xStart+boardlenth, y);
             }
-            y -= (float)fieldsize;
+            y -= (float)fieldsizeY;
         }
 
+        boardlenth = (float)(size * fieldsizeY);
         bigfieldline();
         x = (float)xStart;
         for (int i = 0; i <= size; i++){
@@ -119,16 +123,17 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 glVertex2f(x, (float)yStart);
                 glVertex2f(x, (float)yStart-boardlenth);
             }
-            x += (float)fieldsize;
+            x += (float)fieldsizeX;
         }
 
+        boardlenth = (float)(size * fieldsizeX);
         y = (float)yStart;
         for (int i = 0; i <= size; i++){
             if (i % bigfield == 0){
                 glVertex2f((float)xStart, y);
                 glVertex2f((float)xStart+boardlenth, y);
             }
-            y -= (float)fieldsize;
+            y -= (float)fieldsizeY;
         }
 
         glEnd();
@@ -187,19 +192,24 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.height = height;
         System.out.println("New size: " + width + "x" + height);
         
+        aspect = (double)width/(double)height;
+        xStart *= aspect;
+        
+        fieldsizeY = 1.6 / size ;
+        fieldsizeX = fieldsizeY*aspect;
+
         double y;
         double x;
 
-        fieldsize = 1.6 / size ;
         x = xStart; 
         for (int i = 0; i < size; i++) {
             y = yStart;
             for (int j = 0; j < size; j++) {
                 double[] xy = {x,y}; 
                 buttonArray[i][j].setXY(xy);
-                y -= fieldsize;
+                y -= fieldsizeY;
             }
-            x += fieldsize;
+            x += fieldsizeX;
         }
     }
 
@@ -216,8 +226,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 for (int j = 0; j < size; j++) {
                     fieldButton = buttonArray[i][j];
                     pos = fieldButton.getPos();
-                    if (pos[0] < mouseXt & pos[0] + fieldsize > mouseXt &
-                        pos[1] > mouseYt & pos[1] - fieldsize < mouseYt){
+                    if (pos[0] < mouseXt & pos[0] + fieldsizeX > mouseXt &
+                        pos[1] > mouseYt & pos[1] - fieldsizeY < mouseYt){
                         fieldButton.selected(true);
                         selectedField[0] = i;
                         selectedField[1] = j;
