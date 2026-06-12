@@ -87,12 +87,18 @@ public class playSudokuWindow extends Window implements WindowInterface {
             x += fieldsizeX;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 6e7cfe5 (aabbab git er irreterende)
 
         //return to last window
         returnButton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
         addElement(returnButton, 0);
+<<<<<<< HEAD
 >>>>>>> 79fff3f (added return button for playsudokuWindow)
+=======
+>>>>>>> 6e7cfe5 (aabbab git er irreterende)
     }
 
     public void step() {
