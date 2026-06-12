@@ -45,6 +45,7 @@ public class Solver {
             }
             pointingSingleInBox(field);
             if (field.getLegalEntries().size() == 2){
+                XY_wing(field);
                 Field pairField = nakedBoxPair(field);
                 if (pairField != null){
                     for (Field boxField : field.getBoxEdges()){
@@ -343,6 +344,51 @@ public class Solver {
         }
     }
 }
+    public void XY_wing(Field hinge){
+        if (hinge.getLegalEntries().size() != 2){
+            return;
+        }
+        ArrayList<Field> hingeEdges = hinge.getEdges();
+        ArrayList<Integer> hingeEntries = hinge.getLegalEntries();
+        for (Field edge1 : hingeEdges){
+            for (Field edge2 : hingeEdges){
+                if (edge1 != edge2 && !intersect(edge1, edge2) && edge1.getLeSize() == 2 && edge2.getLeSize() == 2){
+                    ArrayList<Integer> edge1Entries = edge1.getLegalEntries();
+                    ArrayList<Integer> edge2Entries = edge2.getLegalEntries();
+                    Integer entry1 = hingeEntries.get(0);
+                    Integer entry2 = hingeEntries.get(1);
+                    Integer CommonCandidate = null;
+                    for (int edge1Int : edge1Entries){
+                        for (int edge2Int : edge2Entries){
+                            if (edge1Int == edge2Int && edge1Int!= entry1 && edge1Int != entry2){
+                                CommonCandidate = edge1Int;
+                            }
+                        }
+                    }
+                    if (CommonCandidate == null){
+                        continue;
+                    }
+                    for (Field intersectEdge : edge1.getEdges()){
+                        if (intersect(edge2, intersectEdge) && intersectEdge != hinge){
+                            if (edge1Entries.contains(entry1) && edge2Entries.contains(entry2) && !edge1Entries.contains(entry2) && !edge2Entries.contains(entry1)
+                            || edge1Entries.contains(entry2) && edge2Entries.contains(entry1) && !edge1Entries.contains(entry1) && !edge2Entries.contains(entry2)){
+                                Integer leSize = intersectEdge.getLeSize();
+                                intersectEdge.removeLE(CommonCandidate);
+                                if (leSize > intersectEdge.getLeSize()){
+                                    progress = true;
+                                    moves.add("Found XY pattern between " + hinge.getStringCoords() + " " + edge1.getStringCoords() + " " + edge2.getStringCoords());
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public boolean intersect(Field field1, Field field2){
+        return field1.getEdges().contains(field2) && field2.getEdges().contains(field1);
+    }
 
 
     public ArrayList<String> getMoves(){

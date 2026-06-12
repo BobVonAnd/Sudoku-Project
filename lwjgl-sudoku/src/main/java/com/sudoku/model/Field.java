@@ -61,6 +61,7 @@ public class Field {
     }
     public void removeLE(int LE){
         this.legalEntries.remove(Integer.valueOf(LE));
+        this.legalEntries = new ArrayList<>(this.legalEntries);
     }
     public void removeLEs(ArrayList<Integer> Le){
         this.legalEntries.removeAll(Le);

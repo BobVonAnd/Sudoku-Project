@@ -1,6 +1,7 @@
 package com.sudoku;
 
 import com.sudoku.model.SudokuBoard;
+import com.sudoku.model.algoAnalyser;
 import com.sudoku.view.TerminalView;
 
 import java.util.ArrayList;
@@ -23,30 +24,30 @@ public class App {
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		SudokuBoard sudokuBoard2 = new SudokuBoard(9);
 		sudokuBoard.readIntoBoard(new int[][] {
-			{8,2,0,5,0,0,0,0,0},
-			{0,0,0,0,3,0,2,5,7},
-			{0,0,0,6,7,0,9,0,0},
+			{0,8,3,0,2,0,0,9,0},
+			{0,0,0,8,0,0,1,0,0},
+			{0,2,9,3,0,0,0,0,8},
 
-			{4,0,6,1,0,0,0,3,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,5,0,0,8,4,1,9,0},
+			{0,0,0,0,9,8,7,0,0},
+			{0,7,0,0,0,0,0,6,0},
+			{0,0,6,7,4,0,0,0,0},
 
-			{9,0,2,0,1,0,0,0,0},
-			{0,0,5,7,0,0,0,2,0},
-			{0,0,0,0,0,0,5,6,1}
+			{3,0,0,0,0,6,9,8,0},
+			{0,0,2,0,0,5,0,0,0},
+			{0,1,0,0,3,0,5,4,0}
 		});
 		sudokuBoard2.readIntoBoard(new int[][] {
-			{8,2,0,5,0,0,0,0,0},
-			{0,0,0,0,3,0,2,5,7},
-			{0,0,0,6,7,0,9,0,0},
+			{0,8,3,0,2,0,0,9,0},
+			{0,0,0,8,0,0,1,0,0},
+			{0,2,9,3,0,0,0,0,8},
 
-			{4,0,6,1,0,0,0,3,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,5,0,0,8,4,1,9,0},
+			{0,0,0,0,9,8,7,0,0},
+			{0,7,0,0,0,0,0,6,0},
+			{0,0,6,7,4,0,0,0,0},
 
-			{9,0,2,0,1,0,0,0,0},
-			{0,0,5,7,0,0,0,2,0},
-			{0,0,0,0,0,0,5,6,1}
+			{3,0,0,0,0,6,9,8,0},
+			{0,0,2,0,0,5,0,0,0},
+			{0,1,0,0,3,0,5,4,0}
 		});
 		boolean bool = xSolver.algoXIsUnique(sudokuBoard);
 		long startTime = System.nanoTime();
@@ -82,6 +83,7 @@ public class App {
 		else{
 			System.out.println("The sudokus are not the same");
 		}
+		algoAnalyser.algoAnalysisManager();
 		//wm.run();
 	}
 	
