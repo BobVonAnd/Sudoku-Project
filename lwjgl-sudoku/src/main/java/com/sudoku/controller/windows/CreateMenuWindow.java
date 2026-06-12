@@ -81,7 +81,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         float aspect = 1280f / 720f;
         numPad = new NumPadButton(0.65f, 0.6f, 0.1f, 0.1f * aspect, text, fontShader);
-
+        addElement(numPad, 0);
+        addElement(textField, 0);
     }
 
     public void step() {
@@ -95,8 +96,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         textInfo.makeText("You Can Costemize A 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f),
                 (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
-        textField.draw();
-        numPad.draw();
+        
 
         // sudokuBoard
         if (textField.getValidity()) {
@@ -189,34 +189,59 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if (textField.getValidity() && sudokuCreated) {
                 // sudokuBoard
-                if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 1);
+                int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
+                if(value>0 && key == GLFW_KEY_0 && action == GLFW_PRESS){
+                    System.out.println("hej");
+                    value = value * 10 + 0;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                    System.out.println("0 pressed!");
+                }else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+                    value = value * 10 + 1;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("1 pressed!");
                 } else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 2);
+                    value = value * 10 + 2;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("2 pressed!");
                 } else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 3);
+                    value = value * 10 + 3;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("3 pressed!");
                 } else if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 4);
+                    value = value * 10 + 4;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("4 pressed!");
                 } else if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 5);
+                    value = value * 10 + 5;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("5 pressed!");
                 } else if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 6);
+                    value = value * 10 + 6;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("6 pressed!");
                 } else if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 7);
+                    value = value * 10 + 7;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("7 pressed!");
                 } else if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 8);
+                    value = value * 10 + 8;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("8 pressed!");
                 } else if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], 9);
+                    value = value * 10 + 9;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("9 pressed!");
+                }  if (key == GLFW_KEY_BACKSPACE){
+                    System.out.println();
+                    value = value/10;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
+                if (!(value < 100)) {
+                    value = value/10;
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                }
+                buttonArray[selectedField[0]][selectedField[1]].setError(value > sudokuBoard.getSize());
+
             }
 
             if (textField.isSelected()) {
