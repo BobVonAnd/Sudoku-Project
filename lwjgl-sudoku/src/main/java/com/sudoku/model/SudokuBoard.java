@@ -16,6 +16,7 @@ public class SudokuBoard {
     private int bigFieldSize;
     private double difficultyScale;
     private algoXSolver algoX = new algoXSolver();
+    private int fieldsAmount = 0;
 
     private int solutions; // for generating the sudoku
 
@@ -56,6 +57,10 @@ public class SudokuBoard {
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
         System.out.println("The sudoku is unique " + this.solutions);
+    }
+
+    public algoXSolver getAlgoX() {
+        return algoX;
     }
 
     public void readIntoBoard(int[][] integerBoard) {
