@@ -255,7 +255,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
-                if (!(value < 100)) {
+                if (!(value <= size)) {
                     value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
