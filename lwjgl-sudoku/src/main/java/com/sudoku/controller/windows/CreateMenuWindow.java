@@ -116,6 +116,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f),
                 (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
+        textInfo.makeText("Solveable: " + String.valueOf(solveable) + "   Unique: " + String.valueOf(unique), -.9f, -.9f, .3f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
 
         // sudokuBoard
