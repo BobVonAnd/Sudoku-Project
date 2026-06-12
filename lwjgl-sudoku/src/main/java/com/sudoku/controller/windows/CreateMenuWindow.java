@@ -63,6 +63,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     private MenuButton returnButton;
 
+    private boolean errorDetected = false;
+
     public CreateMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
@@ -112,7 +114,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
 
-        textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f),
+        textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f),
                 (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
 
@@ -149,7 +151,15 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             }
 
             glEnd();
+
+
+            if(errorDetected){
+                text.makeText("Invalid input", -0.1f, 0.85f, 0.45f, new float[] {1f,0f,0f});
+                text.flush();
+            }
         }
+
+
 
     }
 
@@ -207,7 +217,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if (textField.getValidity() && sudokuCreated) {
                 // sudokuBoard
-
+                errorDetected = false;
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
                 if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
                     value = value * 10 + 0;
@@ -258,6 +268,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 if (!(value <= size)) {
                     value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                    errorDetected = true;
                 }
                 buttonArray[selectedField[0]][selectedField[1]].setError(value > sudokuBoard.getSize());
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
