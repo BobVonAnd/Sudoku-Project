@@ -27,7 +27,7 @@ public class TextFieldButton implements Element{
 
     private boolean heldOver;
     private boolean selected = false;
-    private boolean isValid;
+    private boolean isValid = false;
 
     //even = x, odd = y
     public float[] quadPos = new float[8];
@@ -85,10 +85,22 @@ public class TextFieldButton implements Element{
 
     public void updateInput(char input){
         this.input += input;
+
+        if(this.input.equals("4") || this.input.equals("9") ||this.input.equals("16")|| this.input.equals("25") || this.input.equals("36")){
+            isValid = true;
+        }else{
+            isValid = false;
+        }
     }
     public void updateInput(){
         if (!input.isEmpty()) {
             input = input.substring(0, input.length() - 1);
+        }
+
+        if(this.input.equals("4") || this.input.equals("9") ||this.input.equals("16")|| this.input.equals("25") || this.input.equals("36")){
+            isValid = true;
+        }else{
+            isValid = false;
         }
         System.out.println(input);
     }
@@ -109,12 +121,10 @@ public class TextFieldButton implements Element{
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if(input.equals("4") || input.equals("9") ||input.equals("16")|| input.equals("25")){
+        if(isValid){
             text.makeText(startString+input, xPos, yPos, scale, new float[]{0.0f,1.0f,0.0f});
-            isValid = true;
         }else{
             text.makeText(startString+input, xPos, yPos, scale, rgb);
-            isValid = false;
         }
     
         text.flush();
