@@ -376,7 +376,7 @@ public class Solver {
                                 intersectEdge.removeLE(CommonCandidate);
                                 if (leSize > intersectEdge.getLeSize()){
                                     progress = true;
-                                    moves.add("Found XY pattern between " + hinge.getStringCoords() + " " + edge1.getStringCoords() + " " + edge2.getStringCoords());
+                                    moves.add("Found XY pattern between " + hinge.getStringCoords() + " " + edge1.getStringCoords() + " " + edge2.getStringCoords() + " number is " + CommonCandidate + " removed from " + intersectEdge.getStringCoords());
                                 }
                             }
                             
@@ -386,6 +386,53 @@ public class Solver {
             }
         }
     }
+    public void XY_Chain(Field hinge){
+        if (hinge.getLegalEntries().size() != 2){
+            return;
+        }
+        for (int i = 0; i < hinge.getLegalEntries().size(); i++){
+            Integer legalEntry = hinge.getLegalEntries().get(i);
+            int j = 0;
+            if (i == 0){
+                j = i+1;
+            }
+            else {
+                j = i-1;
+            }
+            Integer connection = hinge.getLegalEntries().get(j);
+            for (Field link : hinge.getEdges()){
+                ArrayList<Field> chainLinks = new ArrayList<>();
+                chainLinks = XY_Chain_Link(link, connection, chainLinks, legalEntry);
+            }
+        }
+    }
+    public ArrayList<Field> XY_Chain_Link(Field field, int connection, ArrayList<Field> chainLinks, Integer intEndPoint){
+        if (field.getLeSize() != 2){
+            return null;
+        }
+        for (Integer i = 0; i < field.getLegalEntries().size(); i++){
+            Integer legalEntry = field.getLegalEntries().get(i);
+            if (legalEntry == intEndPoint && chainLinks.size() > 0){
+                chainLinks.add(field);
+                return chainLinks;
+            }
+            else if (legalEntry == connection){
+                chainLinks.add(field);
+                if (i > 0){
+                    connection = field.getLegalEntries().get(0);
+                }
+                else {
+                    connection = field.getLegalEntries().get(1);
+                }
+                for (Field link : field.getEdges()){
+                        XY_Chain_Link(link, connection, chainLinks, intEndPoint);
+                }
+            }
+        }
+        return null;
+    }
+
+
     public boolean intersect(Field field1, Field field2){
         return field1.getEdges().contains(field2) && field2.getEdges().contains(field1);
     }
@@ -402,4 +449,3 @@ public class Solver {
     return null;    
     }  
 }
-
