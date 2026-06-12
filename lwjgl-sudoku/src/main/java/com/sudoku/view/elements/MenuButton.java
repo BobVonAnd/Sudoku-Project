@@ -47,9 +47,9 @@ public class MenuButton implements Element {
     public void draw() {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
-        double overSpd = 0.5;
-        double xOffset = (heldOver ? (Math.sin(currentTime * spd)) : 0) / 100 ;
-        double yOffset = (heldOver ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 100;
+        double overSpd = 0.05;
+        double xOffset = (heldOver ? (Math.sin(currentTime * spd)) : 0) / 250 ;
+        double yOffset = (heldOver ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 250;
 
         fontShader.detach();
         glBegin(GL_QUADS);
