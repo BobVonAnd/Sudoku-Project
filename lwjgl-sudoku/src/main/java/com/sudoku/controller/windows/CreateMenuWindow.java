@@ -309,7 +309,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     for (int i = 0; i < size; i++) {
                         y = yStart;
                         for (int j = 0; j < size; j++) {
-                            buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize,
+                            buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize, fieldsize,
                                     sudokuBoard, text, fontShader);
                             addElement(buttonArray[i][j], 0);
                             y -= fieldsize;
@@ -329,7 +329,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     for (int i = 0; i < size; i++) {
                         y = yStart;
                         for (int j = 0; j < size; j++) {
-                            buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize,
+                            buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize, fieldsize,
                                     sudokuBoard, text, fontShader);
                             addElement(buttonArray[i][j], 0);
                             y -= fieldsize;
