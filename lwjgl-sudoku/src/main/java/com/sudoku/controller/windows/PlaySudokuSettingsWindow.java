@@ -38,6 +38,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     private TextFieldButton textField;
     private float[] textFieldPrime = new float[]{-0.6f, 0.7f,0.3f, 0.0f, 0.1f};
     private String output = "Size: ";
+    private boolean startButtonShowing = false;
 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -56,7 +57,6 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 		text = new CreateString(fontShader, font);
 
         startButton = new MenuButton(.5,-.5,0.4,text,fontShader,"Start");
-        addElement(startButton,0);
         Buttons[0] = startButton;
 
         backButton = new MenuButton(-.5,-.5,0.4,text,fontShader,"Back");
@@ -121,6 +121,14 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             textField.setInput("Input a valid size here...");
         }  else if (textField.getInput() == "Input a valid size here...") {
             textField.setInput("");
+        }
+
+        if (textField.getValidity() && !startButtonShowing) {
+            addElement(startButton,0);
+            startButtonShowing = true;
+        } else if (startButtonShowing && !textField.getValidity()){
+            removeElement(startButton);
+            startButtonShowing = false;
         }
 
         sb.setDifficultyScale(1-difficultySlider.getValue());
