@@ -101,7 +101,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
 
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
-                if (Buttons[i].isHeldOver()) {
+                if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
                     if (Buttons[i] == playButton) {
                         new PlaySudokuSettingsWindow(wm, width, height);
                     } else if (Buttons[i] == createButton) {

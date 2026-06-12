@@ -165,7 +165,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             action == GLFW_PRESS) {
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
-                if (Buttons[i].isHeldOver()) {
+                if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
                     if (Buttons[i] == startButton) {
                         new playSudokuWindow(wm, width, height);
                     } else if (Buttons[i] == backButton) {
