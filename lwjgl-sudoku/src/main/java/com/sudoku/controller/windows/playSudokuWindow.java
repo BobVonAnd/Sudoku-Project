@@ -91,33 +91,46 @@ public class playSudokuWindow extends Window implements WindowInterface {
         fontShader.detach();
         glBegin(GL_LINES);
 
-        float x = (float)xStart;
         float boardlenth = (float)(size * fieldsize);
         int bigfield = (int)Math.sqrt(size);
-        for (int i = 0; i <= size; i++){
-            if (i % bigfield == 0){
-                bigfieldline();
-            } else {
-                regularline();
-            }
-            glVertex2f(x, (float)yStart);
-            glVertex2f(x, (float)yStart-boardlenth);
 
+        regularline();
+        float x = (float)xStart;
+        for (int i = 0; i <= size; i++){
+            if (i % bigfield != 0){
+                glVertex2f(x, (float)yStart);
+                glVertex2f(x, (float)yStart-boardlenth);
+            }
             x += (float)fieldsize;
         }
 
         float y = (float)yStart;
         for (int i = 0; i <= size; i++){
-            if (i % bigfield == 0){
-                bigfieldline();
-            } else {
-                regularline();
+            if (i % bigfield != 0){
+                glVertex2f((float)xStart, y);
+                glVertex2f((float)xStart+boardlenth, y);
             }
-            glVertex2f((float)xStart, y);
-            glVertex2f((float)xStart+boardlenth, y);
             y -= (float)fieldsize;
         }
 
+        bigfieldline();
+        x = (float)xStart;
+        for (int i = 0; i <= size; i++){
+            if (i % bigfield == 0){
+                glVertex2f(x, (float)yStart);
+                glVertex2f(x, (float)yStart-boardlenth);
+            }
+            x += (float)fieldsize;
+        }
+
+        y = (float)yStart;
+        for (int i = 0; i <= size; i++){
+            if (i % bigfield == 0){
+                glVertex2f((float)xStart, y);
+                glVertex2f((float)xStart+boardlenth, y);
+            }
+            y -= (float)fieldsize;
+        }
 
         glEnd();
     }
