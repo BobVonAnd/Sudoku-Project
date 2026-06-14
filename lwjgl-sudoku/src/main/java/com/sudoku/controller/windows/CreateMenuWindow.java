@@ -68,9 +68,9 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public CreateMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
+        wm.setActiveWindow(this);
     }
 
     public void create() {

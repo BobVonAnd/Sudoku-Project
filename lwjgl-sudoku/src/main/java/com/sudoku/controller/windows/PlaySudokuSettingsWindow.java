@@ -146,16 +146,16 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             System.out.println("Space pressed!");
         }
         if (action == GLFW_PRESS) {
-                if (textField.isSelected()) {
-                    if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
-                    char c = (char) ('0' + (key - GLFW_KEY_0));
-                    textField.updateInput(c);
-                    }
-                    else if(key == GLFW_KEY_BACKSPACE){
-                        textField.updateInput();
-                    }
+            if (textField.isSelected()) {
+                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+                char c = (char) ('0' + (key - GLFW_KEY_0));
+                textField.updateInput(c);
+                }
+                else if(key == GLFW_KEY_BACKSPACE){
+                    textField.updateInput();
                 }
             }
+        }
     }
 
     @Override // If you don't need a mouse button callback, just delete this
@@ -167,7 +167,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
                     if (Buttons[i] == startButton) {
-                        new playSudokuWindow(wm, width, height, sb.getSize(), sb.getDifficultyScale());
+                        new playSudokuWindow(wm, width, height, sb);
                     } else if (Buttons[i] == backButton) {
                         new mainMenuWindow(wm, width, height);
                     }
