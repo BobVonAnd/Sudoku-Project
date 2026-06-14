@@ -13,12 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -28,31 +23,28 @@ import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.elements.MenuButton;
+import com.sudoku.view.elements.Sudoku;
 import com.sudoku.view.fonts.CreateFont;
 
 public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
     private SudokuBoard sudokuBoard;
-    private int size, width, height;
+    private int width, height;
     private double mouseX, mouseY;
     private CreateFont font;
 	private CreateString text;
     private Shader fontShader;
-    private FieldButton[][] buttonArray;
-    private double fieldsizeX, fieldsizeY, aspect, xAspect, yAspect, difficulty;
-    private double yStart = 0.8;        
-    private double xStart = -0.8;
     private int[] selectedField = new int[2];
-    private MenuButton returnButton;
+    private Sudoku sudokuFront;
+    private MenuButton[] buttons = new MenuButton[1];
 
-    public playSudokuWindow(WindowManager wm, int width, int height, int size, double difficulty) {
+    public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
         super(wm);
         this.wm = wm;
         this.width = width;
         this.height = height;
-        this.size = size;
-        this.difficulty = difficulty;
+        sudokuBoard = sb;
         wm.setActiveWindow(this);
     }
 
@@ -63,116 +55,32 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font); 
         
-        sudokuBoard = new SudokuBoard(size);
-        sudokuBoard.populate(difficulty);
-        buttonArray = new FieldButton[size][size];
+        sudokuBoard.populate();
 
-        aspect = (double) height/(double)width;
-        xAspect = xStart * aspect;
-
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
-
-        double y;
-        double x;
-
-        x = xAspect; 
-        for (int i = 0; i < size; i++) {
-            y = yStart;
-            for (int j = 0; j < size; j++) {
-                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader);
-                addElement(buttonArray[i][j], 0);
-                y -= fieldsizeY;
-            }
-            x += fieldsizeX;
-        }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6e7cfe5 (aabbab git er irreterende)
+        sudokuFront = new Sudoku(width, height, sudokuBoard, font, fontShader, this);
+        addElement(sudokuFront, 0);
 
         //return to last window
-        returnButton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
-        addElement(returnButton, 0);
-<<<<<<< HEAD
->>>>>>> 79fff3f (added return button for playsudokuWindow)
-=======
->>>>>>> 6e7cfe5 (aabbab git er irreterende)
+        buttons[0] = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
+        addElement(buttons[0], 0);
     }
 
     public void step() {
         // This code runs every frame
-        fontShader.detach();
-        glBegin(GL_LINES);
-
-        float boardlenth = (float)(size * fieldsizeY);
-        int bigfield = (int)Math.sqrt(size);
-
-        regularline();
-        float x = (float)xAspect;
-        for (int i = 0; i <= size; i++){
-            if (i % bigfield != 0){
-                glVertex2f(x, (float)yStart);
-                glVertex2f(x, (float)yStart-boardlenth);
-            }
-            x += (float)fieldsizeX;
-        }
-        boardlenth = (float)(size * fieldsizeX);
-
-        float y = (float)yStart;
-        for (int i = 0; i <= size; i++){
-            if (i % bigfield != 0){
-                glVertex2f((float)xAspect, y);
-                glVertex2f((float)xAspect+boardlenth, y);
-            }
-            y -= (float)fieldsizeY;
-        }
-
-        boardlenth = (float)(size * fieldsizeY);
-        bigfieldline();
-        x = (float)xAspect;
-        for (int i = 0; i <= size; i++){
-            if (i % bigfield == 0){
-                glVertex2f(x, (float)yStart);
-                glVertex2f(x, (float)yStart-boardlenth);
-            }
-            x += (float)fieldsizeX;
-        }
-
-        boardlenth = (float)(size * fieldsizeX);
-        y = (float)yStart;
-        for (int i = 0; i <= size; i++){
-            if (i % bigfield == 0){
-                glVertex2f((float)xAspect, y);
-                glVertex2f((float)xAspect+boardlenth, y);
-            }
-            y -= (float)fieldsizeY;
-        }
-
-        glEnd();
         double mouseXt = mouseX/(width/2)-1;
         double mouseYt = -mouseY/(height/2)+1;
         //wiggle physics
-        if (returnButton.getPos()[0] - returnButton.getSize()/2 < mouseXt & 
-                returnButton.getPos()[0] + returnButton.getSize()/2 > mouseXt &
+        for (int i = 0 ; i < buttons.length ; i++) {
+            if (buttons[i].getPos()[0] - buttons[i].getSize()/2 < mouseXt & 
+                buttons[i].getPos()[0] + buttons[i].getSize()/2 > mouseXt &
 
-                returnButton.getPos()[1] - returnButton.getSize()/2 < mouseYt & 
-                returnButton.getPos()[1] + returnButton.getSize()/2 > mouseYt) {
-                returnButton.heldOver(true);
+                buttons[i].getPos()[1] - buttons[i].getSize()/2 < mouseYt & 
+                buttons[i].getPos()[1] + buttons[i].getSize()/2 > mouseYt) {
+                buttons[i].heldOver(true);
             } else {
-                returnButton.heldOver(false);
+                buttons[i].heldOver(false);
             }
-    }
-
-    private void bigfieldline(){
-        glLineWidth(2.5f);
-        glColor3d(0.20392157f,0.27842137f,0.38039216f);
-    }
-
-    private void regularline(){
-        glLineWidth(1.5f);
-        glColor3d(0.84705882f,0.88235294f,0.91764706f);
+        }
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -216,63 +124,20 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
-        System.out.println("New size: " + width + "x" + height);
-        
-        aspect = (double)height/(double)width;
-        xAspect = xStart * aspect;
-        
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
-
-        double y;
-        double x;
-
-        x = xAspect; 
-        for (int i = 0; i < size; i++) {
-            y = yStart;
-            for (int j = 0; j < size; j++) {
-                double[] xy = {x,y}; 
-                buttonArray[i][j].setXY(xy);
-                xy[0] = fieldsizeX;
-                xy[1] = fieldsizeY;
-                buttonArray[i][j].setFieldSize(xy);
-                y -= fieldsizeY;
-            }
-            x += fieldsizeX;
-        }
+        sudokuFront.resize(width, height);
     }
 
     @Override // If you don't need a mouse button callback, just delete this
     public void mouseButtonCallback(int button, int action, int mods) {
         
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
-            action == GLFW_PRESS) { 
-            double [] pos = new double[2];
-            double mouseXt = mouseX/(width/2)-1;
-            double mouseYt = -mouseY/(height/2)+1;
-            FieldButton fieldButton;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    fieldButton = buttonArray[i][j];
-                    pos = fieldButton.getPos();
-                    if (pos[0] < mouseXt & pos[0] + fieldsizeX > mouseXt &
-                        pos[1] > mouseYt & pos[1] - fieldsizeY < mouseYt){
-                        fieldButton.selected(true);
-                        selectedField[0] = i;
-                        selectedField[1] = j;
-                    } else {
-                        fieldButton.selected(false);
-                    }
-                }
-            }
+            action == GLFW_PRESS) {
+            selectedField = sudokuFront.leftClick(mouseX, mouseY);
 
             //return button
             if (returnButton.isHeldOver() && elementExists(returnButton)) {
                 new PlaySudokuSettingsWindow(wm, width, height);
             }
-            
-
-            
         }
 
         if (button == GLFW_MOUSE_BUTTON_RIGHT &&
