@@ -13,12 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -35,15 +30,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
     private SudokuBoard sudokuBoard;
-    private int size, width, height;
+    private int width, height;
     private double mouseX, mouseY;
     private CreateFont font;
 	private CreateString text;
     private Shader fontShader;
-    private FieldButton[][] buttonArray;
-    private double fieldsizeX, fieldsizeY, aspect, xAspect, yAspect;
-    private double yStart = 0.8;        
-    private double xStart = -0.8;
     private int[] selectedField = new int[2];
     private Sudoku sudokuFront;
     private MenuButton returnButton;
@@ -65,7 +56,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
 		text = new CreateString(fontShader, font); 
         
         sudokuBoard.populate();
-        size = sudokuBoard.getSize();
 
         sudokuFront = new Sudoku(width, height, sudokuBoard, font, fontShader, this);
         addElement(sudokuFront, 0);
@@ -132,30 +122,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
-        System.out.println("New size: " + width + "x" + height);
-
-        aspect = (double)height/(double)width;
-        xAspect = xStart * aspect;
-        
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
-
-        double y;
-        double x;
-
-        x = xAspect; 
-        for (int i = 0; i < size; i++) {
-            y = yStart;
-            for (int j = 0; j < size; j++) {
-                double[] xy = {x,y}; 
-                buttonArray[i][j].setXY(xy);
-                xy[0] = fieldsizeX;
-                xy[1] = fieldsizeY;
-                buttonArray[i][j].setFieldSize(xy);
-                y -= fieldsizeY;
-            }
-            x += fieldsizeX;
-        }
+        sudokuFront.resize(width, height);
     }
 
     @Override // If you don't need a mouse button callback, just delete this
@@ -169,9 +136,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
             if (returnButton.isHeldOver() && elementExists(returnButton)) {
                 new PlaySudokuSettingsWindow(wm, width, height);
             }
-            
-
-            
         }
 
         if (button == GLFW_MOUSE_BUTTON_RIGHT &&

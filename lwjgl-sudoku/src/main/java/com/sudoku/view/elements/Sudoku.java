@@ -146,7 +146,34 @@ public class Sudoku implements Element {
         return selectedField;
     }
 
+    public void resize(int width, int height){
+        this.width = width;
+        this.height = height;
+        System.out.println("New size: " + width + "x" + height);
 
+        aspect = (double)height/(double)width;
+        xAspect = xStart * aspect;
+        
+        fieldsizeY = 1.6 / size ;
+        fieldsizeX = fieldsizeY*aspect;
+
+        double y;
+        double x;
+
+        x = xAspect; 
+        for (int i = 0; i < size; i++) {
+            y = yStart;
+            for (int j = 0; j < size; j++) {
+                double[] xy = {x,y}; 
+                buttonArray[i][j].setXY(xy);
+                xy[0] = fieldsizeX;
+                xy[1] = fieldsizeY;
+                buttonArray[i][j].setFieldSize(xy);
+                y -= fieldsizeY;
+            }
+            x += fieldsizeX;
+        }
+    }
 
 
 
