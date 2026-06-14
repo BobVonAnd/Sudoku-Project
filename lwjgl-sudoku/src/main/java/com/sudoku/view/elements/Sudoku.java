@@ -18,7 +18,6 @@ public class Sudoku implements Element {
 
     private SudokuBoard sudokuBoard;
     private int size, width, height;
-    private CreateFont font;
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
@@ -32,7 +31,6 @@ public class Sudoku implements Element {
         this.width = width;
         this.height = height;
         this.sudokuBoard = sb;
-        this.font = font;
         this.fontShader = fontShader;
         
 		//creates a shader and a class that can display strings
