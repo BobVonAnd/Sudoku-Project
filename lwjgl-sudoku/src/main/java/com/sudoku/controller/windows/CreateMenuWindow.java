@@ -191,25 +191,16 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         // first layer
         numPad.setSelected(0, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP && mouseYt < yNP);
-        numPad.setSelected(1,
-                mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - heightNP && mouseYt < yNP);
-        numPad.setSelected(2, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - heightNP
-                && mouseYt < yNP);
+        numPad.setSelected(1,mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - heightNP && mouseYt < yNP);
+        numPad.setSelected(2, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - heightNP && mouseYt < yNP);
         // second layer
-        numPad.setSelected(3,
-                mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
-        numPad.setSelected(4, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 2)
-                && mouseYt < yNP - heightNP);
-        numPad.setSelected(5, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3)
-                && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
+        numPad.setSelected(3, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
+        numPad.setSelected(4, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
+        numPad.setSelected(5, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
         // third layer
-        numPad.setSelected(6, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 3)
-                && mouseYt < yNP - (heightNP * 2));
-        numPad.setSelected(7, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 3)
-                && mouseYt < yNP - (heightNP * 2));
-        numPad.setSelected(8, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3)
-                && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
-
+        numPad.setSelected(6, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
+        numPad.setSelected(7, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
+        numPad.setSelected(8, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -369,7 +360,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             }
 
             if (numPad.isSelected()[numPad.getIndexSelec()]) {
-                System.out.println(numPad.getIndexSelec() + 1 + " is pressed");
+                int value = 10 * sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() + numPad.getIndexSelec() + 1;
+                if(value <= size){
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                }
+               
+                
             }
 
             // sudokuBoard

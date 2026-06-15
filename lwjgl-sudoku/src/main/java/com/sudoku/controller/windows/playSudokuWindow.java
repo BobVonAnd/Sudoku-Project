@@ -39,6 +39,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private Sudoku sudokuFront;
     private MenuButton returnButton;
 
+    private MenuButton solveButton;
+    private MenuButton hintButton;
+
+    //private EndScreenWindow = endScreen;
+
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
         super(wm);
         this.wm = wm;
@@ -61,23 +66,37 @@ public class playSudokuWindow extends Window implements WindowInterface {
         addElement(sudokuFront, 0);
 
         //return to last window
-        returnButton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
+        returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
         addElement(returnButton, 0);
+
+        solveButton = new MenuButton(0.7, 0.75, 0.2, text, fontShader, "Solve");
+        addElement(solveButton, 0);
+
+        hintButton = new MenuButton(0.7, 0.50, 0.2, text, fontShader, "Hint");
+        addElement(hintButton, 0);
     }
 
     public void step() {
         // This code runs every frame
+        
+        holdOver(returnButton);
+        holdOver(solveButton);
+        holdOver(hintButton);
+        
+    }
+
+    //inout a MenuButton and it will track if the mouse if hovering the button
+    private void holdOver(MenuButton button){
         double mouseXt = mouseX/(width/2)-1;
         double mouseYt = -mouseY/(height/2)+1;
-        //wiggle physics
-        if (returnButton.getPos()[0] - returnButton.getSize()/2 < mouseXt & 
-                returnButton.getPos()[0] + returnButton.getSize()/2 > mouseXt &
+        if (button.getPos()[0] - returnButton.getSize()/2 < mouseXt & 
+                button.getPos()[0] + returnButton.getSize()/2 > mouseXt &
 
-                returnButton.getPos()[1] - returnButton.getSize()/2 < mouseYt & 
-                returnButton.getPos()[1] + returnButton.getSize()/2 > mouseYt) {
-                returnButton.heldOver(true);
+                button.getPos()[1] - button.getSize()/2 < mouseYt & 
+                button.getPos()[1] + button.getSize()/2 > mouseYt) {
+                button.heldOver(true);
             } else {
-                returnButton.heldOver(false);
+                button.heldOver(false);
             }
     }
 
@@ -132,9 +151,14 @@ public class playSudokuWindow extends Window implements WindowInterface {
             action == GLFW_PRESS) {
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
 
+
             //return button
             if (returnButton.isHeldOver() && elementExists(returnButton)) {
                 new PlaySudokuSettingsWindow(wm, width, height);
+            }else if (solveButton.isHeldOver() && elementExists(solveButton)) {
+
+            }else if (hintButton.isHeldOver() && elementExists(hintButton)) {
+
             }
         }
 
