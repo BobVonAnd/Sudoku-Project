@@ -146,12 +146,4 @@ public class FieldButton implements Element {
         this.sizeX = xy[0];
         this.sizeY = xy[1];
     }
-
-    // What we wanna do
-    // Be able to paste a image on it with clipping mask
-    // Be able to paste text on it
-    // Store coords for both screen coords and sudokuboard coords
-    // It needs to hold size, force aspect ratio
-    // It needs to be able to be attached to a Window
-
 }
