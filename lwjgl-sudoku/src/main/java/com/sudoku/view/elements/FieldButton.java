@@ -30,7 +30,7 @@ public class FieldButton implements Element {
     private boolean notValid = false;
     private boolean error = false;
 
-    public FieldButton(Field f, double x, double y, double size, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
+    public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -63,20 +63,20 @@ public class FieldButton implements Element {
             
             if (value < 10){
                 if (error) {
-                     text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                     text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f,0f,1f});
                 } else if(notValid){
-                    text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                    text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{1f,0f,0f});
                 } else{
-                     text.makeText(""+value, (float)(x+sizeX/2.72),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                     text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
                 } 
                
             } else {
                  if (error) {
-                     text.makeText(""+value, (float)(x+sizeX/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0f,0f,1f});
+                     text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f,0f,1f});
                 } else if(notValid){
-                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{1f,0f,0f});
+                    text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{1f,0f,0f});
                 } else{
-                    text.makeText(""+value, (float)(x+size/5),(float)(y-size/0.895), (float)(4.5*size), new float[]{0.203921569f,0.278431373f,0.380392157f});
+                    text.makeText(""+value, (float)(x),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.203921569f,0.278431373f,0.380392157f});
                 } 
                 
             }
