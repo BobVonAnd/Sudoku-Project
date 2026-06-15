@@ -20,7 +20,7 @@ public class App {
 	private static algoXSolver xSolver = new algoXSolver();
 	private static humanSolverBoardHelper boardHelper = new humanSolverBoardHelper();
 	public static void main(String[] args) {
-		//textWindow window = new textWindow(wm);
+		// textWindow window = new textWindow(wm);
 		SudokuBoard sudokuBoard = new SudokuBoard(9);
 		SudokuBoard sudokuBoard2 = new SudokuBoard(9);
 		sudokuBoard.readIntoBoard(new int[][] {
@@ -84,7 +84,7 @@ public class App {
 			System.out.println("The sudokus are not the same");
 		}
 		algoAnalyser.algoAnalysisManager();
-		//wm.run();
+		// wm.run();
 	}
 	
 }

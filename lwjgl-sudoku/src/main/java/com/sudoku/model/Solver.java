@@ -28,39 +28,7 @@ public class Solver {
             XY_Chain(field);
             nakedPair(field);   
         }
-        if (field.getLeSize() > 2){
-            Field boxPair = hiddenBoxPair(field);
-            if (boxPair != null){
-                moves.add("Hidden box pair found at " + field.getStringCoords() + " and " + boxPair.getStringCoords());
-                progress = true;
-                Field nextEdge = chooseNextEdge(field);
-                if (nextEdge != null) {
-                    edgeSolver(nextEdge);
-                }
-            }
-        }
-        if (field.getLeSize() > 2 ){
-            Field rowPair = hiddenRowPair(field);
-            if (rowPair != null){
-                moves.add("Hidden row pair found at " + field.getStringCoords() + " and " + rowPair.getStringCoords());
-                progress = true;
-                Field nextEdge = chooseNextEdge(field);
-                if (nextEdge != null) {
-                    edgeSolver(nextEdge);
-                }
-            }
-        }
-        if (field.getLeSize() > 2){
-            Field columnPair = hiddenColumnPair(field);
-            if (columnPair != null){
-                moves.add("Hidden column pair found at " + field.getStringCoords() + " and " + columnPair.getStringCoords());
-                progress = true;
-                Field nextEdge = chooseNextEdge(field);
-                if (nextEdge != null) {
-                    edgeSolver(nextEdge);
-                }
-            }
-        }
+        hiddenPair(field);
 
     }
 
@@ -95,10 +63,20 @@ public class Solver {
     }
 
     public void nakedPair(Field field){
+        if (field.getLeSize() != 2){
+            return;
+        }
         for (Field f : field.getEdges()){
+            if (f.getLeSize() != 2){
+                continue;
+            }
             if (f != field && f.getLegalEntries().equals(field.getLegalEntries())) {
                 for (int legalEntry : field.getLegalEntries()){
-                    removeLegalEntryFromIntersection(field, f, legalEntry);
+                    for (Field edge : field.getEdges()){
+                        if (sameTypeEdge(field, f, edge)){
+                            removeLegalEntryInConstraint(field, f, legalEntry);
+                        }
+                    }
                     moves.add("Found naked pair between" + field.getStringCoords() + " " + f.getStringCoords());
                 }
             }   
@@ -107,129 +85,52 @@ public class Solver {
 
 
     public void hiddenPair(Field field){
-        ArrayList<Integer> legalEntries = field.getLegalEntries();
+        ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
+
+        ArrayList<Field> boxEdges = field.getBoxEdges();
+        ArrayList<Field> rowEdges = field.getRowEdges();
+        ArrayList<Field> columnEdges = field.getColumnEdges();
+
         for (int i = 0; i < legalEntries.size() - 1; i++) {
             for (int j = i + 1; j < legalEntries.size(); j++) {
+                ArrayList<Integer> pair = new ArrayList<>();
+                pair.add(legalEntries.get(i));
+                pair.add(legalEntries.get(j));
 
-            }
-        }
-    }
+                Field boxPartner = findValidPairInFields(boxEdges, pair);
+                Field rowPartner = findValidPairInFields(rowEdges, pair);
+                Field columnPartner = findValidPairInFields(columnEdges, pair);
 
+                if (boxPartner != null) {
+                    applyHiddenPair(field, boxPartner, pair);
+                    return;
+                }
 
-    public Field hiddenBoxPair(Field field) {
-    ArrayList<Integer> legalEntries = field.getLegalEntries();
-    for (int i = 0; i < legalEntries.size() - 1; i++) {
-        for (int j = i + 1; j < legalEntries.size(); j++) {
-            int candidate1 = legalEntries.get(i);
-            int candidate2 = legalEntries.get(j);
+                if (rowPartner != null) {
+                    applyHiddenPair(field, rowPartner, pair);
+                    return;
+                }
 
-            Field matchingField = null;
-            int matchingcandidate1 = 0;
-            int matchingcandidate2 = 0;
-            int boxCount = 0;
-
-            for (Field boxEdge : field.getBoxEdges()) {
-                ArrayList<Integer> boxEntries = boxEdge.getLegalEntries();
-                if (boxEntries.contains(candidate1) || boxEntries.contains(candidate2)) {
-                    boxCount++;
-                    if (boxEntries.contains(candidate1) && boxEntries.contains(candidate2)) {
-                        matchingField = boxEdge;
-                        matchingcandidate1 = candidate1;
-                        matchingcandidate2 = candidate2;
-                    }
+                if (columnPartner != null) {
+                    applyHiddenPair(field, columnPartner, pair);
+                    return;
                 }
             }
-
-            if (boxCount == 1 && matchingField != null) {
-                field.clearLe();
-                field.addLegalEntry(matchingcandidate1);
-                field.addLegalEntry(matchingcandidate2);
-                matchingField.clearLe();
-                matchingField.addLegalEntry(matchingcandidate1);
-                matchingField.addLegalEntry(matchingcandidate2);
-                return matchingField;
-            }
         }
     }
-    return null;
-} 
 
-    public Field hiddenRowPair(Field field) {
-    ArrayList<Integer> legalEntries = field.getLegalEntries();
-    for (int i = 0; i < legalEntries.size() - 1; i++) {
-        for (int j = i + 1; j < legalEntries.size(); j++) {
-            int candidate1 = legalEntries.get(i);
-            int candidate2 = legalEntries.get(j);
+    public void applyHiddenPair(Field field, Field partner, ArrayList<Integer> pair){
+        int fieldSize = field.getLeSize();
+        int partnerSize = partner.getLeSize();
 
-            Field matchingField = null;
-            int matchingcandidate1 = 0;
-            int matchingcandidate2 = 0;
-            int rowCount = 0;
+        field.updateLes(pair);
+        partner.updateLes(pair);
 
-            for (Field rowEdge : field.getRowEdges()) {
-                ArrayList<Integer> rowEntries = rowEdge.getLegalEntries();
-                if (rowEntries.contains(candidate1) || rowEntries.contains(candidate2)) {
-                    rowCount++;
-                    if (rowEntries.contains(candidate1) && rowEntries.contains(candidate2)) {
-                        matchingField = rowEdge;
-                        matchingcandidate1 = candidate1;
-                        matchingcandidate2 = candidate2;
-                    }
-                }
-            }
-
-            if (rowCount == 1 && matchingField != null) {
-                field.clearLe();
-                field.addLegalEntry(matchingcandidate1);
-                field.addLegalEntry(matchingcandidate2);
-                matchingField.clearLe();
-                matchingField.addLegalEntry(matchingcandidate1);
-                matchingField.addLegalEntry(matchingcandidate2);
-                return matchingField;
-            }
+        if (field.getLeSize() < fieldSize || partner.getLeSize() < partnerSize){
+            progress = true;
+            moves.add("Found pair between " + field.getStringCoords() + " " + partner.getStringCoords() + " pair:" + pair);
         }
     }
-    return null;
-} 
-
-    public Field hiddenColumnPair(Field field) {
-    ArrayList<Integer> legalEntries = field.getLegalEntries();
-    for (int i = 0; i < legalEntries.size() - 1; i++) {
-        for (int j = i + 1; j < legalEntries.size(); j++) {
-            int candidate1 = legalEntries.get(i);
-            int candidate2 = legalEntries.get(j);
-
-            Field matchingField = null;
-            int matchingcandidate1 = 0;
-            int matchingcandidate2 = 0;
-            int columnCount = 0;
-
-            for (Field columnEdge : field.getColumnEdges()) {
-                ArrayList<Integer> columnEntries = columnEdge.getLegalEntries();
-                if (columnEntries.contains(candidate1) || columnEntries.contains(candidate2)) {
-                    columnCount++;
-                    if (columnEntries.contains(candidate1) && columnEntries.contains(candidate2)) {
-                        matchingField = columnEdge;
-                        matchingcandidate1 = candidate1;
-                        matchingcandidate2 = candidate2;
-                    }
-                }
-            }
-
-            if (columnCount == 1 && matchingField != null) {
-                field.clearLe();
-                field.addLegalEntry(matchingcandidate1);
-                field.addLegalEntry(matchingcandidate2);
-                matchingField.clearLe();
-                matchingField.addLegalEntry(matchingcandidate1);
-                matchingField.addLegalEntry(matchingcandidate2);
-                return matchingField;
-            }
-        }
-    }
-    return null;
-}
-
     public void pointingSingleInBox(Field field) {
     for (int candidate : field.getLegalEntries()) {
         boolean onlyInThisRow = true;
@@ -389,13 +290,34 @@ public class Solver {
         }
         return false;
     }
-    public int fieldsThatContainLegalEntries(ArrayList<Field> fields, ArrayList<Integer> legalEntries){
-        
+    public Field findValidPairInFields(ArrayList<Field> fields, ArrayList<Integer> legalEntries){
+        int fieldsCounter = 0;
+        Field candidate = null;
+        for (Field field : fields){
+            for (int legalEntry : legalEntries){
+                if (field.getLegalEntries().contains(legalEntry)){
+                    fieldsCounter++;
+                    if (field.getLegalEntries().containsAll(legalEntries) && fieldsCounter < 2){
+                        candidate = field;
+                    }
+                    if (fieldsCounter >1){
+                        return null;
+                    }  
+                    break; 
+                }
+            }
+        }
+        return candidate;
     }
+    
+    
     public boolean intersect(Field field1, Field field2){
         return field1.getEdges().contains(field2) && field2.getEdges().contains(field1);
     }
     public boolean fieldIsInIntersection(Field field1, Field field2, Field intersectField){
+        if (field1 == null || field2 == null || intersectField == null){
+            return false;
+        }
         return intersect(field1, intersectField) && intersect(field2, intersectField);
     }
     public void nakedSingle(Field field){
@@ -408,33 +330,58 @@ public class Solver {
             edgeSolver(nextEdge);
         }
     }
-
+    public boolean sameTypeEdge(Field field1, Field field2, Field edge){
+        if (Field.isBoxEdge(field1,edge) && Field.isBoxEdge(field2, edge)){
+            return true;
+        }
+        if (Field.isRowEdge(field1,edge) && Field.isRowEdge(field2, edge)){
+            return true;
+        }
+        if (Field.isColumnEdge(field1,edge) && Field.isColumnEdge(field2, edge)){
+            return true;
+        }
+        return false;
+    }
 
     public ArrayList<String> getMoves(){
         return moves;
     }
-    public boolean removeLegalEntryFromIntersection(Field field1, Field field2, int legalEntry){
-        boolean internalProgress = false;
+    public void removeLegalEntryFromIntersection(Field field1, Field field2, int legalEntry){
         for (Field edge : field1.getEdges()){
             if (fieldIsInIntersection(field1, field2, edge) && edge != field2 && edge != field1){
                 int size = edge.getLeSize();
                 edge.removeLE(legalEntry);
                 if (edge.getLeSize() < size){
                     progress = true;
-                    internalProgress = true;
                 }
                 if (edge.getLeSize() <= 0 && edge.getValue() == 0){
                     moves.add("I removed the last legal entry here");
                 }
             }
         }
-    return internalProgress;
+    }
+    public void removeLegalEntryInConstraint(Field field1, Field field2, int legalEntry){
+        for (Field edge : field1.getEdges()){
+            if (sameTypeEdge(field1, field2, edge)){
+                int size = edge.getLeSize();
+                edge.removeLE(legalEntry);
+                if (edge.getLeSize() < size){
+                    progress = true;
+                }
+                if (edge.getLeSize() <= 0 && edge.getValue() == 0){
+                    moves.add("I removed the last legal entry here");
+                }
+            }
+        }
     }
     public Field chooseNextEdge(Field field){
-    for (Field edge : field.getEdges()){
-        field.removeEdge(edge);
-        return edge;
-    }
-    return null;    
+        for (Field edge : field.getEdges()){
+            edge.removeEdge(field);
+        }
+        for (Field edge : field.getEdges()){
+            field.removeEdge(edge);
+            return edge;
+        }
+        return null;    
     }  
 }

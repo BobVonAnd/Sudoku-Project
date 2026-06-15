@@ -66,6 +66,10 @@ public class Field {
     public void removeLEs(ArrayList<Integer> Le){
         this.legalEntries.removeAll(Le);
     }
+    public void updateLes(ArrayList<Integer> newLe){
+        this.legalEntries.clear();
+        this.legalEntries = newLe;
+    }
     public void removeEdge(Field field){//This method removes an incoming edge
         Edges.remove(field);
     }
