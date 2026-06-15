@@ -43,12 +43,14 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private TextFieldButton textField;
     private NumPadButton numPad;
     private boolean unique, solveable;
+    private SolvedWindow solvedWindow;
 
     private String output = "Size: ";
     // x, y, scale, width, hight
     private float[] textFieldPrime = new float[] { -0.6f, 0.7f, 0.3f, 0.0f, 0.1f };
 
     private SudokuBoard sudokuBoard = new SudokuBoard(0);
+    private SudokuBoard solvedSudokuBoard; 
     private int standardSize = 9;
     private int size = standardSize;
     private int width;
@@ -62,6 +64,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private boolean sudokuCreated = false;
 
     private MenuButton returnButton;
+    private MenuButton solvedButton;
 
     private boolean errorDetected = false;
 
@@ -93,6 +96,18 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         // return to menu button
         returnButton = new MenuButton(-0.8, 0.8, 0.2, text, fontShader, "Menu");
         addElement(returnButton, 0);
+
+
+        // creates a copy of the sudokuboard which we solve
+        solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+        int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+        solvedSudokuBoard.readIntoBoard(integerBoard);
+        solvedSudokuBoard.solve();
+
+        solvedWindow = new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
+
+        solvedButton = new MenuButton(0.7, -0.6, 0.2, text, fontShader, output);
+        addElement(solvedButton, 0);
     }
 
     public void step() {
@@ -161,7 +176,22 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
 
 
+        holdOver(solvedButton);
+    }
 
+    // inout a MenuButton and it will track if the mouse if hovering the button
+    private void holdOver(MenuButton button) {
+        double mouseXt = mouseX / (width / 2) - 1;
+        double mouseYt = -mouseY / (height / 2) + 1;
+        if (button.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+                button.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+
+                button.getPos()[1] - button.getSize() / 2 < mouseYt &
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) {
+            button.heldOver(true);
+        } else {
+            button.heldOver(false);
+        }
     }
 
     private void bigfieldline() {
