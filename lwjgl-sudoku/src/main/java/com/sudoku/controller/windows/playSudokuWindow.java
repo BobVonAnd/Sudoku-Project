@@ -64,10 +64,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
         returnbutton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
         buttons[0] = returnbutton;
         addElement(buttons[0], 0);
-
-        hintbutton = new MenuButton(0.2, -0.85, 0.2, text, fontShader, "Hint");
-        buttons[1] = hintbutton;
-        addElement(buttons[1], 0);
     }
 
     public void step() {
@@ -144,8 +140,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
             for (int i = 0; i < buttons.length; i++){
                 if (buttons[i].isHeldOver() && elementExists(buttons[i])) {
                     if (buttons[i] == returnbutton) {
-                        new PlaySudokuSettingsWindow(wm, width, height);
-                    } else if (buttons[i] == hintbutton) {
                         new PlaySudokuSettingsWindow(wm, width, height);
                     }
 

@@ -43,10 +43,10 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
         this.sb = new SudokuBoard(9);
+        wm.setActiveWindow(this);
     }
 
     public void create() {

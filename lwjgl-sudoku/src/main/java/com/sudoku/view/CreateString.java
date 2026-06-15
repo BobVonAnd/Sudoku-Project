@@ -34,6 +34,7 @@ public class CreateString {
     private Shader shader;
     private int vao;
     private int vbo;
+    private float aspect = 1;
 
     private int[] indices = {
         0, 1, 3,
@@ -93,7 +94,7 @@ public class CreateString {
         float x0 = x;
         float y0 = y;
         float x1 = x + scale * (charInfo.width/WINDOWX);
-        float y1 = y + scale * (charInfo.height/WINDOWY);
+        float y1 = y + scale * (charInfo.height/(WINDOWY*aspect));
 
         float r = rgb[0];
         float g = rgb[1];
@@ -167,8 +168,6 @@ public class CreateString {
     }
 
     public void setXY(int width, int height){
-        WINDOWX = (float)width;
-        WINDOWY = (float)height;
+        //aspect = (float)(height/width);
     }
-
 }
