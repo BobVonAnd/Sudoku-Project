@@ -29,6 +29,8 @@ public class FieldButton implements Element {
 
     private boolean notValid = false;
     private boolean error = false;
+    private boolean userGess = false;
+    private boolean isSolved = false;
 
     public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
@@ -41,8 +43,27 @@ public class FieldButton implements Element {
         this.fontShader = fontShader;
     }
 
+    //this is used for solved sudoku and it changes the color
+    //where there was an input in the finel solved sudoku
+    public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader, boolean isgess, boolean isSolved) {
+        this.field = f;    
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.x = x;
+        this.y = y;        
+        colour = new double[] {1.0f,0f,0f};
+        this.text = text;
+        this.fontShader = fontShader;
+        this.userGess = isgess;
+        this.isSolved = isSolved;
+    }
+
     public void setError(boolean isError){
         error = isError;
+    }
+
+    public void setUserGess(boolean isGess){
+        userGess = isGess;
     }
 
     public void draw() {
@@ -61,7 +82,13 @@ public class FieldButton implements Element {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             
-            if (value < 10){
+            if(isSolved){
+                if(userGess){
+                    text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f, 0f, 0f});
+                }else{
+                    text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0.0471f, 0.6588f, 0.9529f});
+                }
+            }else if(value < 10){
                 if (error) {
                      text.makeText(""+value, (float)(x+sizeX/3.9),(float)(y-sizeY/0.895), (float)(4.5*sizeY), new float[]{0f,0f,1f});
                 } else if(notValid){
