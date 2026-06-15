@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLineWidth;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
-
 import com.sudoku.controller.Window;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
@@ -24,6 +23,7 @@ public class Sudoku implements Element {
     private double fieldsizeX, fieldsizeY, aspect, xAspect, yAspect;
     private double yStart = 0.8;        
     private double xStart = -0.8;
+
 
 
     
@@ -53,6 +53,42 @@ public class Sudoku implements Element {
             y = yStart;
             for (int j = 0; j < size; j++) {
                 buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader);
+                window.addElement(buttonArray[i][j], 0);
+                y -= fieldsizeY;
+            }
+            x += fieldsizeX;
+        }
+    }
+
+    //this is used for solved sudoku and it changes the color
+    //where there was an input in the finel solved sudoku
+    public Sudoku(int width, int height, SudokuBoard sb, SudokuBoard unsolvedSB, CreateFont font, Shader fontShader, Window window){
+        this.width = width;
+        this.height = height;
+        this.sudokuBoard = sb;
+        this.fontShader = fontShader;
+        
+		//creates a shader and a class that can display strings
+		text = new CreateString(fontShader, font);
+
+        size = sudokuBoard.getSize();
+        buttonArray = new FieldButton[size][size];
+
+        aspect = (double) height/(double)width;
+        xAspect = xStart * aspect;
+
+        fieldsizeY = 1.6 / size ;
+        fieldsizeX = fieldsizeY*aspect;
+
+        double y;
+        double x;
+
+        x = xAspect; 
+        for (int i = 0; i < size; i++) {
+            y = yStart;
+            for (int j = 0; j < size; j++) {
+                boolean gess = unsolvedSB.getSingleField(i, j).getValue() != 0;
+                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader, gess, true);
                 window.addElement(buttonArray[i][j], 0);
                 y -= fieldsizeY;
             }
@@ -121,6 +157,13 @@ public class Sudoku implements Element {
     private void regularline(){
         glLineWidth(1.5f);
         glColor3d(0.84705882f,0.88235294f,0.91764706f);
+    }
+
+    public void setNotValidInput(boolean isValidInput, int[] selectedField){
+        buttonArray[selectedField[0]][selectedField[1]].setNotValid(isValidInput);
+    }
+    public void setNotValidInputToFalse(int[] selectedField){
+        buttonArray[selectedField[0]][selectedField[1]].setNotValid(false);
     }
 
     public int[] leftClick(double x,double y){
