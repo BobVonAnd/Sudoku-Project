@@ -54,7 +54,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		Shader fontShader = wm.getFontShader();
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font, width, height);
 
         startButton = new MenuButton(.5,-.5,0.4,text,fontShader,"Start");
         Buttons[0] = startButton;
@@ -69,7 +69,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
             textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
         addElement(textField, 0);
-        textInfo = new CreateString(fontShader, font);
+        textInfo = new CreateString(fontShader, font, width, height);
         
     }
 
@@ -93,6 +93,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        text.setXY(width, height);
     }
 
     public void step() {
@@ -167,6 +168,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
                     if (Buttons[i] == startButton) {
+                        sb.populate();
                         new playSudokuWindow(wm, width, height, sb);
                     } else if (Buttons[i] == backButton) {
                         new mainMenuWindow(wm, width, height);

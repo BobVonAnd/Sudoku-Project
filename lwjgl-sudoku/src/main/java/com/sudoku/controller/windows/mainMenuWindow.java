@@ -38,7 +38,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font, width, height);
 
         playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
         addElement(playButton,0);
@@ -65,6 +65,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        text.setXY(width, height);
     }
 
     public void step() {

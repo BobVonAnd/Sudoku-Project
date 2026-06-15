@@ -34,7 +34,7 @@ public class Sudoku implements Element {
         this.fontShader = fontShader;
         
 		//creates a shader and a class that can display strings
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font , width, height);
 
         size = sudokuBoard.getSize();
         buttonArray = new FieldButton[size][size];
@@ -173,6 +173,7 @@ public class Sudoku implements Element {
             }
             x += fieldsizeX;
         }
+        text.setXY(width, height);
     }
 
 
