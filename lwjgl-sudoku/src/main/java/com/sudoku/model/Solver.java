@@ -403,6 +403,10 @@ public class Solver {
             for (Field link : hinge.getEdges()){
                 ArrayList<Field> chainLinks = new ArrayList<>();
                 chainLinks = XY_Chain_Link(link, connection, chainLinks, legalEntry);
+                if (chainLinks != null){
+                    int size = chainLinks.size();
+                    Field endField = chainLinks.get(size-1);
+                }
             }
         }
     }
@@ -440,6 +444,9 @@ public class Solver {
 
     public ArrayList<String> getMoves(){
         return moves;
+    }
+    public void removeLegalEntryFromIntersection(Field field1, Field field2, int legalEntry){
+        for 
     }
     public Field chooseNextEdge(Field field){
     for (Field edge : field.getEdges()){
