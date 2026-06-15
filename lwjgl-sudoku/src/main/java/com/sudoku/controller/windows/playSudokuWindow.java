@@ -57,7 +57,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         
         sudokuBoard.populate();
 
-        sudokuFront = new Sudoku(width, height, sudokuBoard, font, fontShader, this);
+        sudokuFront = new Sudoku(width, height, 1.6,  0, 0, sudokuBoard, font, fontShader, this);
         addElement(sudokuFront, 0);
 
         //return to last window
