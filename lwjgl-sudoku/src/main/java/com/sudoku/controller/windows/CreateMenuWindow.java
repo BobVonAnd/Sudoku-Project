@@ -252,7 +252,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println("9 pressed!");
                 }
-                if (key == GLFW_KEY_BACKSPACE) {
+                if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
                     System.out.println();
                     value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);

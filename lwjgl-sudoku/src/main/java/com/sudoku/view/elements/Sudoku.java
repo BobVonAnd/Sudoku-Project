@@ -25,6 +25,7 @@ public class Sudoku implements Element {
     private double xStart = -0.8;
 
 
+
     
     public Sudoku(int width, int height, SudokuBoard sb, CreateFont font, Shader fontShader, Window window){
         this.width = width;
@@ -156,6 +157,13 @@ public class Sudoku implements Element {
     private void regularline(){
         glLineWidth(1.5f);
         glColor3d(0.84705882f,0.88235294f,0.91764706f);
+    }
+
+    public void setNotValidInput(boolean isValidInput, int[] selectedField){
+        buttonArray[selectedField[0]][selectedField[1]].setNotValid(isValidInput);
+    }
+    public void setNotValidInputToFalse(int[] selectedField){
+        buttonArray[selectedField[0]][selectedField[1]].setNotValid(false);
     }
 
     public int[] leftClick(double x,double y){

@@ -31,6 +31,7 @@ public class FieldButton implements Element {
     private boolean error = false;
     private boolean userGess = false;
     private boolean isSolved = false;
+    
 
     public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard, CreateString text, Shader fontShader) {
         this.field = f;    
@@ -62,6 +63,10 @@ public class FieldButton implements Element {
         error = isError;
     }
 
+    public void setNotValid(boolean notValid) {
+        this.notValid = notValid;
+    }
+
     public void setUserGess(boolean isGess){
         userGess = isGess;
     }
@@ -70,6 +75,7 @@ public class FieldButton implements Element {
         fontShader.detach();
         glBegin(GL_QUADS);
         setColour();
+
         glColor3d(colour[0], colour[1], colour[2]);
         glVertex2d(x, y - sizeY); //Bottom left
         glVertex2d(x + sizeX, y - sizeY); //Bottom right
