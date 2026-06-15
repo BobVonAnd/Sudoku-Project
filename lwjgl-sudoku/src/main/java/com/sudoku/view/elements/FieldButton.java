@@ -21,7 +21,7 @@ public class FieldButton implements Element {
     private int value;
     private double x,y,size;
     private boolean selected;
-    private double[] colour;
+    private double[] colour, textColour;
     private CreateString text;
     private Shader fontShader;
     private boolean touching;
@@ -42,6 +42,10 @@ public class FieldButton implements Element {
 
     public void setError(boolean isError){
         error = isError;
+    }
+
+    public void setNotValid(boolean isNotValid) {
+        notValid = isNotValid;
     }
 
     public void draw() {
