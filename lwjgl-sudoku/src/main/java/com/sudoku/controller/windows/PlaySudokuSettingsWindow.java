@@ -13,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.Gamepad;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
@@ -39,6 +40,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     private float[] textFieldPrime = new float[]{-0.6f, 0.7f,0.3f, 0.0f, 0.1f};
     private String output = "Size: ";
     private boolean startButtonShowing = false;
+    private Gamepad gpad;
 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -51,6 +53,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
     public void create() {
         // This code runs once
+        gpad = new Gamepad();
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		Shader fontShader = wm.getFontShader();
@@ -63,14 +66,17 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         addElement(backButton,0);
         Buttons[1] = backButton;
 
-        difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, "Difficulty: ", " (easy)");
+        difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, gpad, "Difficulty: ", " (easy)");
         addElement(difficultySlider, 0);
 
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
             textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
         addElement(textField, 0);
         textInfo = new CreateString(fontShader, font);
-        
+
+        gpad.addElement(textField, 0, 0);
+        gpad.addElement(difficultySlider, 0, 1);
+        gpad.addElement(backButton, -1, 2);
     }
 
     private void textFieldHover(double mouseXt, double mouseYt){
@@ -97,17 +103,19 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
     public void step() {
         // This code runs every frame
+        gpad.step();
         difficultySlider.update(mouseX, mouseY, width, height, mbLeftHeld);
         // Check every menu button if we're holding over
         double mouseXt = mouseX/(width/2)-1;
         double mouseYt = -mouseY/(height/2)+1;
         for (int i = 0 ; i < Buttons.length ; i++) {
-            if (Buttons[i].getPos()[0] - Buttons[i].getSize()/2 < mouseXt & 
+            if ((Buttons[i].getPos()[0] - Buttons[i].getSize()/2 < mouseXt & 
                 Buttons[i].getPos()[0] + Buttons[i].getSize()/2 > mouseXt &
 
                 Buttons[i].getPos()[1] - Buttons[i].getSize()/2 < mouseYt & 
-                Buttons[i].getPos()[1] + Buttons[i].getSize()/2 > mouseYt) {
+                Buttons[i].getPos()[1] + Buttons[i].getSize()/2 > mouseYt) || gpad.isSelected(Buttons[i])) {
                 Buttons[i].heldOver(true);
+                windowTransition(Buttons[i],false);
             } else {
                 Buttons[i].heldOver(false);
             }
@@ -125,9 +133,11 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
         if (textField.getValidity() && !startButtonShowing) {
             addElement(startButton,0);
+            gpad.addElement(startButton, 0, 2);
             startButtonShowing = true;
         } else if (startButtonShowing && !textField.getValidity()){
             removeElement(startButton);
+            gpad.removeElement(startButton);
             startButtonShowing = false;
         }
 
@@ -166,11 +176,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
-                    if (Buttons[i] == startButton) {
-                        new playSudokuWindow(wm, width, height, sb);
-                    } else if (Buttons[i] == backButton) {
-                        new mainMenuWindow(wm, width, height);
-                    }
+                    windowTransition(Buttons[i], true);
                 }
             }
         }
@@ -193,6 +199,17 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
         }
         
+    }
+    public void windowTransition(MenuButton b, boolean mouseClick) {
+        if (mouseClick || gpad.isEntered()) {
+            if (b.isHeldOver() && elementExists(b)) {
+                if (b == startButton) {
+                    new playSudokuWindow(wm, width, height, sb);
+                } else if (b == backButton) {
+                    new mainMenuWindow(wm, width, height);
+                }
+            }
+        }
     }
 
 }

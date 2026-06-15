@@ -1,11 +1,12 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.*;
+
+import java.rmi.server.Operation;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
+import com.sudoku.model.Gamepad;
 import com.sudoku.controller.WindowManager;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
@@ -24,6 +25,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
     private CreateFont font;
 	private CreateString text;
     private Shader fontShader;
+    private Gamepad gpad;
 
     public mainMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -34,25 +36,27 @@ public class mainMenuWindow extends Window implements WindowInterface {
     }
 
     public void create() {
+        gpad = new Gamepad();
         // This code runs once
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font);
 
-        playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
-        addElement(playButton,0);
-        Buttons[0] = playButton;
-
         createButton = new MenuButton(0,0.6,0.4,text,fontShader,"Create");
+        gpad.addElement(createButton,0,1);
         addElement(createButton,0);
         Buttons[1] = createButton;
 
+        playButton = new MenuButton(0,0,0.4,text,fontShader,"Play");
+        gpad.addElement(playButton,0,2);
+        addElement(playButton,0);
+        Buttons[0] = playButton;
+
         exitButton = new MenuButton(0,-.6,0.4,text,fontShader,"Exit");
+        gpad.addElement(exitButton,0,3);
         addElement(exitButton,0);
         Buttons[2] = exitButton;
-
-        
     }
 
     @Override
@@ -69,17 +73,18 @@ public class mainMenuWindow extends Window implements WindowInterface {
 
     public void step() {
         // This code runs every frame
-        
+        gpad.step();
         // Check every menu button if we're holding over
         double mouseXt = mouseX/(width/2)-1;
         double mouseYt = -mouseY/(height/2)+1;
         for (int i = 0 ; i < Buttons.length ; i++) {
-            if (Buttons[i].getPos()[0] - Buttons[i].getSize()/2 < mouseXt & 
+            if ((Buttons[i].getPos()[0] - Buttons[i].getSize()/2 < mouseXt & 
                 Buttons[i].getPos()[0] + Buttons[i].getSize()/2 > mouseXt &
 
                 Buttons[i].getPos()[1] - Buttons[i].getSize()/2 < mouseYt & 
-                Buttons[i].getPos()[1] + Buttons[i].getSize()/2 > mouseYt) {
+                Buttons[i].getPos()[1] + Buttons[i].getSize()/2 > mouseYt) || gpad.isSelected(Buttons[i])) {
                 Buttons[i].heldOver(true);
+                windowTransition(Buttons[i],false);
             } else {
                 Buttons[i].heldOver(false);
             }
@@ -101,17 +106,22 @@ public class mainMenuWindow extends Window implements WindowInterface {
 
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
-                if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
-                    if (Buttons[i] == playButton) {
-                        new PlaySudokuSettingsWindow(wm, width, height);
-                    } else if (Buttons[i] == createButton) {
-                        new CreateMenuWindow(wm, width, height);
-                    } else if (Buttons[i] == exitButton) {
-                        System.exit(0);
-                    }
-                }
+                windowTransition(Buttons[i], true);
             }
         }
     }
 
+    public void windowTransition(MenuButton b, boolean mouseClick) {
+        if (mouseClick || gpad.isEntered()) {
+            if (b.isHeldOver() && elementExists(b)) {
+                if (b == playButton) {
+                    new PlaySudokuSettingsWindow(wm, width, height);
+                } else if (b == createButton) {
+                    new CreateMenuWindow(wm, width, height);
+                } else if (b == exitButton) {
+                    System.exit(0);
+                }
+            }
+        }
+    }
 }
