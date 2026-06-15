@@ -14,6 +14,10 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Utestet_kode
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -211,6 +215,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         sudokuFront.resize(width, height);
+        text.setXY(width, height);
     }
 
     @Override // If you don't need a mouse button callback, just delete this

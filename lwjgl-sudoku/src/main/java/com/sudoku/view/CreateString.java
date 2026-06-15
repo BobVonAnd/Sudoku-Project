@@ -25,15 +25,16 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 import com.sudoku.view.fonts.CharInfo;
 import com.sudoku.view.fonts.CreateFont;
 
-//borrowed from GamesWithGabe
+//borrowed from GamesWithGabe and edited a tiny bit
 public class CreateString {
     
-    private final float WINDOWX = 1280f;
-    private final float WINDOWY = 720f;
+    private float WINDOWX = 1280f;
+    private float WINDOWY = 720f;
     private CreateFont font;
     private Shader shader;
     private int vao;
     private int vbo;
+    private float aspect = 1;
 
     private int[] indices = {
         0, 1, 3,
@@ -47,9 +48,11 @@ public class CreateString {
     private Matrix4f projection = new Matrix4f();
 
 
-    public CreateString(Shader shader, CreateFont font){
+    public CreateString(Shader shader, CreateFont font, int width, int height){
         this.shader = shader;
         this.font = font;
+        WINDOWX = (float)width;
+        WINDOWY = (float)height;
         createBatch();
     }
 
@@ -91,7 +94,7 @@ public class CreateString {
         float x0 = x;
         float y0 = y;
         float x1 = x + scale * (charInfo.width/WINDOWX);
-        float y1 = y + scale * (charInfo.height/WINDOWY);
+        float y1 = y + scale * (charInfo.height/(WINDOWY*aspect));
 
         float r = rgb[0];
         float g = rgb[1];
@@ -164,4 +167,7 @@ public class CreateString {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, eBuffer, GL_STATIC_DRAW);
     }
 
+    public void setXY(int width, int height){
+        //aspect = (float)(height/width);
+    }
 }

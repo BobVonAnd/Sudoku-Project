@@ -78,12 +78,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         font = wm.getFont();
         // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
-        text = new CreateString(fontShader, font);
+        text = new CreateString(fontShader, font, width, height);
 
         // creates a String and a box, with xyPos, color, width, hight
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1],
                 textFieldPrime[2], new float[] { 1.0f, 0.0f, 0.0f }, textFieldPrime[3], textFieldPrime[4]);
-        textInfo = new CreateString(fontShader, font);
+        textInfo = new CreateString(fontShader, font, width, height);
 
         float aspect = 1280f / 720f;
         numPad = new NumPadButton(0.65f, 0.6f, 0.1f, 0.1f * aspect, text, fontShader);
@@ -345,6 +345,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        text.setXY(width, height);
         System.out.println("New size: " + width + "x" + height);
     }
 
@@ -362,14 +363,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             if (numPad.isSelected()[numPad.getIndexSelec()]) {
                 int value = 10 * sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() + numPad.getIndexSelec() + 1;
                 if(value <= size){
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
                
-                
-            }
-
-            // sudokuBoard
-            if (textField.getValidity() && sudokuCreated) {
                 double[] pos = new double[2];
                 double mouseXt = mouseX / (width / 2) - 1;
                 double mouseYt = -mouseY / (height / 2) + 1;

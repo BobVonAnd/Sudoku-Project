@@ -30,9 +30,9 @@ public class mainMenuWindow extends Window implements WindowInterface {
     public mainMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
+        wm.setActiveWindow(this);
     }
 
     public void create() {
@@ -41,7 +41,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		fontShader = wm.getFontShader();
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font, width, height);
 
         createButton = new MenuButton(0,0.6,0.4,text,fontShader,"Create");
         gpad.addElement(createButton,0,1);
@@ -69,6 +69,7 @@ public class mainMenuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        text.setXY(width, height);
     }
 
     public void step() {

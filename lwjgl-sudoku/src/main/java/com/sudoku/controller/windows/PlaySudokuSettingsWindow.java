@@ -45,10 +45,10 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
         super(wm);
         this.wm = wm;
-        wm.setActiveWindow(this);
         this.width = width;
         this.height = height;
         this.sb = new SudokuBoard(9);
+        wm.setActiveWindow(this);
     }
 
     public void create() {
@@ -57,7 +57,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         font = wm.getFont();
 		//creates a shader and a class that can display strings
 		Shader fontShader = wm.getFontShader();
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font, width, height);
 
         startButton = new MenuButton(.5,-.5,0.4,text,fontShader,"Start");
         Buttons[0] = startButton;
@@ -72,7 +72,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
             textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
         addElement(textField, 0);
-        textInfo = new CreateString(fontShader, font);
+        textInfo = new CreateString(fontShader, font, width, height);
 
         gpad.addElement(textField, 0, 0);
         gpad.addElement(difficultySlider, 0, 1);
@@ -99,6 +99,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        text.setXY(width, height);
     }
 
     public void step() {
