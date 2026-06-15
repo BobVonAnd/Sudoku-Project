@@ -21,7 +21,6 @@ import com.sudoku.controller.WindowManager;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.Sudoku;
 import com.sudoku.view.fonts.CreateFont;
@@ -37,6 +36,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private Shader fontShader;
     private int[] selectedField = new int[2];
     private Sudoku sudokuFront;
+    private MenuButton returnbutton;
     private MenuButton[] buttons = new MenuButton[1];
 
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
@@ -61,7 +61,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
         addElement(sudokuFront, 0);
 
         //return to last window
-        buttons[0] = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
+        returnbutton = new MenuButton(-0.88, 0.9, 0.13, text, fontShader, "Back");
+        buttons[0] = returnbutton;
         addElement(buttons[0], 0);
     }
 
@@ -135,8 +136,12 @@ public class playSudokuWindow extends Window implements WindowInterface {
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
 
             //return button
-            if (returnButton.isHeldOver() && elementExists(returnButton)) {
-                new PlaySudokuSettingsWindow(wm, width, height);
+            for (int i = 0; i < buttons.length; i++){
+                if (buttons[i].isHeldOver() && elementExists(buttons[i])) {
+                    if (buttons[i] == returnbutton) {
+                        new PlaySudokuSettingsWindow(wm, width, height);
+                    }
+                }
             }
         }
 
