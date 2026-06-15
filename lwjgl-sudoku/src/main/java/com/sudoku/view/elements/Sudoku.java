@@ -60,6 +60,41 @@ public class Sudoku implements Element {
             x += fieldsizeX;
         }
     }
+
+        public Sudoku(int width, int height, SudokuBoard sb, SudokuBoard unsolvedSB, CreateFont font, Shader fontShader, Window window){
+        this.width = width;
+        this.height = height;
+        this.sudokuBoard = sb;
+        this.fontShader = fontShader;
+        
+		//creates a shader and a class that can display strings
+		text = new CreateString(fontShader, font, width, height);
+
+        size = sudokuBoard.getSize();
+        buttonArray = new FieldButton[size][size];
+
+        aspect = (double) height/(double)width;
+        xAspect = xStart * aspect;
+
+        fieldsizeY = 1.6 / size ;
+        fieldsizeX = fieldsizeY*aspect;
+
+        double y;
+        double x;
+
+        x = xAspect; 
+        for (int i = 0; i < size; i++) {
+            y = yStart;
+            for (int j = 0; j < size; j++) {
+                boolean gess = unsolvedSB.getSingleField(i, j).getValue() != 0;
+                buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader, gess, true);
+                window.addElement(buttonArray[i][j], 0);
+                y -= fieldsizeY;
+            }
+            x += fieldsizeX;
+        }
+    }
+
     
     public void draw(){
         fontShader.detach();

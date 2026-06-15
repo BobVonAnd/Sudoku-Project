@@ -14,10 +14,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/Utestet_kode
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -62,11 +58,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
         font = wm.getFont();
         // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
-        text = new CreateString(fontShader, font);
+        text = new CreateString(fontShader, font, width, height);
 
         sudokuBoard.populate();
 
-        sudokuFront = new Sudoku(width, height, sudokuBoard, font, fontShader, this);
+        sudokuFront = new Sudoku(width, height, 1.6, 0,0, sudokuBoard, font, fontShader, this);
         addElement(sudokuFront, 0);
 
         // return to last window

@@ -42,9 +42,9 @@ public class SolvedWindow extends Window implements WindowInterface {
         // This code runs once
         font = wm.getFont();
 		fontShader = wm.getFontShader();
-		text = new CreateString(fontShader, font);        
+		text = new CreateString(fontShader, font, width, height);        
 
-        sudokuUI = new Sudoku(width, height,solvedSudokuBoard, sudokuBoard, font, fontShader, this);
+        sudokuUI = new Sudoku(width, height, solvedSudokuBoard, sudokuBoard, font, fontShader, this);
         addElement(sudokuUI, 0);
 
     }
