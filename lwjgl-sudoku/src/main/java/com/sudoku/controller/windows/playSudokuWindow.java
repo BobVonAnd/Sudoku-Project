@@ -14,14 +14,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
-
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.Sudoku;
 import com.sudoku.view.fonts.CreateFont;
@@ -30,6 +28,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     
     private WindowManager wm;
     private SudokuBoard sudokuBoard;
+    private SudokuBoard solvedSudokuBoard;
     private int width, height;
     private double mouseX, mouseY;
     private CreateFont font;
@@ -74,6 +73,15 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
         hintButton = new MenuButton(0.7, 0.50, 0.2, text, fontShader, "Hint");
         addElement(hintButton, 0);
+
+
+        
+
+        solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+        int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+        solvedSudokuBoard.readIntoBoard(integerBoard);
+        solvedSudokuBoard.solve();
+
     }
 
     public void step() {
@@ -156,7 +164,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             if (returnButton.isHeldOver() && elementExists(returnButton)) {
                 new PlaySudokuSettingsWindow(wm, width, height);
             }else if (solveButton.isHeldOver() && elementExists(solveButton)) {
-
+                new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
             }else if (hintButton.isHeldOver() && elementExists(hintButton)) {
 
             }

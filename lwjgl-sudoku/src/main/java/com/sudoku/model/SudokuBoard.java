@@ -31,6 +31,11 @@ public class SudokuBoard {
             }
         }
     }
+
+    public void setWholeBoard(Field[][] wholeBoard){
+        this.wholeBoard = wholeBoard;
+    }
+
     
     public void clear() {
         for (int i = 0 ; i < wholeBoard.length ; i++) {
@@ -69,6 +74,17 @@ public class SudokuBoard {
                 changeField(x, y, integerBoard[y][x]);
             }
         }
+    }
+
+    public static int[][] readOutOffBoard(SudokuBoard sudokuBoard){
+        int size = sudokuBoard.getSize();
+        int[][] integerBoard = new int[size][size];
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                integerBoard[j][i] = sudokuBoard.getSingleField(i, j).getValue();
+            }
+        }
+        return integerBoard;
     }
     
     public void populate(double difficultyScale) {

@@ -1,5 +1,10 @@
 package com.sudoku.controller.windows;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
