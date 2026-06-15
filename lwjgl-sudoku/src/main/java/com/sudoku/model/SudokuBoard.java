@@ -47,6 +47,16 @@ public class SudokuBoard {
             }
         }
     }
+    public static int[][] readOutOffBoard(SudokuBoard sudokuBoard){
+        int size = sudokuBoard.getSize();
+        int[][] integerBoard = new int[size][size];
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                integerBoard[j][i] = sudokuBoard.getSingleField(i, j).getValue();
+            }
+        }
+        return integerBoard;
+    }
 
     public void populate(double difficultyScale) {
         double accumulatedTime = 0;
