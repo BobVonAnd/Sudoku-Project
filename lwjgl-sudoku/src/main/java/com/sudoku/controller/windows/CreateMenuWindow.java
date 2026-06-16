@@ -176,7 +176,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
 
 
-        holdOver(solvedButton);
+        //holdOver(solvedButton);
     }
 
     // inout a MenuButton and it will track if the mouse if hovering the button
