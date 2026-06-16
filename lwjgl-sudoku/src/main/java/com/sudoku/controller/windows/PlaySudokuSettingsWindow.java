@@ -112,6 +112,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         for (int i = 0 ; i < Buttons.length ; i++) {
             if ((Buttons[i].getPos()[0] - Buttons[i].getSize()/2 < mouseXt & 
                 Buttons[i].getPos()[0] + Buttons[i].getSize()/2 > mouseXt &
+                !gpad.isConnected()&
 
                 Buttons[i].getPos()[1] - Buttons[i].getSize()/2 < mouseYt & 
                 Buttons[i].getPos()[1] + Buttons[i].getSize()/2 > mouseYt) || gpad.isSelected(Buttons[i])) {

@@ -34,7 +34,12 @@ public class NumPadButton implements Element{
     private float textOfSetY;
     private float textOfSetX;
 
-    private boolean[] selected = new boolean[]{false,true,false,true,false,true,false,true,false};
+    private boolean[] selected = new boolean[]{
+        false,true,false,
+        true,false,true,
+        false,true,false,
+        false,false,false
+    };
     private int indexSelec;
 
     public NumPadButton(float x, float y, float width, float height, CreateString text, Shader fontShader){
@@ -86,121 +91,110 @@ public class NumPadButton implements Element{
         }
     }
 
-    private void makeLines(){
+    private void makeLines() {
         fontShader.detach();
+
         glLineWidth(1.0f);
         glBegin(GL_LINES);
 
-        glColor3d(0f,0f,0f);
-        //y-axis
+        glColor3d(0f, 0f, 0f);
+
+        // vertical lines
         glVertex2f(x, y);
-        glVertex2f(x, y-height*3); 
+        glVertex2f(x, y - height * 4);
 
-        glVertex2f(x+width, y);
-        glVertex2f(x+width, y-height*3);
+        glVertex2f(x + width, y);
+        glVertex2f(x + width, y - height * 4);
 
-        glVertex2f(x+width*2, y);
-        glVertex2f(x+width*2, y-height*3);
+        glVertex2f(x + width * 2, y);
+        glVertex2f(x + width * 2, y - height * 4);
 
-        glVertex2f(x+width*3, y);
-        glVertex2f(x+width*3, y-height*3);
-        //x-axis
+        glVertex2f(x + width * 3, y);
+        glVertex2f(x + width * 3, y - height * 4);
 
+        // horizontal lines
+        glVertex2f(x - 0.001f, y);
+        glVertex2f(x + width * 3, y);
 
-        glVertex2f(x-0.001f, y);
-        glVertex2f(x+width*3, y); 
+        glVertex2f(x, y - height);
+        glVertex2f(x + width * 3, y - height);
 
-        glVertex2f(x, y-height);
-        glVertex2f(x+width*3, y-height);
+        glVertex2f(x, y - height * 2);
+        glVertex2f(x + width * 3, y - height * 2);
 
-        glVertex2f(x, y-height*2);
-        glVertex2f(x+width*3, y-height*2);
+        glVertex2f(x, y - height * 3);
+        glVertex2f(x + width * 3, y - height * 3);
 
-        glVertex2f(x, y-height*3);
-        glVertex2f(x+width*3, y-height*3);
-
+        glVertex2f(x, y - height * 4);
+        glVertex2f(x + width * 3, y - height * 4);
 
         glEnd();
     }
 
-    private void makeTexts(){
-        text.makeText("1", x+textOfSetX, y-textOfSetY, scale, rgb);
+    private void makeTexts() {
+
+        text.makeText("1", x + textOfSetX, y - textOfSetY, scale, rgb);
         text.flush();
-        text.makeText("2", x+textOfSetX + width, y-textOfSetY, scale, rgb);
+
+        text.makeText("2", x + textOfSetX + width, y - textOfSetY, scale, rgb);
         text.flush();
-        text.makeText("3", x+textOfSetX + width*2, y-textOfSetY, scale, rgb);
+
+        text.makeText("3", x + textOfSetX + width * 2, y - textOfSetY, scale, rgb);
         text.flush();
-        text.makeText("4", x+textOfSetX, y-textOfSetY - height, scale, rgb);
+
+        text.makeText("4", x + textOfSetX, y - textOfSetY - height, scale, rgb);
         text.flush();
-        text.makeText("5", x+textOfSetX + width, y-textOfSetY - height, scale, rgb);
+
+        text.makeText("5", x + textOfSetX + width, y - textOfSetY - height, scale, rgb);
         text.flush();
-        text.makeText("6", x+textOfSetX + width*2, y-textOfSetY - height, scale, rgb);
+
+        text.makeText("6", x + textOfSetX + width * 2, y - textOfSetY - height, scale, rgb);
         text.flush();
-        text.makeText("7", x+textOfSetX, y-textOfSetY - height*2, scale, rgb);
+
+        text.makeText("7", x + textOfSetX, y - textOfSetY - height * 2, scale, rgb);
         text.flush();
-        text.makeText("8", x+textOfSetX + width, y-textOfSetY - height*2, scale, rgb);
+
+        text.makeText("8", x + textOfSetX + width, y - textOfSetY - height * 2, scale, rgb);
         text.flush();
-        text.makeText("9", x+textOfSetX + width*2, y-textOfSetY - height*2, scale, rgb);
+
+        text.makeText("9", x + textOfSetX + width * 2, y - textOfSetY - height * 2, scale, rgb);
+        text.flush();
+
+        text.makeText("0", x + textOfSetX, y - textOfSetY - height * 3, scale, rgb);
+        text.flush();
+
+        text.makeText("<<", x + textOfSetX + width, y - textOfSetY - height * 3, scale, rgb);
+        text.flush();
+
+        text.makeText("OK", x + textOfSetX + width * 2, y - textOfSetY - height * 3, scale, rgb);
         text.flush();
     }
 
-    private void makeQuads(){
+    private void makeQuads() {
+
         glBegin(GL_QUADS);
-        //first layer
-        glColor3d(selected[0] ? 0.5f: 0.82745f, selected[0] ? 0.5f : 0.82745f, selected[0] ? 0.5f : 0.82745f);
-        glVertex2d(x, y);
-        glVertex2d(x, y-height);
-        glVertex2d(x+width, y-height);
-        glVertex2d(x+width, y);
 
-        glColor3d(selected[1] ? 0.5f: 0.82745f, selected[1] ? 0.5f : 0.82745f, selected[1] ? 0.5f : 0.82745f);
-        glVertex2d(x+width, y);
-        glVertex2d(x+width, y-height);
-        glVertex2d(x+(width*2), y-height);
-        glVertex2d(x+(width*2), y);
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 3; col++) {
 
-        glColor3d(selected[2] ? 0.5f: 0.82745f, selected[2] ? 0.5f : 0.82745f, selected[2] ? 0.5f : 0.82745f);
-        glVertex2d(x+(width*2), y);
-        glVertex2d(x+(width*2), y-height);
-        glVertex2d(x+(width*3), y-height);
-        glVertex2d(x+(width*3), y);
-        //secend layer
-        glColor3d(selected[3] ? 0.5f: 0.82745f, selected[3] ? 0.5f : 0.82745f, selected[3] ? 0.5f : 0.82745f);
-        glVertex2d(x, y-height);
-        glVertex2d(x, y-(height*2));
-        glVertex2d(x+width, y-(height*2));
-        glVertex2d(x+width, y-height);
+                int index = row * 3 + col;
 
-        glColor3d(selected[4] ? 0.5f: 0.82745f, selected[4] ? 0.5f : 0.82745f, selected[4] ? 0.5f : 0.82745f);
-        glVertex2d(x+width, (y-height));
-        glVertex2d(x+width, y-(height*2));
-        glVertex2d(x+(width*2), y-(height*2));
-        glVertex2d(x+(width*2), y-height);
+                float shade = selected[index] ? 0.5f : 0.82745f;
 
-        glColor3d(selected[5] ? 0.5f: 0.82745f, selected[5] ? 0.5f : 0.82745f, selected[5] ? 0.5f : 0.82745f);
-        glVertex2d(x+(width*2), y-height);
-        glVertex2d(x+(width*2), y-(height*2));
-        glVertex2d(x+(width*3), y-(height*2));
-        glVertex2d(x+(width*3), y-height);
+                glColor3d(shade, shade, shade);
 
-        //third layer
-        glColor3d(selected[6] ? 0.5f: 0.82745f, selected[6] ? 0.5f : 0.82745f, selected[6] ? 0.5f : 0.82745f);
-        glVertex2d(x, y-(height*2));
-        glVertex2d(x, y-(height*3));
-        glVertex2d(x+width, y-(height*3));
-        glVertex2d(x+width, y-(height*2));
+                float left = x + (width * col);
+                float right = left + width;
 
-        glColor3d(selected[7] ? 0.5f: 0.82745f, selected[7] ? 0.5f : 0.82745f, selected[7] ? 0.5f : 0.82745f);
-        glVertex2d(x+width, y-(height*2));
-        glVertex2d(x+width, y-(height*3));
-        glVertex2d(x+(width*2),y-(height*3));
-        glVertex2d(x+(width*2), y-(height*2));
+                float top = y - (height * row);
+                float bottom = top - height;
 
-        glColor3d(selected[8] ? 0.5f: 0.82745f, selected[8] ? 0.5f : 0.82745f, selected[8] ? 0.5f : 0.82745f);
-        glVertex2d(x+(width*2), y-(height*2));
-        glVertex2d(x+(width*2), y-(height*3));
-        glVertex2d(x+(width*3), y-(height*3));
-        glVertex2d(x+(width*3), y-(height*2));
+                glVertex2d(left, top);
+                glVertex2d(left, bottom);
+                glVertex2d(right, bottom);
+                glVertex2d(right, top);
+            }
+        }
 
         glEnd();
     }

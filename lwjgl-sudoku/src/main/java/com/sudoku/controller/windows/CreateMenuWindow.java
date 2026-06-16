@@ -23,6 +23,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.Gamepad;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
@@ -43,6 +44,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private TextFieldButton textField;
     private NumPadButton numPad;
     private boolean unique, solveable;
+    
+    private Gamepad gpad;
+    private int gpadNumpadIndex = 0;
+    private long numpad_buffer = 167; // in ms
+    private long numpad_buffer_timestamp = System.currentTimeMillis();
+    private boolean gpad_selected_before = true;
 
     private String output = "Size: ";
     // x, y, scale, width, hight
@@ -75,6 +82,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        gpad = new Gamepad();
         font = wm.getFont();
         // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
@@ -93,20 +101,27 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         // return to menu button
         returnButton = new MenuButton(-0.8, 0.8, 0.2, text, fontShader, "Menu");
         addElement(returnButton, 0);
+
+        // Add base elements to gamepad
+        gpad.addElement(returnButton,1,0);
+        gpad.addElement(numPad,37,0);
     }
 
     public void step() {
         // This code runs every frame
+        gpad.step();
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
         // button juggle
-        if (returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+        if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
                 returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+                !gpad.isConnected()&
 
                 returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
-                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) {
+                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
             returnButton.heldOver(true);
+            windowTransition(returnButton,false);
         } else {
             returnButton.heldOver(false);
         }
@@ -190,17 +205,43 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         float heightNP = numPad.getHeight();
 
         // first layer
-        numPad.setSelected(0, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP && mouseYt < yNP);
-        numPad.setSelected(1,mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - heightNP && mouseYt < yNP);
-        numPad.setSelected(2, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - heightNP && mouseYt < yNP);
+        numPad.setSelected(0, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP && mouseYt < yNP && !gpad.isConnected());
+        numPad.setSelected(1,mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - heightNP && mouseYt < yNP && !gpad.isConnected());
+        numPad.setSelected(2, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - heightNP && mouseYt < yNP && !gpad.isConnected());
         // second layer
-        numPad.setSelected(3, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
-        numPad.setSelected(4, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
-        numPad.setSelected(5, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP);
+        numPad.setSelected(3, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP && !gpad.isConnected());
+        numPad.setSelected(4, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP && !gpad.isConnected());
+        numPad.setSelected(5, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 2) && mouseYt < yNP - heightNP && !gpad.isConnected());
         // third layer
-        numPad.setSelected(6, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
-        numPad.setSelected(7, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
-        numPad.setSelected(8, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2));
+        numPad.setSelected(6, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        numPad.setSelected(7, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        numPad.setSelected(8, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        // fourth layer
+        numPad.setSelected(9, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        numPad.setSelected(10, mouseXt > xNP + widthNP && mouseXt < xNP + (widthNP * 2) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        numPad.setSelected(11, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3) && mouseYt > yNP - (heightNP * 3) && mouseYt < yNP - (heightNP * 2) && !gpad.isConnected());
+        
+        // Gamepad stuff
+        if (gpad_selected_before && gpad.isSelected(numPad)) {
+            numpad_buffer_timestamp = System.currentTimeMillis();
+            gpad_selected_before = false;
+        }
+        long now = System.currentTimeMillis();
+        boolean canMove =
+                (numpad_buffer_timestamp == -1 ||
+                now - numpad_buffer_timestamp >= numpad_buffer);
+
+        if (gpad.isSelected(numPad)) {
+            gpad.setMoveLocked(true);
+            numPad.setSelected(gpadNumpadIndex, true);
+            if (canMove) {
+                int x_move = gpad.getXDir();
+                int y_move = gpad.getYDir();
+                gpadNumpadIndex += 3 * y_move + x_move;
+                gpadNumpadIndex = gpadNumpadIndex > 11 ? 8 : gpadNumpadIndex < 0 ? 0 : gpadNumpadIndex;
+                numpad_buffer_timestamp = now;
+            }
+        }
     }
 
     @Override // If you don't need a key callback, just delete this
@@ -397,6 +438,17 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         // System.out.println("Right click!");
         // }
     }
+
+    public void windowTransition(MenuButton b, boolean mouseClick) {
+        if (mouseClick || gpad.isEntered()) {
+            if (b.isHeldOver() && elementExists(b)) {
+                if (b == returnButton) {
+                    new mainMenuWindow(wm, width, height);
+                }
+            }
+        }
+    }
+
 
     private double mouseX;
     private double mouseY;
