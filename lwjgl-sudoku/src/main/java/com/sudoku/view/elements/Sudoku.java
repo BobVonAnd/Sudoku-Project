@@ -95,6 +95,10 @@ public class Sudoku implements Element {
         }
     }
 
+
+    public FieldButton[][] getButtonArray() {
+        return buttonArray;
+    }
     
     public void draw(){
         fontShader.detach();
