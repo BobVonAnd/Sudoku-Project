@@ -67,7 +67,6 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         Buttons[1] = backButton;
 
         difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, gpad, "Difficulty: ", " (easy)");
-        addElement(difficultySlider, 0);
 
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
             textFieldPrime[2], new float[]{1.0f, 0.0f, 0.0f},textFieldPrime[3],textFieldPrime[4]);
@@ -75,7 +74,6 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         textInfo = new CreateString(fontShader, font, width, height);
 
         gpad.addElement(textField, 0, 0);
-        gpad.addElement(difficultySlider, 0, 1);
         gpad.addElement(backButton, -1, 2);
     }
 
@@ -136,10 +134,14 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         if (textField.getValidity() && !startButtonShowing) {
             addElement(startButton,0);
             gpad.addElement(startButton, 0, 2);
+            addElement(difficultySlider,0);
+            gpad.addElement(difficultySlider, 0, 1);
             startButtonShowing = true;
         } else if (startButtonShowing && !textField.getValidity()){
             removeElement(startButton);
             gpad.removeElement(startButton);
+            removeElement(difficultySlider);
+            gpad.removeElement(difficultySlider);
             startButtonShowing = false;
         }
 
