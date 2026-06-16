@@ -166,6 +166,7 @@ public class Field {
         this.setValue(number);
         this.removeValueFromLegalEntriesOfNeighbours();
         this.clearLe();
+        this.removeEdges();
     }
     public static ArrayList<Integer> getUnionOfFieldsLegalEntries(ArrayList<Field> fields){
         ArrayList<Integer> union = new ArrayList<>();

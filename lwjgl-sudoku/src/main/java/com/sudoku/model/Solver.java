@@ -9,8 +9,6 @@ public class Solver {
         humanSolverBoardHelper boardManager = new humanSolverBoardHelper();
         boardManager.BoardHelper(sudokuboard);
         while(progress){
-            
-            System.out.println(sudokuboard.getSingleField(8, 5).getLegalEntries().size());
             progress = false;
             for (Field f : sudokuboard.getFields()){
                 if (!f.getEdges().isEmpty()){
@@ -29,13 +27,11 @@ public class Solver {
             nakedPair(field);   
         }
         hiddenPair(field);
-
     }
 
     public void single(Field field){
         ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
         Integer value = null;
-
         if (field.getLeSize() == 1){
             value = legalEntries.get(0);
         }
@@ -49,19 +45,12 @@ public class Solver {
                 }
             }
         }
-
         if (value != null){
             field.updateField(value);
             progress = true;
             moves.add("Single in field " + field.getStringCoords() + " value: " + value);
-
-            Field nextEdge = chooseNextEdge(field);
-            if (nextEdge != null) {
-                edgeSolver(nextEdge);
-            }
         }
     }
-
     public void nakedPair(Field field){
         if (field.getLeSize() != 2){
             return;
@@ -219,64 +208,48 @@ public class Solver {
         }
     }
     public void XY_Chain(Field hinge){
-        if (hinge.getLegalEntries().size() != 2){
+        if (hinge.getLeSize() != 2){
             return;
         }
-        for (int i = 0; i < hinge.getLegalEntries().size(); i++){
-            Integer legalEntry = hinge.getLegalEntries().get(i);
-            int j = 0;
-            if (i == 0){
-                j = i+1;
-            }
-            else {
-                j = i-1;
-            }
-            Integer connection = hinge.getLegalEntries().get(j);
-            for (Field link : hinge.getEdges()){
-                if (link == hinge){
-                    continue;
-                }
-                ArrayList<Field> chainLinks = new ArrayList<>();
-                chainLinks = XY_Chain_Link(link, connection, chainLinks, legalEntry, hinge);
-                if (chainLinks != null){
-                    int size = chainLinks.size();
-                    Field endField = chainLinks.get(size-1);
-                    removeLegalEntryFromIntersection(hinge, endField, legalEntry);
-                    moves.add("Found XY chain ending between " + hinge.getStringCoords() + " " + endField.getStringCoords());
-                }
+        ArrayList<Integer> legalEntries = hinge.getLegalEntries();
+        Field result = XY_Chain_Link(hinge, hinge, legalEntries.get(0), legalEntries.get(1));
+        ArrayList<Field> visited = new ArrayList<>();
+        if (result != null){
+            removeLegalEntryFromIntersection(hinge, result, legalEntries.get(0), visited);
+        }
+        if (result == null){
+            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0), visited);
+            if (result != null){
+                removeLegalEntryFromIntersection(hinge, result, legalEntries.get(1));
             }
         }
+
+
     }
-    public ArrayList<Field> XY_Chain_Link(Field field, int connection, ArrayList<Field> chainLinks, Integer intEndPoint, Field hinge){
-        if (field.getLeSize() != 2){
+    public Field XY_Chain_Link(Field link, Field hinge, Integer legalEntry, Integer connection){
+        if (link.getLeSize() != 2){
             return null;
         }
-        if (chainLinks.contains(field)){
+        if (!link.getLegalEntries().contains(connection)){
             return null;
         }
-        for (Integer i = 0; i < field.getLegalEntries().size(); i++){
-            Integer legalEntry = field.getLegalEntries().get(i);
-            if (legalEntry.equals(intEndPoint) && chainLinks.size() > 0){
-                chainLinks.add(field);
-                return chainLinks;
+        if (link != hinge && !intersect(link, hinge) && link.getLegalEntries().contains(legalEntry)){
+            return link;
+        }
+        for (Field edge : link.getEdges()){
+            ArrayList<Integer> legalEntries = edge.getLegalEntries();
+            if (edge == hinge){
+                continue;
             }
-            else if (legalEntry.equals(connection)){
-                chainLinks.add(field);
-                if (i > 0){
-                    connection = field.getLegalEntries().get(0);
-                }
-                else {
-                    connection = field.getLegalEntries().get(1);
-                }
-                for (Field link : field.getEdges()){
-                    if (link == field || link == hinge){
-                        continue;
-                    }
-                        ArrayList<Field> result = XY_Chain_Link(link, connection, chainLinks, intEndPoint, hinge);
-                        if (result != null){
-                            return result;
-                        }
-                }
+            if (edge.getLeSize() != 2){
+                continue;
+            }
+            Field result = XY_Chain_Link(edge, hinge, legalEntry, legalEntries.get(1));
+            if (result == null){
+                result = XY_Chain_Link(edge, hinge, legalEntry, legalEntries.get(0));
+            }
+            if (result != null){
+                return result;
             }
         }
         return null;
@@ -320,16 +293,6 @@ public class Solver {
         }
         return intersect(field1, intersectField) && intersect(field2, intersectField);
     }
-    public void nakedSingle(Field field){
-        progress = true;
-        int value = field.getLegalEntries().get(0);
-        moves.add("Single in field " +field.getStringCoords() + "value: " + value);
-        field.updateField(value);
-        Field nextEdge = chooseNextEdge(field);
-        if (nextEdge != null) {
-            edgeSolver(nextEdge);
-        }
-    }
     public boolean sameTypeEdge(Field field1, Field field2, Field edge){
         if (Field.isBoxEdge(field1,edge) && Field.isBoxEdge(field2, edge)){
             return true;
@@ -353,15 +316,20 @@ public class Solver {
                 edge.removeLE(legalEntry);
                 if (edge.getLeSize() < size){
                     progress = true;
+                    moves.add("Because of XY chain this field" + edge.getStringCoords() + " has removed " + legalEntry);
                 }
-                if (edge.getLeSize() <= 0 && edge.getValue() == 0){
-                    moves.add("I removed the last legal entry here");
+                if (edge.getValue() == 0 && edge.getLeSize() == 0){
+                    moves.add("I removed the last LE");
                 }
+                
             }
         }
     }
     public void removeLegalEntryInConstraint(Field field1, Field field2, int legalEntry){
         for (Field edge : field1.getEdges()){
+            if (edge == field1 || edge == field2) {
+                continue;
+            }
             if (sameTypeEdge(field1, field2, edge)){
                 int size = edge.getLeSize();
                 edge.removeLE(legalEntry);
@@ -374,14 +342,4 @@ public class Solver {
             }
         }
     }
-    public Field chooseNextEdge(Field field){
-        for (Field edge : field.getEdges()){
-            edge.removeEdge(field);
-        }
-        for (Field edge : field.getEdges()){
-            field.removeEdge(edge);
-            return edge;
-        }
-        return null;    
-    }  
 }
