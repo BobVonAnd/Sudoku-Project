@@ -34,7 +34,8 @@ public class CreateString {
     private Shader shader;
     private int vao;
     private int vbo;
-    private float aspect = 1;
+    private float startaspect;
+    private float normalizedAspect = 1;
 
     private int[] indices = {
         0, 1, 3,
@@ -53,6 +54,7 @@ public class CreateString {
         this.font = font;
         WINDOWX = (float)width;
         WINDOWY = (float)height;
+        startaspect = WINDOWX/WINDOWY;
         createBatch();
     }
 
@@ -63,7 +65,7 @@ public class CreateString {
             float yPos = y;
            
             processChar(charInfo, scale, xPos, yPos, rgb);
-            x += (charInfo.width/WINDOWX) * scale;
+            x += (charInfo.width/(WINDOWX*normalizedAspect)) * scale;
         }
     }
 
@@ -93,8 +95,8 @@ public class CreateString {
         //pos
         float x0 = x;
         float y0 = y;
-        float x1 = x + scale * (charInfo.width/WINDOWX);
-        float y1 = y + scale * (charInfo.height/(WINDOWY*aspect));
+        float x1 = x + scale * (charInfo.width/(WINDOWX*normalizedAspect));
+        float y1 = y + scale * (charInfo.height/WINDOWY);
 
         float r = rgb[0];
         float g = rgb[1];
@@ -168,6 +170,7 @@ public class CreateString {
     }
 
     public void setXY(int width, int height){
-        //aspect = (float)(height/width);
+        float aspect = (float)width/(float)height;
+        normalizedAspect = aspect/startaspect;
     }
 }

@@ -49,8 +49,6 @@ public class SolvedWindow extends Window implements WindowInterface {
 
     }
 
-    
-
     public void step() {
         // This code runs every frame
     }
