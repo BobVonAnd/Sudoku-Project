@@ -104,7 +104,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         // Add base elements to gamepad
         gpad.addElement(returnButton,1,0);
-        gpad.addElement(numPad,37,0);
+        gpad.addElement(textField, 2, 0);
     }
 
     public void step() {
