@@ -171,36 +171,26 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 
     @Override // If you don't need a mouse button callback, just delete this
     public void mouseButtonCallback(int button, int action, int mods) {
-
-        if (button == GLFW_MOUSE_BUTTON_LEFT &&
-            action == GLFW_PRESS) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            mbLeftHeld = true;
             // Button Action
             for (int i = 0 ; i < Buttons.length ; i++) {
                 if (Buttons[i].isHeldOver() && elementExists(Buttons[i])) {
                     windowTransition(Buttons[i], true);
                 }
             }
-        }
-        if (button == GLFW_MOUSE_BUTTON_LEFT) {
-            if (action == GLFW_PRESS) {
-                mbLeftHeld = true;
-            } else if (action == GLFW_RELEASE) {
-                mbLeftHeld = false;
-            }
-            
-        }
 
-        if (button == GLFW_MOUSE_BUTTON_LEFT &&
-            action == GLFW_PRESS) {
             if(textField.isHeldOver()){
                 textField.setSelected(true);
             }else{
                 textField.setSelected(false);
             }
 
+        } else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
+                        mbLeftHeld = false;
         }
-        
     }
+
     public void windowTransition(MenuButton b, boolean mouseClick) {
         if (mouseClick || gpad.isEntered()) {
             if (b.isHeldOver() && elementExists(b)) {
@@ -212,5 +202,4 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             }
         }
     }
-
 }
