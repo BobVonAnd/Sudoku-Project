@@ -2,6 +2,7 @@ package com.sudoku.view.elements;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.sudoku.controller.windows.playSudokuWindow;
+import com.sudoku.model.Gamepad;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.fonts.CreateFont;
@@ -25,8 +26,10 @@ public class Slider implements Element {
     private double deltaTime = 0.0;
     private double pickerBarWidth;
     private String overrideValueString = "";
+    private Gamepad gpad;
+    private double gpadSpd;
 
-    public Slider(double x, double y, double mouseX, double mouseY, double screenWidth, double screenHeight, double width, double size, CreateString text, Shader fontShader, String prefixTextString, String suffixTextString) {   
+    public Slider(double x, double y, double mouseX, double mouseY, double screenWidth, double screenHeight, double width, double size, CreateString text, Shader fontShader, Gamepad gpad, String prefixTextString, String suffixTextString) {   
         ///                          MOUSE POS SHOULD BE SCREEN POS
         this.size = size;
         this.half = width/2;
@@ -44,6 +47,7 @@ public class Slider implements Element {
         this.pickerBarWidth = width*0.95;
         this.mbLeftHeld = false;
         this.suffixTextString = suffixTextString;
+        this.gpad = gpad;
     }
 
     public void update(double mouseX, double mouseY, double screenWidth, double screenHeight, boolean mbLeftHeld) {
@@ -105,7 +109,17 @@ public class Slider implements Element {
         double pickerRadiusY = ten * diamondScale;
 
         if (pickerDragging) {
-            sliderX = mouseXt-x + pickerBarWidth/2;
+            if (gpad.isConnected()) {
+                if (gpad.getXDir() == 0) {
+                    gpadSpd = 0;
+                } else {
+                    gpadSpd = lerp(gpadSpd, gpad.getXDir(),0.75 * deltaTime);
+                    sliderX += gpadSpd * deltaTime;
+                }
+            } else {
+                sliderX = mouseXt-x + pickerBarWidth/2;
+            }
+            
         }
         if (sliderX > x+pickerBarWidth + (width-pickerBarWidth)/2 ) {
             sliderX = x+pickerBarWidth + (width-pickerBarWidth)/2;
@@ -125,21 +139,34 @@ public class Slider implements Element {
         double top = y + ten;
 
         heldOver =
-            mouseXt >= left &&
+            (mouseXt >= left &&
             mouseXt <= right &&
             mouseYt >= bottom &&
-            mouseYt <= top;
+            mouseYt <= top) || gpad.isSelected(this);
 
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
         double overSpd = 0.15;
         double xOffset = (heldOver || pickerHeldOver || pickerDragging ? (Math.sin(currentTime * spd)) : 0) / 500 ;
         double yOffset = (heldOver || pickerHeldOver || pickerDragging  ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
-        if (mbLeftHeld && pickerHeldOver) {
-            pickerDragging = true;
-        } else if (mbLeftHeld == false) {
-            pickerDragging = false;
+        if (gpad.isConnected() && gpad.isSelected(this)) {
+            boolean gpadEnter = gpad.isEntered();
+            if (gpadEnter && !pickerDragging) {
+                pickerDragging = true;
+                gpad.setMoveLocked(true);
+            } else if (gpadEnter && pickerDragging) {
+                pickerDragging = false;
+                gpad.setMoveLocked(false);
+            }
+            gpad.setMoveLocked(pickerDragging);
+        } else {
+            if (mbLeftHeld && pickerHeldOver) {
+                pickerDragging = true;
+            } else if (mbLeftHeld == false) {
+                pickerDragging = false;
+            }
         }
+        
         fontShader.detach();
         glBegin(GL_QUADS);
         // behind

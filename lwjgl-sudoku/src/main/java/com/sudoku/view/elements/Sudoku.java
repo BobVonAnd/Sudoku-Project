@@ -20,37 +20,38 @@ public class Sudoku implements Element {
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
-    private double fieldsizeX, fieldsizeY, aspect, xAspect, yAspect;
-    private double yStart = 0.8;        
-    private double xStart = -0.8;
+    private double fieldsizeX, fieldsizeY, aspect, yStart, xStart, xAspect, yAspect, sudokuSize, xOffset, yOffset;
 
 
-
-    
-    public Sudoku(int width, int height, SudokuBoard sb, CreateFont font, Shader fontShader, Window window){
+    public Sudoku(int width, int height, double sudokuSize, double xOffset, double yOffset, SudokuBoard sb, CreateFont font, Shader fontShader, Window window){
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
         this.width = width;
         this.height = height;
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
+        this.sudokuSize = sudokuSize;
         
 		//creates a shader and a class that can display strings
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font , width, height);
 
         size = sudokuBoard.getSize();
         buttonArray = new FieldButton[size][size];
+        
+        yStart = sudokuSize/2;
+        xStart = -(sudokuSize/2);
 
-        aspect = (double) height/(double)width;
-        xAspect = xStart * aspect;
+        setAspect();
 
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
+        xAspect-=xOffset;
+        yAspect+=yOffset;
 
         double y;
         double x;
 
         x = xAspect; 
         for (int i = 0; i < size; i++) {
-            y = yStart;
+            y = yAspect;
             for (int j = 0; j < size; j++) {
                 buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i,j), x, y, fieldsizeX, fieldsizeY, sudokuBoard, text, fontShader);
                 window.addElement(buttonArray[i][j], 0);
@@ -60,25 +61,23 @@ public class Sudoku implements Element {
         }
     }
 
-    //this is used for solved sudoku and it changes the color
-    //where there was an input in the finel solved sudoku
-    public Sudoku(int width, int height, SudokuBoard sb, SudokuBoard unsolvedSB, CreateFont font, Shader fontShader, Window window){
+        public Sudoku(int width, int height, double sudokuSize, SudokuBoard sb, SudokuBoard unsolvedSB, CreateFont font, Shader fontShader, Window window){
         this.width = width;
         this.height = height;
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
+        this.sudokuSize = sudokuSize;
         
 		//creates a shader and a class that can display strings
-		text = new CreateString(fontShader, font);
+		text = new CreateString(fontShader, font, width, height);
 
         size = sudokuBoard.getSize();
         buttonArray = new FieldButton[size][size];
 
-        aspect = (double) height/(double)width;
-        xAspect = xStart * aspect;
+        yStart = sudokuSize/2;
+        xStart = -(sudokuSize/2);
 
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
+        setAspect();
 
         double y;
         double x;
@@ -97,7 +96,6 @@ public class Sudoku implements Element {
     }
 
     
-    
     public void draw(){
         fontShader.detach();
         glBegin(GL_LINES);
@@ -109,14 +107,14 @@ public class Sudoku implements Element {
         float x = (float)xAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield != 0){
-                glVertex2f(x, (float)yStart);
-                glVertex2f(x, (float)yStart-boardlenth);
+                glVertex2f(x, (float)yAspect);
+                glVertex2f(x, (float)yAspect-boardlenth);
             }
             x += (float)fieldsizeX;
         }
         boardlenth = (float)(size * fieldsizeX);
 
-        float y = (float)yStart;
+        float y = (float)yAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield != 0){
                 glVertex2f((float)xAspect, y);
@@ -130,14 +128,14 @@ public class Sudoku implements Element {
         x = (float)xAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield == 0){
-                glVertex2f(x, (float)yStart);
-                glVertex2f(x, (float)yStart-boardlenth);
+                glVertex2f(x, (float)yAspect);
+                glVertex2f(x, (float)yAspect-boardlenth);
             }
             x += (float)fieldsizeX;
         }
 
         boardlenth = (float)(size * fieldsizeX);
-        y = (float)yStart;
+        y = (float)yAspect;
         for (int i = 0; i <= size; i++){
             if (i % bigfield == 0){
                 glVertex2f((float)xAspect, y);
@@ -194,18 +192,17 @@ public class Sudoku implements Element {
         this.height = height;
         System.out.println("New size: " + width + "x" + height);
 
-        aspect = (double)height/(double)width;
-        xAspect = xStart * aspect;
+        setAspect();
         
-        fieldsizeY = 1.6 / size ;
-        fieldsizeX = fieldsizeY*aspect;
+        xAspect-=xOffset;
+        yAspect+=yOffset;
 
         double y;
         double x;
 
         x = xAspect; 
         for (int i = 0; i < size; i++) {
-            y = yStart;
+            y = yAspect;
             for (int j = 0; j < size; j++) {
                 double[] xy = {x,y}; 
                 buttonArray[i][j].setXY(xy);
@@ -216,14 +213,28 @@ public class Sudoku implements Element {
             }
             x += fieldsizeX;
         }
+        text.setXY(width, height);
     }
 
+    private void setAspect(){
+        if (height <= width){
+            aspect = (double) height/(double)width;
+            xAspect = xStart * aspect;
+            yAspect = yStart;
 
+            fieldsizeY = sudokuSize / size;
+            fieldsizeX = fieldsizeY*aspect;
 
+        } else if (height > width){
+            aspect = (double) width/(double)height;
+            yAspect = yStart * aspect;
+            xAspect = xStart;
 
-} 
-
-
+            fieldsizeX = sudokuSize / size ;
+            fieldsizeY = fieldsizeX*aspect;
+        }
+    }
+}
 
 
 

@@ -155,10 +155,14 @@ public class SudokuBoard {
         double scale = Math.min(1, Math.max(difficultyScale, 0));
         int totalCells = this.size * this.size;
         switch (this.size) {
+            case 4:
+                return (int) (-7*scale+12);
             case 9:
                 return (int) (-28*scale+64);
+            case 16:
+                return (int) (-122*scale+200);
             default:
-                double fraction = 0.55 - 0.2 * scale;
+                double fraction = 0.65 - 0.3 * scale;
                 return (int) (totalCells * fraction);
         }
     }

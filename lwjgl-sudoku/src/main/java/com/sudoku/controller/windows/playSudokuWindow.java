@@ -58,11 +58,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
         font = wm.getFont();
         // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
-        text = new CreateString(fontShader, font);
+        text = new CreateString(fontShader, font, width, height);
 
         sudokuBoard.populate();
 
-        sudokuFront = new Sudoku(width, height, sudokuBoard, font, fontShader, this);
+        sudokuFront = new Sudoku(width, height, 1.6, 0,0, sudokuBoard, font, fontShader, this);
         addElement(sudokuFront, 0);
 
         // return to last window
@@ -211,6 +211,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         sudokuFront.resize(width, height);
+        text.setXY(width, height);
     }
 
     @Override // If you don't need a mouse button callback, just delete this

@@ -4,11 +4,13 @@ import static org.lwjgl.glfw.GLFW.*;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.Gamepad;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
 public class windowTemplate extends Window implements WindowInterface {
     
     private WindowManager wm;
+    private Gamepad gpad;
 
     public windowTemplate(WindowManager wm) {
         super(wm);
@@ -18,10 +20,12 @@ public class windowTemplate extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        gpad = new Gamepad();
     }
 
     public void step() {
         // This code runs every frame
+        gpad.step();
     }
 
     @Override // If you don't need a key callback, just delete this
