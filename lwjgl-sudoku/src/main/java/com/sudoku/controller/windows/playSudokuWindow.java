@@ -18,10 +18,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
 import com.sudoku.controller.WindowManager;
+import com.sudoku.model.Gamepad;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.MenuButton;
+import com.sudoku.view.elements.NumPadButton;
 import com.sudoku.view.elements.Sudoku;
 import com.sudoku.view.fonts.CreateFont;
 
@@ -38,6 +40,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private int[] selectedField = new int[2];
     private Sudoku sudokuFront;
     private MenuButton returnButton;
+    private Gamepad gpad;
+    private NumPadButton numPad;
 
     private MenuButton solveButton;
     private MenuButton hintButton;
@@ -55,6 +59,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void create() {
         // This code runs once
+        gpad = new Gamepad();
         font = wm.getFont();
         // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
@@ -71,9 +76,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
         solveButton = new MenuButton(0.7, 0.75, 0.2, text, fontShader, "Solve");
         addElement(solveButton, 0);
+        gpad.addElement(solveButton, 37, 1);
 
         hintButton = new MenuButton(0.7, 0.50, 0.2, text, fontShader, "Hint");
         addElement(hintButton, 0);
+        gpad.addElement(hintButton, 37, 2);
+
+        // numpad
+        float aspect = 1280f / 720f;
+        numPad = new NumPadButton(0.525f, 0.2f, 0.1f, 0.1f * aspect, text, fontShader);
+        addElement(numPad, 0);
 
         // creates a copy of the sudokuboard which we solve
         solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
@@ -85,7 +97,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void step() {
         // This code runs every frame
-
+        gpad.step();
         holdOver(returnButton);
         holdOver(solveButton);
         holdOver(hintButton);
@@ -96,11 +108,11 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
-        if (button.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+        if ((button.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
                 button.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
 
                 button.getPos()[1] - button.getSize() / 2 < mouseYt &
-                button.getPos()[1] + button.getSize() / 2 > mouseYt) {
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) || !gpad.isConnected()) {
             button.heldOver(true);
         } else {
             button.heldOver(false);
