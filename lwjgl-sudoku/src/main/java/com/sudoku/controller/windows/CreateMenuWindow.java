@@ -404,8 +404,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             if (numPad.isSelected()[numPad.getIndexSelec()]) {
                 int value = 10 * sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() + numPad.getIndexSelec() + 1;
                 if(value <= size){
+                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                 }
-               
+            }
+
+            // sudokuBoard
+            if (textField.getValidity() && sudokuCreated) {
                 double[] pos = new double[2];
                 double mouseXt = mouseX / (width / 2) - 1;
                 double mouseYt = -mouseY / (height / 2) + 1;
