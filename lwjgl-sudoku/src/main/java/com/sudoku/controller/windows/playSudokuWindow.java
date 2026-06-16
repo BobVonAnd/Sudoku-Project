@@ -73,6 +73,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         // return to last window
         returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
         addElement(returnButton, 0);
+        gpad.addElement(returnButton, 0, 0);
 
         solveButton = new MenuButton(0.7, 0.75, 0.2, text, fontShader, "Solve");
         addElement(solveButton, 0);
@@ -112,7 +113,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 button.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
 
                 button.getPos()[1] - button.getSize() / 2 < mouseYt &
-                button.getPos()[1] + button.getSize() / 2 > mouseYt) || !gpad.isConnected()) {
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {
             button.heldOver(true);
         } else {
             button.heldOver(false);
@@ -233,20 +234,31 @@ public class playSudokuWindow extends Window implements WindowInterface {
             validateInput(selectedField);
 
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
-            // return button
-            if (returnButton.isHeldOver() && elementExists(returnButton)) {
-                new PlaySudokuSettingsWindow(wm, width, height);
-            } else if (solveButton.isHeldOver() && elementExists(solveButton)) {
-                new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
-            } else if (hintButton.isHeldOver() && elementExists(hintButton)) {
-
-            }
+            windowTransition(returnButton, true);
+            windowTransition(solveButton, true);
+            windowTransition(hintButton, true);
         }
 
         if (button == GLFW_MOUSE_BUTTON_RIGHT &&
                 action == GLFW_PRESS) {
 
             System.out.println("Right click!");
+        }
+    }
+
+    public void windowTransition(MenuButton b, boolean mouseClick) {
+        if (elementExists(b)){
+            if (mouseClick || gpad.isEntered()) {
+                if (b.isHeldOver()) {
+                    if (b == returnButton) {
+                        new PlaySudokuSettingsWindow(wm, width, height);
+                    } else if (b == solveButton) {
+                        new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
+                    } else if (b == hintButton) {
+
+                    }
+                } 
+            }
         }
     }
 
