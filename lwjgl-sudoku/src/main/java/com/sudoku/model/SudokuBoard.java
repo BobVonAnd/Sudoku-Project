@@ -145,6 +145,7 @@ import com.sudoku.view.TerminalView;
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
             wholeBoard[x][y].setLocked(false);
+            nrOfFieldsLeft += 1;
             boolean isUnique = algoX.algoXIsUnique(this);
             if (!isUnique) {
                 wholeBoard[x][y].setValue(tempVal);
