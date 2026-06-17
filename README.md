@@ -30,7 +30,7 @@ First. Follow the installation instructions.
 
 Install the .jar from the [latest release](https://github.com/BobVonAnd/Sudoku-Project/releases) and run it via:
 ```bash
-java -jar lwjgl-sudoku-x.x-SNAPSHOT.jar
+java -jar lwjgl-sudoku-1.0-SNAPSHOT.jar
 ```
 
 ## Compiling and Running From Source
