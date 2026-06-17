@@ -20,7 +20,7 @@ public class Solver {
     public void edgeSolver(Field field){
         single(field);
         pointingSingleInBox(field);
-        xWing(field);
+        //xWing(field);
         if (field.getLegalEntries().size() == 2){
             XY_wing(field);
             XY_Chain(field);
@@ -351,7 +351,7 @@ public class Solver {
         return null;
     }
 
-    public void xWing(Field field){
+    private void xWing(Field field){
         ArrayList<Integer> leField = field.getLegalEntries(); 
         Field pair1;
         Field pair2;
@@ -364,13 +364,13 @@ public class Solver {
                 for (Field checkingField : columnFieldsWithLE(field, checkingEntry)){
                     pairs = pairRow(checkingField, checkingEntry);
                     if (pairs.size() == 1){
-                        pair2 = pairRow(checkingField, checkingEntry).get(0);
-                        if (pair1 == pair2){
-                            removeFrom = removeList(field, checkingField, new ArrayList<Field>());
-                            removeFrom = removeList(pair1, pair2, removeFrom);
-                            removeFromColumn(removeFrom, checkingEntry);
+                        pair2 = pairs.get(0);
+                        if (pair1.getCoordinates()[1] == pair2.getCoordinates()[1] ){
+                            removeFrom = removeListColumn(field, checkingField, new ArrayList<Field>());
+                            removeFrom = removeListColumn(pair1, pair2, removeFrom);
+                            removeFrom(removeFrom, checkingEntry);
                             progress = true;
-                            System.out.println("xwing from " + field.getStringCoords() + " to " + pair2.getStringCoords());
+                            System.out.println("xwing on "+ checkingEntry + " in " + field.getStringCoords() + ", " + pair1.getStringCoords() + ", " + checkingField.getStringCoords() + ", " + pair2.getStringCoords());
                             break;
                         }
                     }
@@ -379,13 +379,13 @@ public class Solver {
         }
     }
     
-    private void removeFromColumn(ArrayList<Field> array, int LE){
+    private void removeFrom(ArrayList<Field> array, int LE){
         for (Field field : array){
             field.removeLE(LE);
         }
     }
 
-    private ArrayList<Field> removeList(Field field, Field checkingField,  ArrayList<Field> array){
+    private ArrayList<Field> removeListColumn(Field field, Field checkingField,  ArrayList<Field> array){
         for (Field addingField : field.getColumnEdges()){
             if (addingField != checkingField){
                 array.add(addingField);
@@ -393,15 +393,15 @@ public class Solver {
         }
         return array;
     }
-    
+
     private ArrayList<Field> columnFieldsWithLE(Field field, int checkingEntry){
         ArrayList<Field> rows = new ArrayList<>();
         for (Field checkingField : field.getColumnEdges()){
-            if (field.getCoordinates()[1] < checkingField.getCoordinates()[1] ){
+            //if (field.getCoordinates()[0] < checkingField.getCoordinates()[0] ){
                 if (checkingField.getLegalEntries().contains(checkingEntry)){
                     rows.add(checkingField);
                 }
-            }
+            //}
         }
         return rows;
     }
@@ -409,11 +409,11 @@ public class Solver {
     private ArrayList<Field> pairRow(Field field, int checkingEntry){
         ArrayList<Field> pair = new ArrayList<>();
         for (Field checkingField : field.getRowEdges()){
-            if (field.getCoordinates()[0] < checkingField.getCoordinates()[0] ){
+            //if (field.getCoordinates()[1] < checkingField.getCoordinates()[1] ){
                 if (checkingField.getLegalEntries().contains(checkingEntry)){
                     pair.add(checkingField);
                 }
-            }
+            //}
         }
         return pair;
     }
