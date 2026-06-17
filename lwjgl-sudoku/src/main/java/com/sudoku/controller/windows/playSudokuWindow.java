@@ -394,7 +394,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
                     } else if (b == solveButton) {
                         new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
                     } else if (b == hintButton) {
-
+                        new EndScreenWindow(wm, sudokuBoard, width, height, "win");
                     }
                 } 
             }
