@@ -142,6 +142,18 @@ public class Gamepad {
         return connected;
     }
 
+    public int[] getPosition() {
+        return (new int[] {position.x, position.y});
+    }
+
+    public Element getCurrentElement() {
+        return buttonMap.get(position);
+    }
+
+    public Element getElementAt(int x, int y) {
+        return buttonMap.get(new Position(x, y));
+    }
+
     private Position findNearest(X_Input xDir, Y_Input yDir) {
         entered = false;
         Position current = new Position(position.x(), position.y());
@@ -187,6 +199,18 @@ public class Gamepad {
             // get state
             float leftX = state.axes(GLFW_GAMEPAD_AXIS_LEFT_X);
             float leftY = state.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
+
+            if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_LEFT) == GLFW_PRESS) {
+                leftX = -1.0f;
+            } else if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT) == GLFW_PRESS) {
+                leftX = 1.0f;
+            }
+
+            if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == GLFW_PRESS) {
+                leftY = -1.0f;
+            } else if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == GLFW_PRESS) {
+                leftY = 1.0f;
+            }
 
             // should we move?
             if (Math.abs(leftX) < 0.02 + deadzone) {
