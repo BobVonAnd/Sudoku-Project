@@ -170,11 +170,20 @@ import com.sudoku.view.TerminalView;
             int totalCells = this.size * this.size;
             switch (this.size) {
                 case 4:
-                    return (int) (-7*scale+12);
+                    return (int) (-7 * scale + 12); 
+
                 case 9:
-                    return (int) (-28*scale+64);
+                    return (int) (-20 * scale + 56); 
+
                 case 16:
-                    return (int) (-122*scale+200);
+                    return (int) (-82 * scale + 160); 
+
+                case 25:
+                    return (int) (-93 * scale + 311);
+
+                case 36:
+                    return (int) (-135 * scale + 588);
+
                 default:
                     double fraction = 0.65 - 0.3 * scale;
                     return (int) (totalCells * fraction);
