@@ -142,25 +142,28 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         if (gpad.isConnected() && (gpad.isSelected(textField) || gpad.isSelected(numPad))) {
             boolean entered = gpad.isEntered();
             // select when the gpad is over it
+
             if (gpad.isSelected(textField)) {
                 textField.setSelected(true);
+            // press a to enter
+                if (entered) {
+                    gpad.addElement(numPad, 37, 0);
+                    gpad.setPosition(37, 0);
+                    numpad_for_board = false;
+                }
             } else {
                 textField.setSelected(false);
-            }
-            // press a to enter
-            if (entered && textField.isSelected()) {
-                gpad.addElement(numPad, 37, 0);
-                gpad.setPosition(37, 0);
-                numpad_for_board = false;
-            }
-            // reset the numpad if enter
-            if (entered && gpad.isSelected(numPad)) {
-                if (numpad_for_board) {
-                    typeBoard(gpadNumpadIndex);
-                } else {
-                    typeSize(gpadNumpadIndex);
+                // reset the numpad if enter
+                if (entered && gpad.isSelected(numPad)) {
+                    if (numpad_for_board) {
+                        typeBoard(gpadNumpadIndex);
+                    } else {
+                        typeSize(gpadNumpadIndex);
+                    }
                 }
             }
+
+            
         }
 
         // Sudoku board gamepad

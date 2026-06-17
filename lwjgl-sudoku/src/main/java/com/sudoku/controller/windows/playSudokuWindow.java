@@ -54,6 +54,9 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private boolean gpad_selected_before = true;
     private boolean wasOnBoardLastFrame = false;
 
+    private long a_buffer_timestamp = System.currentTimeMillis();
+    private long a_buffer_max = 200;
+
     private boolean classIsCreated = false;
 
     // private EndScreenWindow = endScreen;
@@ -156,7 +159,12 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 }
             }
 
-            boolean entered = gpad.isEntered();
+            long now = System.currentTimeMillis();
+            boolean entered = gpad.isEntered() && (now - a_buffer_timestamp >= a_buffer_max);
+
+            if (entered) {
+                a_buffer_timestamp = now;
+            }
 
             if (onBoard && !onMenu && !gpad.isSelected(numPad) && entered && wasOnBoardLastFrame) {
                 gpadNumpadIndex = 0;
@@ -168,11 +176,17 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 typeBoard(gpadNumpadIndex);
             }
 
-            wasOnBoardLastFrame = onBoard && !gpad.isSelected(numPad);
+            if (gpad.isSelected(returnButton) && entered) {
+                windowTransition(returnButton, false);
+            }
+            if (gpad.isSelected(solveButton) && entered) {
+                windowTransition(solveButton, false);
+            }
+            if (gpad.isSelected(hintButton) && entered) {
+                windowTransition(hintButton, false);
+            }
 
-            windowTransition(returnButton, false);
-            windowTransition(solveButton, false);
-            windowTransition(hintButton, false);
+            wasOnBoardLastFrame = onBoard && !gpad.isSelected(numPad);
         } else {
             wasOnBoardLastFrame = false;
         }
@@ -257,11 +271,9 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 selectedField[0],
                 selectedField[1]).getValue();
 
-        if (idx == 11) { // Enter — close numpad, return cursor to the cell
+        if (idx == 11) {
             gpad.removeElement(numPad);
             gpad.setMoveLocked(false);
-            // wasOnBoardLastFrame stays false for one frame so the return
-            // A press doesn't immediately re-open the numpad
             wasOnBoardLastFrame = false;
             gpad.setPosition(1 + selectedField[0], 1 + selectedField[1]);
             return;
@@ -414,7 +426,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void windowTransition(MenuButton b, boolean mouseClick) {
         if (elementExists(b)) {
-            if (mouseClick || gpad.isEntered()) {
+            if ((mouseClick && !gpad.isConnected()) || gpad.isConnected()) {
                 if (b.isHeldOver()) {
                     if (b == returnButton) {
                         new PlaySudokuSettingsWindow(wm, width, height);
