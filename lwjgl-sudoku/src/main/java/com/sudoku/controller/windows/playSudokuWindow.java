@@ -90,6 +90,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
         holdOver(solveButton);
         holdOver(hintButton);
 
+        
+
     }
 
     // inout a MenuButton and it will track if the mouse if hovering the button
@@ -227,7 +229,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             } else if (solveButton.isHeldOver() && elementExists(solveButton)) {
                 new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
             } else if (hintButton.isHeldOver() && elementExists(hintButton)) {
-
+                new EndScreenWindow(wm, sudokuBoard, width, height, "win");
             }
         }
 
