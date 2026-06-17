@@ -24,6 +24,12 @@ To check if java is installed correctly, you can run the command:
 java -version
 ```
 
+Now you need to install Maven. You can so by following this guide:
+
+https://maven.apache.org/
+
+Install any version that is 3.8+.
+
 ## Running the packaged release
 First. Follow the installation instructions.
 
@@ -57,6 +63,7 @@ The project is a maven project called lwjgl-sudoku, which means you need to firs
 * Navigate to the `lwjgl-sudoku` directory. Do this via `cd lwjgl-sudoku`
 
 **To package the project into a .jar:**
+
 On Windows:
 ```bash
 mvn install
@@ -64,6 +71,7 @@ mvn clean package
 ```
 
 **To run the package:**
+
 On Windows or MacOS:
 ```bash
 java -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
