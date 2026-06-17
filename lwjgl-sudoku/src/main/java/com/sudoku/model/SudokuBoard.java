@@ -310,7 +310,19 @@ public class SudokuBoard {
     public Field[][] getWholeBoard() {
         return this.wholeBoard;
     }
-
+    public SudokuBoard getCopy(){
+        ArrayList<Field> fields = this.getFields();
+        SudokuBoard copyBoard = new SudokuBoard(this.size);
+        for (Field field : fields){
+            Integer value = field.getValue();
+            if (value == 0){
+                continue;
+            }
+            int[] coords = field.getCoordinates();
+            copyBoard.getSingleField(coords[0], coords[1]).setValue(value);
+        }
+        return copyBoard;
+    }
     public int getSize() {
         return this.size;
     }

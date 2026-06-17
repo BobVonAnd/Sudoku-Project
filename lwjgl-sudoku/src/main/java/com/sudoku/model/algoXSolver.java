@@ -1,11 +1,16 @@
 package com.sudoku.model;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Collections;
+import java.util.List;
+import java.util.Arrays;
 
 public class algoXSolver {
     private ColumnNode root;
     private ArrayList<Node> solution = new ArrayList<>();
     private int solutionCounter = 0;
+    private final Random random = new Random();
+    private Node[] rowHeads;
 
     public void algoXManager(SudokuBoard sudokuBoard){
         //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
@@ -72,6 +77,7 @@ public class algoXSolver {
         root.left = prev;
         //Start with first column
         int boxSize = (int)Math.sqrt(size);
+        rowHeads = new Node[size*size*size];
         for (int i = 0; i < size; i++){
             for (int j = 0; j<size; j++){
                 for (int n = 0; n < size ; n++){
@@ -79,6 +85,11 @@ public class algoXSolver {
                     //cell constraint
                     Node cellNode = new Node();
                     cellNode.setNodeCoordinates(i, j, n);
+
+                    int rowIndex = i * size * size + j * size + n;
+                    
+                    rowHeads[rowIndex] = cellNode;
+
                     Node rowNode = new Node();
                     rowNode.setNodeCoordinates(i, j, n);
                     Node colNode = new Node();
@@ -146,7 +157,8 @@ public class algoXSolver {
                 //We search for a solution one depth further in
                 ArrayList<Node> result = search(root, solution);
                 //As we are looking for one solution we exit if we have gotten a solution
-                if (result != null){
+                if (result != null) {
+                    uncover(columnNode);
                     return result;
                 }
                 solution.remove(solution.size() - 1);
@@ -267,15 +279,14 @@ public class algoXSolver {
                 }
                 //We search for a solution one depth further in
                 algoXUniqueTest(root, solution);
-                if (solutionCounter > 1){
-                    break;
-                }
                 //We uncover the nodes that were covered 
                 for (Node j = firstNode.left; j != firstNode; j = j.left){
                     uncover(j.column);
                 }
                 solution.remove(solution.size() - 1);
-
+                if (solutionCounter > 1){
+                    break;
+                }
                 //We go down to the next row and continue looking for multiple solutions
                 firstNode = firstNode.down;
             }
@@ -307,9 +318,106 @@ public class algoXSolver {
         algoXUniqueTest(root, solution);
         return solutionCounter == 1;
     }
-    public ArrayList<Node> algoXCreateUnique(ColumnNode root, ArrayList<Node> solution){
-    //If the matrix is empty, we have found a solution
-    Random rand = new Random();
+    public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove){
+        ArrayList<Node> uniqueSolution = new ArrayList<>();
+        root = initializeNodes(size);
+        SudokuBoard sudokuBoard = new SudokuBoard(size);
+        SudokuBoard copyBoard = new SudokuBoard(size);
+        shuffleNodes(root, size);
+        uniqueSolution = uniqueSearch(root, solution);
+        ArrayList<Node> testSolution = new ArrayList<>(uniqueSolution);
+        if (solution == null){
+            return null;
+        }
+        do {
+            int[] numberCounter = new int[size];
+            int i = 0;
+            int allRemoved = 0;
+            testSolution = new ArrayList<>(uniqueSolution);
+            copyBoard.clear();
+            java.util.Collections.shuffle(testSolution);
+            for (i = 0; i < fieldsToRemove/2 ; i++){
+                Node node = testSolution.get(testSolution.size() - 1);
+                numberCounter[node.getNum()] ++;
+                if (numberCounter[node.getNum()] == 8){
+                    if (allRemoved > 0){
+                    java.util.Collections.shuffle(testSolution);
+                    i--;
+                    continue;
+                    }
+                    allRemoved ++;
+                }
+                testSolution.remove(testSolution.size()-1);
+            }
+            for (Node n : testSolution) {
+                int row = n.getRow();
+                int col = n.getCol();
+                int value = n.getNum() + 1;
+
+                copyBoard.changeField(row, col, value);
+            }
+            if (algoXIsUnique(copyBoard)){
+                copyBoard.clear();
+                while (i < fieldsToRemove){
+                    Node candidate = testSolution.get(testSolution.size()-1);
+                    testSolution.remove(testSolution.size()-1);
+                    for (Node n : testSolution) {
+                        int row = n.getRow();
+                        int col = n.getCol();
+                        int value = n.getNum() + 1;
+
+                        copyBoard.changeField(row, col, value);
+                    }
+                    if (!algoXIsUnique(copyBoard)){
+                        testSolution.add(candidate);
+                        java.util.Collections.shuffle(testSolution);
+                    }
+                    i++;
+                }
+            }
+        } while (!algoXIsUnique(copyBoard));
+        for (Node n : testSolution) {
+            int row = n.getRow();
+            int col = n.getCol();
+            int value = n.getNum() + 1;
+
+            sudokuBoard.changeField(row, col, value);
+        }
+
+        return sudokuBoard;
+    }
+    public void shuffleNodes(ColumnNode root, int size){
+        Node[][] rowNodes = new Node[size * size * size][4];
+
+        for (int i = 0; i < rowHeads.length; i++) {
+            Node currentNode = rowHeads[i];
+            for (int j = 0; j < 4; j++) {
+                rowNodes[i][j] = detachFromColumn(currentNode);
+                currentNode = currentNode.right;
+            }
+        }
+        shuffleRows(rowNodes);
+        for (int i = 0; i < rowHeads.length; i++){
+            for (int j = 0; j < 4; j++){
+                appendToColumn(rowNodes[i][j].column, rowNodes[i][j]);
+            }
+        }
+    }
+    public void shuffleRows(Node[][] rowNodes) {
+        List<Node[]> rows = Arrays.asList(rowNodes);
+        Collections.shuffle(rows, random);
+    }
+
+    public Node detachFromColumn(Node node) {
+        node.up.down = node.down;
+        node.down.up = node.up;
+
+        node.column.size--;
+
+        return node;
+    }
+    public ArrayList<Node> uniqueSearch(ColumnNode root, ArrayList<Node> solution){
+        //If the matrix is empty, we have found a solution
         if (root.right == root ){
             return new ArrayList<>(solution);
         }
@@ -319,18 +427,11 @@ public class algoXSolver {
             if (columnNode.size == 0){
                 return null;
             }
-            int size = columnNode.size;
-            int randint = rand.nextInt(size);
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
             Node firstNode = columnNode.down;
             //While the node we went into isn't the original node
-            int i = 0;
-            while (i < randint){
-                firstNode = firstNode.down;
-                i++;
-            }
             while (firstNode != columnNode){
                 //We try to add the row to the solution
                 solution.add(firstNode);
@@ -341,9 +442,10 @@ public class algoXSolver {
                     rightNode = rightNode.right;
                 }
                 //We search for a solution one depth further in
-                ArrayList<Node> result = algoXCreateUnique(root, solution);
+                ArrayList<Node> result = uniqueSearch(root, solution);
                 //As we are looking for one solution we exit if we have gotten a solution
-                if (result != null){
+                if (result != null) {
+                    uncover(columnNode);
                     return result;
                 }
                 solution.remove(solution.size() - 1);
