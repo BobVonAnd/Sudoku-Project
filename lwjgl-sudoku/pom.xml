@@ -104,7 +104,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -118,10 +117,9 @@
                         </goals>
 
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation=
+                                    "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.sudoku.App</mainClass>
                                 </transformer>
                             </transformers>
@@ -161,6 +159,24 @@
                 <configuration>
                     <mainClass>com.sudoku.App</mainClass>
                 </configuration>
+
+                <executions>
+                    <execution>
+                        <id>run-macos</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-XstartOnFirstThread</argument>
+                                <argument>-cp</argument>
+                                <classpath/>
+                                <argument>com.sudoku.App</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -171,23 +187,5 @@
 
         </plugins>
     </build>
-
-    <profiles>
-
-        <profile>
-            <id>macos</id>
-
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-
-            <properties>
-                <platform.name>macos</platform.name>
-            </properties>
-        </profile>
-
-    </profiles>
 
 </project>
