@@ -66,7 +66,6 @@ public class EndScreenWindow extends Window implements WindowInterface {
 
         switch (endCondition) {
             case "win":
-                System.out.println("hej");
                 text.makeText("You Finished The Sudoku!", -0.3f, 0.83f, 0.5f, new float[]{0f,0f,0f});
                 break;
             case "lost":
