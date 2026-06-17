@@ -104,6 +104,7 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -117,9 +118,10 @@
                         </goals>
 
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+
                             <transformers>
-                                <transformer implementation=
-                                    "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.sudoku.App</mainClass>
                                 </transformer>
                             </transformers>
@@ -169,5 +171,23 @@
 
         </plugins>
     </build>
+
+    <profiles>
+
+        <profile>
+            <id>macos</id>
+
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+
+            <properties>
+                <platform.name>macos</platform.name>
+            </properties>
+        </profile>
+
+    </profiles>
 
 </project>
