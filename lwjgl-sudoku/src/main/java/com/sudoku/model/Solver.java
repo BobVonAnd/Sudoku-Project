@@ -15,7 +15,6 @@ public class Solver {
                     edgeSolver(f);
                 }
             }
-
         }
     }
     public void edgeSolver(Field field){
@@ -25,6 +24,7 @@ public class Solver {
             XY_wing(field);
             XY_Chain(field);
             nakedPair(field);   
+            Y_Wing(field);
         }
         hiddenPair(field);
     }
@@ -71,7 +71,6 @@ public class Solver {
             }   
         }
     }
-
 
     public void hiddenPair(Field field){
         ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
@@ -173,7 +172,7 @@ public class Solver {
         ArrayList<Integer> hingeEntries = hinge.getLegalEntries();
         for (Field edge1 : hingeEdges){
             for (Field edge2 : hingeEdges){
-                if (edge1 != edge2 && !intersect(edge1, edge2) && edge1.getLeSize() == 2 && edge2.getLeSize() == 2){
+                if (edge1 != edge2 && edge1.getLeSize() == 2 && edge2.getLeSize() == 2){
                     ArrayList<Integer> edge1Entries = edge1.getLegalEntries();
                     ArrayList<Integer> edge2Entries = edge2.getLegalEntries();
                     Integer entry1 = hingeEntries.get(0);
@@ -207,53 +206,147 @@ public class Solver {
             }
         }
     }
-    public void XY_Chain(Field hinge){
-        if (hinge.getLeSize() != 2){
+    public void XY_Chain(Field hinge) {
+        if (hinge.getLeSize() != 2) {
             return;
         }
+
         ArrayList<Integer> legalEntries = hinge.getLegalEntries();
-        ArrayList<Field> visited = new ArrayList<>();
-        Field result = XY_Chain_Link(hinge, hinge, legalEntries.get(0), legalEntries.get(1), visited);
-        if (result != null){
+
+        Field result = XY_Chain_Link(
+            hinge,
+            hinge,
+            legalEntries.get(0),
+            legalEntries.get(1),
+            new ArrayList<>()
+        );
+
+        if (result != null) {
             removeLegalEntryFromIntersection(hinge, result, legalEntries.get(0));
         }
-        if (result == null){
-            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0), visited);
-            if (result != null){
+
+        if (result == null) {
+            result = XY_Chain_Link(
+                hinge,
+                hinge,
+                legalEntries.get(1),
+                legalEntries.get(0),
+                new ArrayList<>()
+            );
+
+            if (result != null) {
                 removeLegalEntryFromIntersection(hinge, result, legalEntries.get(1));
             }
         }
     }
-    public Field XY_Chain_Link(Field link, Field hinge, Integer legalEntry, Integer connection, ArrayList<Field> visited){
-        if (visited.contains(link)){
+
+    public void Y_Wing(Field hinge){
+        ArrayList<Field> hingeEdges = hinge.getEdges();
+        for (Integer legalEntry : hinge.getLegalEntries()){
+            Integer otherLegalEntry = Field.getOtherLegalEntry(legalEntry, hinge);
+            for(Field edge1 : hingeEdges){
+                for (Field edge2 : hingeEdges){
+                    if (edge1 == edge2){
+                        continue;
+                    }
+
+                    if (edge1.getLegalEntries().contains(legalEntry) 
+                        && edge2.getLegalEntries().contains(otherLegalEntry)){
+                        Integer edge1OtherEntry = Field.getOtherLegalEntry(legalEntry, edge1);
+                        Integer edge2OtherEntry = Field.getOtherLegalEntry(otherLegalEntry, edge2);
+                        if (edge1OtherEntry == null || edge2OtherEntry == null){
+                            continue;
+                        }
+                        if (edge1OtherEntry.equals(edge2OtherEntry)){
+                            Integer legalEntryToRemove = Field.getOtherLegalEntry(legalEntry, edge1);
+                            if (legalEntryToRemove == null){
+                                continue;
+                            }
+                            moves.add("Used Y_wing");
+                            removeLegalEntryFromIntersection(edge1, edge2, legalEntryToRemove);
+                        }
+                    }
+                    else if (edge2.getLegalEntries().contains(legalEntry) 
+                        && edge1.getLegalEntries().contains(otherLegalEntry)){
+                        Integer edge1OtherEntry = Field.getOtherLegalEntry(otherLegalEntry, edge1);
+                        Integer edge2OtherEntry = Field.getOtherLegalEntry(legalEntry, edge2);
+                        if (edge1OtherEntry == null || edge2OtherEntry == null){
+                            continue;
+                        }
+                        if (Field.getOtherLegalEntry(otherLegalEntry, edge1) == Field.getOtherLegalEntry(legalEntry, edge2)){
+                            Integer legalEntryToRemove = Field.getOtherLegalEntry(otherLegalEntry, edge1);
+                            if (legalEntryToRemove == null){
+                                continue;
+                            }
+                            moves.add("Used Y_wing");
+                            removeLegalEntryFromIntersection(edge1, edge2, legalEntryToRemove);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public Field XY_Chain_Link(
+            Field link,
+            Field hinge,
+            Integer legalEntry,
+            Integer connection,
+            ArrayList<Field> visited) 
+            {
+        if (visited.contains(link)) {
             return null;
         }
-        visited.add(link);
-        if (intersect(link, hinge) && link != hinge){
+        
+        visited.add(link);      
+
+        if (link.getLeSize() != 2) {
             return null;
         }
-        if (link.getLeSize() != 2){
+
+        if (!link.getLegalEntries().contains(connection)) {
             return null;
         }
-        if (!link.getLegalEntries().contains(connection)){
-            return null;
-        }
-        if (link.getLegalEntries().contains(legalEntry) && link != hinge){
+
+        if (link != hinge && link.getLegalEntries().contains(legalEntry)) {
             return link;
         }
-        for (Field edge : link.getEdges()){
+
+        for (Field edge : link.getEdges()) {
+            if (visited.contains(edge)) {
+                continue;
+            }
+
+            if (edge.getLeSize() != 2) {
+                continue;
+            }
+
+            if (!edge.getLegalEntries().contains(connection)) {
+                continue;
+            }
+
             ArrayList<Integer> edgeLegalEntries = edge.getLegalEntries();
-            for (Integer entry : edgeLegalEntries){
-                if (entry.equals(connection)){
+
+            for (Integer entry : edgeLegalEntries) {
+                if (entry.equals(connection)) {
                     continue;
                 }
+
                 Integer nextConnection = entry;
-                Field result = XY_Chain_Link(edge, hinge, legalEntry, nextConnection, visited);
-                if (result != null){
+
+                Field result = XY_Chain_Link(
+                    edge,
+                    hinge,
+                    legalEntry,
+                    nextConnection,
+                    new ArrayList<>(visited)
+                );
+
+                if (result != null) {
                     return result;
                 }
             }
         }
+
         return null;
     }
     public boolean legalEntryInFields(ArrayList<Field> fields, int legalEntry){
@@ -317,10 +410,6 @@ public class Solver {
                 edge.removeLE(legalEntry);
                 if (edge.getLeSize() < size){
                     progress = true;
-                    moves.add("Because of XY chain this field" + edge.getStringCoords() + " has removed " + legalEntry);
-                }
-                if (edge.getValue() == 0 && edge.getLeSize() == 0){
-                    moves.add("I removed the last LE");
                 }
                 
             }

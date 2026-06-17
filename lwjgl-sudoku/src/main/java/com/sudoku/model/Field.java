@@ -167,6 +167,19 @@ public class Field {
         this.removeValueFromLegalEntriesOfNeighbours();
         this.clearLe();
     }
+    public static ArrayList<Integer> getComplementOfLegalEntries(Integer legalEntry, Field field){
+        ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
+        legalEntries.remove(legalEntry);
+        return legalEntries;
+    }
+    public static Integer getOtherLegalEntry(Integer legalEntry, Field field){
+        if (field.getLeSize() != 2){
+            return null;
+        }
+        ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
+        legalEntries.remove(legalEntry);
+        return legalEntries.get(0);
+    }
     public static ArrayList<Integer> getUnionOfFieldsLegalEntries(ArrayList<Field> fields){
         ArrayList<Integer> union = new ArrayList<>();
         for (Field field : fields){
