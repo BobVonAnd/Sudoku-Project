@@ -9,7 +9,7 @@ public class Field {
     private double[] colour;
 
     //if value is correct then it can't be changed
-    private boolean locked = true;
+    private boolean locked = false;
 
     public Field(int x, int y, int value, int size, double[] colour){
 

@@ -123,6 +123,13 @@ import com.sudoku.view.TerminalView;
             before.printBoard();
             algoX.algoXManager(this);
 
+            //makes all values in field locked
+            for(int i = 0; i< size; i++){
+                for(int j = 0; j< size; j++){
+                    wholeBoard[i][j].setLocked(true);
+                }
+            }
+
         TerminalView solved = new TerminalView(this);
         solved.printBoard();
         System.out.println("Solved Sudoku (Before removal)^^");

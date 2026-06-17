@@ -79,7 +79,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             // creates a shader and a class that can display strings
             fontShader = wm.getFontShader();
             text = new CreateString(fontShader, font, width, height);
-
+            
             sudokuFront = new Sudoku(width, height, 1.6, 0, 0, sudokuBoard, font, fontShader, this);
             addElement(sudokuFront, 0);
             size = sudokuBoard.getSize();
@@ -181,7 +181,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
     }
 
-    // inout a MenuButton and it will track if the mouse if hovering the button
+    // input a MenuButton and it will track if the mouse if hovering the button
     private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;

@@ -13,12 +13,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -30,6 +24,7 @@ import com.sudoku.view.Shader;
 import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.NumPadButton;
+import com.sudoku.view.elements.Sudoku;
 import com.sudoku.view.elements.TextFieldButton;
 import com.sudoku.view.fonts.CreateFont;
 
@@ -59,7 +54,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     // x, y, scale, width, hight
     private float[] textFieldPrime = new float[] { -0.6f, 0.7f, 0.3f, 0.0f, 0.1f };
 
-    private SudokuBoard sudokuBoard = new SudokuBoard(0);
+    private SudokuBoard sudokuBoard = new SudokuBoard(1);
     private int standardSize = 9;
     private int size = standardSize;
     private int width;
@@ -71,10 +66,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private int[] selectedField = new int[2];
 
     private boolean sudokuCreated = false;
+    private boolean errorDetected = false;
 
     private MenuButton returnButton;
+    private Sudoku sudokuFront;
 
-    private boolean errorDetected = false;
+    private FieldButton[][] boardButtons;
+  
 
     public CreateMenuWindow(WindowManager wm, int width, int height) {
         super(wm);
@@ -87,15 +85,15 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void create() {
         // This code runs once
         gpad = new Gamepad();
+
         font = wm.getFont();
-        // creates a shader and a class that can display strings
         fontShader = wm.getFontShader();
         text = new CreateString(fontShader, font, width, height);
 
         // creates a String and a box, with xyPos, color, width, hight
-        textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1],
-                textFieldPrime[2], new float[] { 1.0f, 0.0f, 0.0f }, textFieldPrime[3], textFieldPrime[4]);
+        textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], textFieldPrime[2], new float[] { 1.0f, 0.0f, 0.0f }, textFieldPrime[3], textFieldPrime[4]);
         textInfo = new CreateString(fontShader, font, width, height);
+
 
         float aspect = 1280f / 720f;
         numPad = new NumPadButton(0.65f, 0.6f, 0.1f, 0.1f * aspect, text, fontShader);
@@ -117,18 +115,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
-        // button juggle
-        if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
-                returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
-                !gpad.isConnected()&
-
-                returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
-                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
-            returnButton.heldOver(true);
-            windowTransition(returnButton,false);
-        } else {
-            returnButton.heldOver(false);
-        }
+        holdOver(returnButton);
 
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
@@ -174,7 +161,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 if (!gpad.isSelected(returnButton) && !gpad.isSelected(textField) && !gpad.isSelected(numPad)) {
                     for (int i = 0; i < size; i++) {
                         for (int j = 0; j < size; j++) {
-                            fieldButton = buttonArray[i][j];
+                            fieldButton = sudokuFront.getButtonArray()[i][j];
                             if (gpad.isSelected(gpad.getElementAt(2+i,2+j))) {
                                 fieldButton.selected(true);
                                 selectedField[0] = i;
@@ -197,60 +184,67 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         } 
         
 
-        // sudokuBoard
-        if (textField.getValidity()) {
-            fontShader.detach();
-            glBegin(GL_LINES);
+        // // sudokuBoard
+        // if (textField.getValidity()) {
+        //     fontShader.detach();
+        //     glBegin(GL_LINES);
 
-            float x = (float) xStart;
-            float boardlenth = (float) (size * fieldsize);
-            int bigfield = (int) Math.sqrt(size);
-            for (int i = 0; i <= size; i++) {
-                if (i % bigfield == 0) {
-                    bigfieldline();
-                } else {
-                    regularline();
-                }
-                glVertex2f(x, (float) yStart);
-                glVertex2f(x, (float) yStart - boardlenth);
+        //     float x = (float) xStart;
+        //     float boardlenth = (float) (size * fieldsize);
+        //     int bigfield = (int) Math.sqrt(size);
+        //     for (int i = 0; i <= size; i++) {
+        //         if (i % bigfield == 0) {
+        //             bigfieldline();
+        //         } else {
+        //             regularline();
+        //         }
+        //         glVertex2f(x, (float) yStart);
+        //         glVertex2f(x, (float) yStart - boardlenth);
 
-                x += (float) fieldsize;
-            }
+        //         x += (float) fieldsize;
+        //     }
 
-            float y = (float) yStart;
-            for (int i = 0; i <= size; i++) {
-                if (i % bigfield == 0) {
-                    bigfieldline();
-                } else {
-                    regularline();
-                }
-                glVertex2f((float) xStart, y);
-                glVertex2f((float) xStart + boardlenth, y);
-                y -= (float) fieldsize;
-            }
+        //     float y = (float) yStart;
+        //     for (int i = 0; i <= size; i++) {
+        //         if (i % bigfield == 0) {
+        //             bigfieldline();
+        //         } else {
+        //             regularline();
+        //         }
+        //         glVertex2f((float) xStart, y);
+        //         glVertex2f((float) xStart + boardlenth, y);
+        //         y -= (float) fieldsize;
+        //     }
 
-            glEnd();
+        //     glEnd();
 
 
-            if(errorDetected){
-                text.makeText("Invalid input", -0.1f, 0.85f, 0.45f, new float[] {1f,0f,0f});
-                text.flush();
-            }
+            // if(errorDetected){
+            //     text.makeText("Invalid input", -0.1f, 0.85f, 0.45f, new float[] {1f,0f,0f});
+            //     text.flush();
+            // }
+        //}
+
+
+
+    }
+
+     // input a MenuButton and it will track if the mouse if hovering the button
+    private void holdOver(MenuButton button) {
+        double mouseXt = mouseX / (width / 2) - 1;
+        double mouseYt = -mouseY / (height / 2) + 1;
+        if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
+                button.getPos()[0] + button.getSize() / 2 > mouseXt &
+
+                button.getPos()[1] - button.getSize() / 2 < mouseYt &
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {
+            button.heldOver(true);
+        } else {
+            button.heldOver(false);
         }
-
-
-
     }
 
-    private void bigfieldline() {
-        glLineWidth(2.5f);
-        glColor3d(0.20392157f, 0.27842137f, 0.38039216f);
-    }
-
-    private void regularline() {
-        glLineWidth(1.5f);
-        glColor3d(0.84705882f, 0.88235294f, 0.91764706f);
-    }
+   
 
     private void textFieldHover(double mouseXt, double mouseYt) {
         if (mouseXt < textField.quadPos[0] && mouseXt > textField.quadPos[4]
@@ -291,7 +285,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             value
         );
 
-        buttonArray[selectedField[0]][selectedField[1]].setNotValid(!solveable);
+        sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].setNotValid(!solveable);
     }
 
     private void numPadHover(double mouseXt, double mouseYt) {
@@ -406,44 +400,20 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             size = Integer.parseInt(textField.getInput());
             System.out.println(size);
             sudokuBoard = new SudokuBoard(size);
-            buttonArray = new FieldButton[size][size];
-            double y;
-            double x;
-
-            fieldsize = 1.3 / size;
-            x = xStart;
-            for (int i = 0; i < size; i++) {
-                y = yStart;
-                for (int j = 0; j < size; j++) {
-                    buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize, fieldsize,
-                            sudokuBoard, text, fontShader);
-                    addElement(buttonArray[i][j], 0);
-                    gpad.addElement(buttonArray[i][j], 2+j, 2+i);
-                    y -= fieldsize;
-                }
-                x += fieldsize;
-            }
+           
             sudokuCreated = true;
-        } else if (!textField.getValidity() && sudokuCreated) {
-            size = standardSize;
-            sudokuBoard = new SudokuBoard(size);
-            buttonArray = new FieldButton[size][size];
-            double y;
-            double x;
+            sudokuFront = new Sudoku(width, height, 1.3, 0,-0.1, sudokuBoard, font, fontShader, this);
+            addElement(sudokuFront, 0);
 
-            fieldsize = 1.3 / size;
-            x = xStart;
+            boardButtons = sudokuFront.getButtonArray();
             for (int i = 0; i < size; i++) {
-                y = yStart;
                 for (int j = 0; j < size; j++) {
-                    buttonArray[i][j] = new FieldButton(sudokuBoard.getSingleField(i, j), x, y, fieldsize, fieldsize,
-                            sudokuBoard, text, fontShader);
-                    addElement(buttonArray[i][j], 0);
-                    gpad.addElement(buttonArray[i][j], 2+j, 2+i);
-                    y -= fieldsize;
+                    gpad.addElement(boardButtons[i][j], 1 + i, 1 + j);
                 }
-                x += fieldsize;
             }
+            
+        } else if (!textField.getValidity()) {
+            sudokuFront.clear();
             sudokuCreated = false;
         }
     }
@@ -507,7 +477,6 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     errorDetected = true;
                 }
-                buttonArray[selectedField[0]][selectedField[1]].setError(value > sudokuBoard.getSize());
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
                     updateBoardState(value);
                 }
@@ -538,6 +507,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
+        sudokuFront.resize(width, height);
         text.setXY(width, height);
         System.out.println("New size: " + width + "x" + height);
     }
@@ -547,6 +517,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
             action == GLFW_PRESS) {
+
+            if(sudokuCreated){
+                selectedField = sudokuFront.leftClick(mouseX, mouseY);
+            }
+           
+
             if (!gpad.isConnected()) {
                 if (textField.isHeldOver()) {
                     textField.setSelected(true);
@@ -603,33 +579,34 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                         errorDetected = true;
                     }
     
-                    buttonArray[selectedField[0]][selectedField[1]]
-                            .setError(value > size);
+                    // buttonArray[selectedField[0]][selectedField[1]]
+                    //         .setError(value > size);
                 }
             }
             
 
-            // sudokuBoard
-            if (textField.getValidity() && sudokuCreated) {
-                double[] pos = new double[2];
-                double mouseXt = mouseX / (width / 2) - 1;
-                double mouseYt = -mouseY / (height / 2) + 1;
-                FieldButton fieldButton;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        fieldButton = buttonArray[i][j];
-                        pos = fieldButton.getPos();
-                        if ((pos[0] < mouseXt & pos[0] + fieldsize > mouseXt &
-                                pos[1] > mouseYt & pos[1] - fieldsize < mouseYt) && !gpad.isConnected()) {
-                            fieldButton.selected(true);
-                            selectedField[0] = i;
-                            selectedField[1] = j;
-                        } else {
-                            fieldButton.selected(false);
-                        }
-                    }
-                }
-            }
+
+            // // sudokuBoard
+            // if (textField.getValidity() && sudokuCreated) {
+            //     double[] pos = new double[2];
+            //     double mouseXt = mouseX / (width / 2) - 1;
+            //     double mouseYt = -mouseY / (height / 2) + 1;
+            //     FieldButton fieldButton;
+            //     for (int i = 0; i < size; i++) {
+            //         for (int j = 0; j < size; j++) {
+            //             fieldButton = buttonArray[i][j];
+            //             pos = fieldButton.getPos();
+            //             if ((pos[0] < mouseXt & pos[0] + fieldsize > mouseXt &
+            //                     pos[1] > mouseYt & pos[1] - fieldsize < mouseYt) && !gpad.isConnected()) {
+            //                 fieldButton.selected(true);
+            //                 selectedField[0] = i;
+            //                 selectedField[1] = j;
+            //             } else {
+            //                 fieldButton.selected(false);
+            //             }
+            //         }
+            //     }
+            // }
 
             if(returnButton.isHeldOver()){
                 new mainMenuWindow(wm, width, height);

@@ -21,7 +21,7 @@ public class Sudoku implements Element {
     private Shader fontShader;
     private FieldButton[][] buttonArray;
     private double fieldsizeX, fieldsizeY, aspect, yStart, xStart, xAspect, yAspect, sudokuSize, xOffset, yOffset;
-
+    private Window window;
 
     public Sudoku(int width, int height, double sudokuSize, double xOffset, double yOffset, SudokuBoard sb, CreateFont font, Shader fontShader, Window window){
         this.xOffset = xOffset;
@@ -31,6 +31,7 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
+        this.window = window;
         
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font , width, height);
@@ -67,7 +68,8 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
-        
+        this.window = window;
+
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font, width, height);
 
@@ -95,6 +97,15 @@ public class Sudoku implements Element {
         }
     }
 
+    public void clear(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                window.removeElement(buttonArray[i][j]);
+            }
+        }
+        window.removeElement(this);
+        
+    }
 
     public FieldButton[][] getButtonArray() {
         return buttonArray;
@@ -103,7 +114,7 @@ public class Sudoku implements Element {
     public void draw(){
         fontShader.detach();
         glBegin(GL_LINES);
-
+    
         float boardlenth = (float)(size * fieldsizeY);
         int bigfield = (int)Math.sqrt(size);
 
