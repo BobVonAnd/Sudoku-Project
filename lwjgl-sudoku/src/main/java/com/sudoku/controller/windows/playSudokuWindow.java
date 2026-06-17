@@ -186,8 +186,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
-        if ((button.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
-                button.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+        if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
+                button.getPos()[0] + button.getSize() / 2 > mouseXt &
 
                 button.getPos()[1] - button.getSize() / 2 < mouseYt &
                 button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {

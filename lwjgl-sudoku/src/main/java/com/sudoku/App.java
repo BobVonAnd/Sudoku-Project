@@ -11,14 +11,7 @@ public class App {
 	private static int height = 720;
 	private static WindowManager wm = new WindowManager(width, height);
 	public static void main(String[] args) {
-		
 		mainMenuWindow window = new mainMenuWindow(wm,width, height);
-		SudokuBoard sudokuBoard = new SudokuBoard(9);
-		sudokuBoard.populate(1);
-		sudokuBoard.solve();
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
-
 		wm.run();
 	}
 	

@@ -6,7 +6,7 @@
     import java.util.Random;
     import java.util.stream.IntStream;
 
-    import com.sudoku.view.TerminalView;
+import com.sudoku.view.TerminalView;
 
     public class SudokuBoard {
 
@@ -56,24 +56,24 @@
             }
         }
 
-        public void setDifficultyScale(double difficultyScale) {
-            this.difficultyScale = difficultyScale;
-        }
-        
-        public void solve() {
-            double startTime = System.currentTimeMillis();
-            //boolean unique = algoX.algoXIsUnique(this);
-            double endTime = System.currentTimeMillis();
-            double sudokuBoardStartTime = System.currentTimeMillis();
-            //this.uniquenessTest();
-            algoX.algoXManager(this);
-            double sudokuBoardEndTIme = System.currentTimeMillis();
-            double duration = endTime - startTime;
-            double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
-            System.out.println("It took " + duration + " ms to check if it is unique with algox");
-            System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
-            System.out.println("The sudoku is unique " + this.solutions);
-        }
+    public void setDifficultyScale(double difficultyScale) {
+        this.difficultyScale = difficultyScale;
+    }
+    
+    public void solve() {
+        double startTime = System.currentTimeMillis();
+        //boolean unique = algoX.algoXIsUnique(this);
+        double endTime = System.currentTimeMillis();
+        double sudokuBoardStartTime = System.currentTimeMillis();
+        //this.uniquenessTest();
+		algoX.algoXManager(this);
+        double sudokuBoardEndTIme = System.currentTimeMillis();
+        double duration = endTime - startTime;
+        double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
+        System.out.println("It took " + duration + " ms to check if it is unique with algox");
+        System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
+        System.out.println("The sudoku is unique " + String.valueOf(this.solutions == 0));
+    }
 
         public algoXSolver getAlgoX() {
             return algoX;
@@ -123,42 +123,37 @@
             before.printBoard();
             algoX.algoXManager(this);
 
-            TerminalView solved = new TerminalView(this);
-            solved.printBoard();
-            System.out.println("Solved Sudoku (Before removal)^^");
-            
-            int amountToRemove = getFieldsToRemove(this.difficultyScale);
-            Random rand = new Random();
-            int removed = 0;
-            int attempts = 0;
-            
-            while (removed < amountToRemove) {
-                int x = rand.nextInt(this.size);
-                int y = rand.nextInt(this.size);
+        TerminalView solved = new TerminalView(this);
+        solved.printBoard();
+        System.out.println("Solved Sudoku (Before removal)^^");
+        ArrayList<Field> notRemoved = new ArrayList<>();
+        for (int i = 0 ; i < size ; i++) {
+            for (int j = 0 ; j < size ; j++) {
+                notRemoved.add(wholeBoard[i][j]);
+            }
+        }
+        int amountToRemove = getFieldsToRemove(this.difficultyScale);
+        Random rand = new Random();
+        int beforesize = notRemoved.size();
+        
+        while (notRemoved.size() > beforesize-amountToRemove) {
+            Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
+            int x = f.getCoordinates()[0];
+            int y = f.getCoordinates()[1];
 
-                // if chosen value is 0, try again (brute force, this is temp)
-                if (wholeBoard[x][y].getValue() == 0) {
-                    continue;
-                }
-
-                attempts++;
-
-                // temp removal of field
-                int tempVal = wholeBoard[x][y].getValue();
-                wholeBoard[x][y].setValue(0);
-
-                wholeBoard[x][y].setLocked(false);
-                nrOfFieldsLeft += 1;
-                
-                boolean isUnique = algoX.algoXIsUnique(this);
-                if (!isUnique) {
-                    wholeBoard[x][y].setValue(tempVal);
-                } else if (isUnique) {
-                    removed++;
-                    System.out.println(removed);
-                } else {
-                    wholeBoard[x][y].setValue(tempVal);
-                }
+            // temp removal of field
+            int tempVal = wholeBoard[x][y].getValue();
+            wholeBoard[x][y].setValue(0);
+            wholeBoard[x][y].setLocked(false);
+            boolean isUnique = algoX.algoXIsUnique(this);
+            if (!isUnique) {
+                wholeBoard[x][y].setValue(tempVal);
+            } else if (isUnique) {
+                notRemoved.remove(wholeBoard[x][y]);
+                System.out.println(String.valueOf(beforesize-notRemoved.size()));
+            } else {
+                wholeBoard[x][y].setValue(tempVal);
+            }
 
             }
             System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
@@ -214,27 +209,27 @@
             return true;
         }
 
-        public Boolean uniquenessTest() {
-            if (this.solutions > 1) {
-                return true;
-            }
-            for (int i = 0; i < this.size; i++) {
-                for (int j = 0; j < this.size; j++) {
-                    if (wholeBoard[i][j].getValue() == 0) {
-                        for (int k = 0; k < this.size; k++) {
-                            if (isValid(i, j, k)) {
-                                changeField(i, j, k);
-                                uniquenessTest();
-                                changeField(i, j, 0);
-                            }
-                        }
-                        return false;
-                    }
-                }
-            }
-            this.solutions++;
+    public Boolean uniquenessTest() {
+        if (this.solutions > 1) {
             return false;
         }
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (wholeBoard[i][j].getValue() == 0) {
+                    for (int k = 1; k <= this.size; k++) {
+                        if (isValid(i, j, k)) {
+                            changeField(i, j, k);
+                            uniquenessTest();
+                            changeField(i, j, 0);
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        this.solutions++;
+        return false;
+    }
 
         public String getDifficultyString() {
             int amountToRemove = getFieldsToRemove(this.difficultyScale);
