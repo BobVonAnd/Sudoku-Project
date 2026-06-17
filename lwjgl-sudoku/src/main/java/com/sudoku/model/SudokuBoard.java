@@ -144,14 +144,16 @@ import com.sudoku.view.TerminalView;
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
-            wholeBoard[x][y].setLocked(false);
-            nrOfFieldsLeft += 1;
             
+            
+
             boolean isUnique = algoX.algoXIsUnique(this);
             if (!isUnique) {
                 wholeBoard[x][y].setValue(tempVal);
             } else if (isUnique) {
                 notRemoved.remove(wholeBoard[x][y]);
+                wholeBoard[x][y].setLocked(false);
+                nrOfFieldsLeft += 1;
                 System.out.println(String.valueOf(beforesize-notRemoved.size()));
             } else {
                 wholeBoard[x][y].setValue(tempVal);
@@ -182,7 +184,7 @@ import com.sudoku.view.TerminalView;
                     return (int) (-93 * scale + 311);
 
                 case 36:
-                    return (int) (-135 * scale + 588);
+                    return (int) (-135 * scale + 580);
 
                 default:
                     double fraction = 0.65 - 0.3 * scale;
