@@ -24,6 +24,15 @@ To check if java is installed correctly, you can run the command:
 java -version
 ```
 
+## Running the packaged release
+First. Follow the installation instructions.
+
+
+Install the .jar from the [latest release](https://github.com/BobVonAnd/Sudoku-Project/releases) and run it via:
+```bash
+java -jar lwjgl-sudoku-x.x-SNAPSHOT.jar
+```
+
 ## Compiling and Running From Source
 
 The project is a maven project called lwjgl-sudoku, which means you need to first:
@@ -39,4 +48,22 @@ On MacOS:
 ```bash
 mvn install
 mvn clean compile exec:exec
+```
+
+## Packaging and running the project
+
+The project is a maven project called lwjgl-sudoku, which means you need to first:
+* Navigate to the `lwjgl-sudoku` directory. Do this via `cd lwjgl-sudoku`
+
+**To package the project into a .jar:**
+On Windows:
+```bash
+mvn install
+mvn clean package
+```
+
+**To run the package:**
+On Windows or MacOS:
+```bash
+java -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
 ```

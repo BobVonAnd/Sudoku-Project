@@ -4,6 +4,7 @@ The project is a maven project called lwjgl-sudoku, which means you need to firs
 * Navigate to the `lwjgl-sudoku` directory. Do this via `cd lwjgl-sudoku`
 
 **To compile and run directly:**
+
 On Windows:
 ```bash
 mvn install
