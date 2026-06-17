@@ -121,8 +121,7 @@ public class SudokuBoard {
         int removed = 0;
         int attempts = 0;
         
-        while (removed < amountToRemove && attempts < size * size * 10) {
-            attempts++;
+        while (removed < amountToRemove) {
             int x = rand.nextInt(this.size);
             int y = rand.nextInt(this.size);
 
@@ -130,6 +129,8 @@ public class SudokuBoard {
             if (wholeBoard[x][y].getValue() == 0) {
                 continue;
             }
+
+            attempts++;
 
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
@@ -140,6 +141,7 @@ public class SudokuBoard {
                 wholeBoard[x][y].setValue(tempVal);
             } else if (isUnique) {
                 removed++;
+                System.out.println(removed);
             } else {
                 wholeBoard[x][y].setValue(tempVal);
             }
