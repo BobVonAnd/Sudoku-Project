@@ -378,8 +378,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     }
 
     public void validateInput(int[] selectedField) {
-        // detecter if (0,0) was selected since selectedField get set at (0,0) at
-        // default
+        // detecter if (0,0) was selected since selectedField get set at (0,0) at default
         if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected()) {
 
             // detects if the input matches the solution
@@ -396,6 +395,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
                     lastValidation();
                 }
             }
+            System.out.println(sudokuBoard.getNrOfFieldsLeft());
         }
 
     }
