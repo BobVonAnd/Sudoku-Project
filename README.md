@@ -63,6 +63,7 @@ The project is a maven project called lwjgl-sudoku, which means you need to firs
 * Navigate to the `lwjgl-sudoku` directory. Do this via `cd lwjgl-sudoku`
 
 **To package the project into a .jar:**
+
 On Windows:
 ```bash
 mvn install
@@ -70,6 +71,7 @@ mvn clean package
 ```
 
 **To run the package:**
+
 On Windows or MacOS:
 ```bash
 java -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
