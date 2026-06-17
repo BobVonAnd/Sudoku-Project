@@ -143,7 +143,7 @@ public class SudokuBoard {
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
             wholeBoard[x][y].setLocked(false);
-            boolean isUnique = uniquenessTest();
+            boolean isUnique = algoX.algoXIsUnique(this);
             if (!isUnique) {
                 wholeBoard[x][y].setValue(tempVal);
             } else if (isUnique) {
@@ -209,12 +209,12 @@ public class SudokuBoard {
 
     public Boolean uniquenessTest() {
         if (this.solutions > 1) {
-            return true;
+            return false;
         }
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (wholeBoard[i][j].getValue() == 0) {
-                    for (int k = 0; k < this.size; k++) {
+                    for (int k = 1; k <= this.size; k++) {
                         if (isValid(i, j, k)) {
                             changeField(i, j, k);
                             uniquenessTest();
