@@ -54,6 +54,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private boolean gpad_selected_before = true;
     private boolean wasOnBoardLastFrame = false;
 
+    private boolean classIsCreated = false;
+
     // private EndScreenWindow = endScreen;
 
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
@@ -62,53 +64,56 @@ public class playSudokuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         sudokuBoard = sb;
+        sudokuBoard.populate();
         wm.setActiveWindow(this);
+        classIsCreated = true;
     }
 
     public void create() {
         // This code runs once
-        gpad = new Gamepad();
-        font = wm.getFont();
-        // creates a shader and a class that can display strings
-        fontShader = wm.getFontShader();
-        text = new CreateString(fontShader, font, width, height);
+        if (!classIsCreated) {
+            gpad = new Gamepad();
+            font = wm.getFont();
+            // creates a shader and a class that can display strings
+            fontShader = wm.getFontShader();
+            text = new CreateString(fontShader, font, width, height);
 
-        sudokuBoard.populate();
+            sudokuFront = new Sudoku(width, height, 1.6, 0, 0, sudokuBoard, font, fontShader, this);
+            addElement(sudokuFront, 0);
+            size = sudokuBoard.getSize();
 
-        sudokuFront = new Sudoku(width, height, 1.6, 0,0, sudokuBoard, font, fontShader, this);
-        addElement(sudokuFront, 0);
-        size = sudokuBoard.getSize();
+            // return to last window
+            returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
+            addElement(returnButton, 0);
+            gpad.addElement(returnButton, 0, 0);
 
-        // return to last window
-        returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
-        addElement(returnButton, 0);
-        gpad.addElement(returnButton, 0, 0);
+            solveButton = new MenuButton(0.7, 0.75, 0.2, text, fontShader, "Solve");
+            addElement(solveButton, 0);
+            gpad.addElement(solveButton, size + 2, 1);
 
-        solveButton = new MenuButton(0.7, 0.75, 0.2, text, fontShader, "Solve");
-        addElement(solveButton, 0);
-        gpad.addElement(solveButton, size + 2, 1);
+            hintButton = new MenuButton(0.7, 0.50, 0.2, text, fontShader, "Hint");
+            addElement(hintButton, 0);
+            gpad.addElement(hintButton, size + 2, 2);
 
-        hintButton = new MenuButton(0.7, 0.50, 0.2, text, fontShader, "Hint");
-        addElement(hintButton, 0);
-        gpad.addElement(hintButton, size + 2, 2);
+            // numpad
+            float aspect = 1280f / 720f;
+            numPad = new NumPadButton(0.525f, 0.2f, 0.1f, 0.1f * aspect, text, fontShader);
+            addElement(numPad, 0);
 
-        // numpad
-        float aspect = 1280f / 720f;
-        numPad = new NumPadButton(0.525f, 0.2f, 0.1f, 0.1f * aspect, text, fontShader);
-        addElement(numPad, 0);
-
-        boardButtons = sudokuFront.getButtonArray();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                gpad.addElement(boardButtons[i][j], 1 + i, 1 + j);
+            boardButtons = sudokuFront.getButtonArray();
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    gpad.addElement(boardButtons[i][j], 1 + i, 1 + j);
+                }
             }
-        }
 
-        // creates a copy of the sudokuboard which we solve
-        solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
-        int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
-        solvedSudokuBoard.readIntoBoard(integerBoard);
-        solvedSudokuBoard.solve();
+            // creates a copy of the sudokuboard which we solve
+            solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+            int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+            solvedSudokuBoard.readIntoBoard(integerBoard);
+            solvedSudokuBoard.solve();
+
+        }
 
     }
 
@@ -187,18 +192,30 @@ public class playSudokuWindow extends Window implements WindowInterface {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
 
-        numPad.setSelected(0,  mouseXt > xNP                && mouseXt < xNP + widthNP        && mouseYt > yNP - heightNP        && mouseYt < yNP                  && !gpad.isConnected());
-        numPad.setSelected(1,  mouseXt > xNP + widthNP      && mouseXt < xNP + widthNP * 2    && mouseYt > yNP - heightNP        && mouseYt < yNP                  && !gpad.isConnected());
-        numPad.setSelected(2,  mouseXt > xNP + widthNP * 2  && mouseXt < xNP + widthNP * 3    && mouseYt > yNP - heightNP        && mouseYt < yNP                  && !gpad.isConnected());
-        numPad.setSelected(3,  mouseXt > xNP                && mouseXt < xNP + widthNP        && mouseYt > yNP - heightNP * 2    && mouseYt < yNP - heightNP        && !gpad.isConnected());
-        numPad.setSelected(4,  mouseXt > xNP + widthNP      && mouseXt < xNP + widthNP * 2    && mouseYt > yNP - heightNP * 2    && mouseYt < yNP - heightNP        && !gpad.isConnected());
-        numPad.setSelected(5,  mouseXt > xNP + widthNP * 2  && mouseXt < xNP + widthNP * 3    && mouseYt > yNP - heightNP * 2    && mouseYt < yNP - heightNP        && !gpad.isConnected());
-        numPad.setSelected(6,  mouseXt > xNP                && mouseXt < xNP + widthNP        && mouseYt > yNP - heightNP * 3    && mouseYt < yNP - heightNP * 2    && !gpad.isConnected());
-        numPad.setSelected(7,  mouseXt > xNP + widthNP      && mouseXt < xNP + widthNP * 2    && mouseYt > yNP - heightNP * 3    && mouseYt < yNP - heightNP * 2    && !gpad.isConnected());
-        numPad.setSelected(8,  mouseXt > xNP + widthNP * 2  && mouseXt < xNP + widthNP * 3    && mouseYt > yNP - heightNP * 3    && mouseYt < yNP - heightNP * 2    && !gpad.isConnected());
-        numPad.setSelected(9,  mouseXt > xNP                && mouseXt < xNP + widthNP        && mouseYt > yNP - heightNP * 4    && mouseYt < yNP - heightNP * 3    && !gpad.isConnected());
-        numPad.setSelected(10, mouseXt > xNP + widthNP      && mouseXt < xNP + widthNP * 2    && mouseYt > yNP - heightNP * 4    && mouseYt < yNP - heightNP * 3    && !gpad.isConnected());
-        numPad.setSelected(11, mouseXt > xNP + widthNP * 2  && mouseXt < xNP + widthNP * 3    && mouseYt > yNP - heightNP * 4    && mouseYt < yNP - heightNP * 3    && !gpad.isConnected());
+        numPad.setSelected(0, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP && mouseYt < yNP
+                && !gpad.isConnected());
+        numPad.setSelected(1, mouseXt > xNP + widthNP && mouseXt < xNP + widthNP * 2 && mouseYt > yNP - heightNP
+                && mouseYt < yNP && !gpad.isConnected());
+        numPad.setSelected(2, mouseXt > xNP + widthNP * 2 && mouseXt < xNP + widthNP * 3 && mouseYt > yNP - heightNP
+                && mouseYt < yNP && !gpad.isConnected());
+        numPad.setSelected(3, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP * 2
+                && mouseYt < yNP - heightNP && !gpad.isConnected());
+        numPad.setSelected(4, mouseXt > xNP + widthNP && mouseXt < xNP + widthNP * 2 && mouseYt > yNP - heightNP * 2
+                && mouseYt < yNP - heightNP && !gpad.isConnected());
+        numPad.setSelected(5, mouseXt > xNP + widthNP * 2 && mouseXt < xNP + widthNP * 3 && mouseYt > yNP - heightNP * 2
+                && mouseYt < yNP - heightNP && !gpad.isConnected());
+        numPad.setSelected(6, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP * 3
+                && mouseYt < yNP - heightNP * 2 && !gpad.isConnected());
+        numPad.setSelected(7, mouseXt > xNP + widthNP && mouseXt < xNP + widthNP * 2 && mouseYt > yNP - heightNP * 3
+                && mouseYt < yNP - heightNP * 2 && !gpad.isConnected());
+        numPad.setSelected(8, mouseXt > xNP + widthNP * 2 && mouseXt < xNP + widthNP * 3 && mouseYt > yNP - heightNP * 3
+                && mouseYt < yNP - heightNP * 2 && !gpad.isConnected());
+        numPad.setSelected(9, mouseXt > xNP && mouseXt < xNP + widthNP && mouseYt > yNP - heightNP * 4
+                && mouseYt < yNP - heightNP * 3 && !gpad.isConnected());
+        numPad.setSelected(10, mouseXt > xNP + widthNP && mouseXt < xNP + widthNP * 2 && mouseYt > yNP - heightNP * 4
+                && mouseYt < yNP - heightNP * 3 && !gpad.isConnected());
+        numPad.setSelected(11, mouseXt > xNP + widthNP * 2 && mouseXt < xNP + widthNP * 3
+                && mouseYt > yNP - heightNP * 4 && mouseYt < yNP - heightNP * 3 && !gpad.isConnected());
 
         // Gamepad D-pad navigation inside numpad
         if (gpad_selected_before && gpad.isSelected(numPad)) {
@@ -257,7 +274,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
         validateInput(selectedField);
     }
 
-
     @Override // If you don't need a key callback, just delete this
     public void keyCallback(int key, int scancode, int action, int mods) {
 
@@ -313,7 +329,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
             value = value / 10;
             sudokuBoard.changeField(selectedField[0], selectedField[1], value);
         }
-       
 
         // if (key == GLFW_KEY_1 && action == GLFW_PRESS){
         // sudokuBoard.changeField(selectedField[0],selectedField[1],1);
@@ -352,8 +367,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void validateInput(int[] selectedField) {
         sudokuFront.setNotValidInput(
-                sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() !=
-                        solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue(),
+                sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() != solvedSudokuBoard
+                        .getSingleField(selectedField[0], selectedField[1]).getValue(),
                 selectedField);
     }
 
@@ -386,17 +401,17 @@ public class playSudokuWindow extends Window implements WindowInterface {
     }
 
     public void windowTransition(MenuButton b, boolean mouseClick) {
-        if (elementExists(b)){
+        if (elementExists(b)) {
             if (mouseClick || gpad.isEntered()) {
                 if (b.isHeldOver()) {
                     if (b == returnButton) {
                         new PlaySudokuSettingsWindow(wm, width, height);
                     } else if (b == solveButton) {
-                        new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard);
+                        new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard, this);
                     } else if (b == hintButton) {
                         new EndScreenWindow(wm, sudokuBoard, width, height, "win");
                     }
-                } 
+                }
             }
         }
     }
