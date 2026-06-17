@@ -117,6 +117,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     }
 
+    private void removeLockedFromGPad(){
+        for(int i = 0; i < sudokuBoard.getSize(); i++){
+            for(int j = 0; j < sudokuBoard.getSize(); j++){
+                if(sudokuBoard.getSingleField(i, j).getLocked()){
+                    gpad.removeElement(sudokuFront.getButtonArray()[i][j]);
+                }
+            }
+        }
+    }
+
     public void step() {
         // This code runs every frame
         gpad.step();
@@ -278,7 +288,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void keyCallback(int key, int scancode, int action, int mods) {
 
         int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-
+        
         if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
             value = value * 10 + 0;
             sudokuBoard.changeField(selectedField[0], selectedField[1], value);
@@ -366,10 +376,12 @@ public class playSudokuWindow extends Window implements WindowInterface {
     }
 
     public void validateInput(int[] selectedField) {
-        sudokuFront.setNotValidInput(
-                sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() != solvedSudokuBoard
-                        .getSingleField(selectedField[0], selectedField[1]).getValue(),
-                selectedField);
+        boolean validInput = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() != solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
+        sudokuFront.setNotValidInput(validInput , selectedField);
+        sudokuBoard.getSingleField(selectedField[0], selectedField[1]).setLocked(!validInput);
+        if(!validInput){
+            gpad.removeElement(sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]]);
+        }
     }
 
     @Override // If you don't need a resize callback, just delete this

@@ -179,7 +179,7 @@ public class Sudoku implements Element {
                 fieldButton = buttonArray[i][j];
                 pos = fieldButton.getPos();
                 if (pos[0] < mouseXt & pos[0] + fieldsizeX > mouseXt &
-                    pos[1] > mouseYt & pos[1] - fieldsizeY < mouseYt){
+                    pos[1] > mouseYt & pos[1] - fieldsizeY < mouseYt & !sudokuBoard.getSingleField(i,j).getLocked()){
                     fieldButton.selected(true);
                     selectedField[0] = i;
                     selectedField[1] = j;

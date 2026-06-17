@@ -8,6 +8,9 @@ public class Field {
     private ArrayList<Field> Edges = new ArrayList<>();
     private double[] colour;
 
+    //if value is correct then it can't be changed
+    private boolean locked = true;
+
     public Field(int x, int y, int value, int size, double[] colour){
 
         this.x = x;
@@ -20,6 +23,15 @@ public class Field {
             legalEntries.add(i);
         }
     }
+
+    public void setLocked(boolean isLocked){
+        this.locked = isLocked;
+    }
+
+    public boolean getLocked(){
+        return locked;
+    }
+
     public void setValue(int value){
         this.value = value;
     }

@@ -134,6 +134,7 @@ public class SudokuBoard {
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
+            wholeBoard[x][y].setLocked(false);
             boolean isUnique = algoX.algoXIsUnique(this);
             if (!isUnique) {
                 wholeBoard[x][y].setValue(tempVal);
