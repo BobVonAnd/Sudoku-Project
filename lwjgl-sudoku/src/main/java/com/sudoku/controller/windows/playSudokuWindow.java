@@ -120,16 +120,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     }
 
-    private void removeLockedFromGPad(){
-        for(int i = 0; i < sudokuBoard.getSize(); i++){
-            for(int j = 0; j < sudokuBoard.getSize(); j++){
-                if(sudokuBoard.getSingleField(i, j).getLocked()){
-                    gpad.removeElement(sudokuFront.getButtonArray()[i][j]);
-                }
-            }
-        }
-    }
-
     public void step() {
         // This code runs every frame
         gpad.step();
