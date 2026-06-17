@@ -369,6 +369,9 @@ public class Solver {
                             removeFrom = removeList(field, checkingField, new ArrayList<Field>());
                             removeFrom = removeList(pair1, pair2, removeFrom);
                             removeFromColumn(removeFrom, checkingEntry);
+                            progress = true;
+                            System.out.println("xwing from " + field.getStringCoords() + " to " + pair2.getStringCoords());
+                            break;
                         }
                     }
                 }
