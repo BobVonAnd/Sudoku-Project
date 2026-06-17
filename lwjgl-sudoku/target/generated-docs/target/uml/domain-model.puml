@@ -12,6 +12,7 @@ abstract class com.sudoku.controller.Window {
 	{method} +addElement ( paramElement1 : com.sudoku.view.elements.Element , paramdouble2 : double ) : void
 	{method} +changeElementDepth ( paramElement1 : com.sudoku.view.elements.Element , paramdouble2 : double ) : void
 	{method} +draw () : void
+	{method} +elementExists ( paramElement1 : com.sudoku.view.elements.Element ) : boolean
 	{method} +removeElement ( paramElement1 : com.sudoku.view.elements.Element ) : boolean
 }
 
@@ -40,10 +41,19 @@ class com.sudoku.controller.WindowManager {
 
 class com.sudoku.controller.windows.CreateMenuWindow {
 	{field} -buttonArray : [[Lcom.sudoku.view.elements.FieldButton;
+	{field} -errorDetected : boolean
 	{field} -fieldsize : double
+	{field} -gpadNumpadIndex : int
+	{field} -gpad_selected_before : boolean
 	{field} -height : int
 	{field} -mouseX : double
 	{field} -mouseY : double
+	{field} -numpad_buffer : long
+	{field} -numpad_buffer_timestamp : long
+	{field} -numpad_for_board : boolean
+	{field} -numpad_type_buffer : long
+	{field} -numpad_type_buffer_timestamp : long
+	{field} -numpad_type_selected_before : boolean
 	{field} -output : String
 	{field} -selectedField : [I
 	{field} -size : int
@@ -58,6 +68,7 @@ class com.sudoku.controller.windows.CreateMenuWindow {
 	{method} -bigfieldline () : void
 	{method} -clearSelectField () : void
 	{method} +create () : void
+	{method} +createSudoku () : void
 	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
 	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
 	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
@@ -66,34 +77,87 @@ class com.sudoku.controller.windows.CreateMenuWindow {
 	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
 	{method} +step () : void
 	{method} -textFieldHover ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} -typeBoard ( paramint1 : int ) : void
+	{method} +typeSize ( paramint1 : int ) : void
+	{method} -updateBoardState ( paramint1 : int ) : void
+	{method} +windowTransition ( paramMenuButton1 : com.sudoku.view.elements.MenuButton , paramboolean2 : boolean ) : void
 }
 
 
-class com.sudoku.controller.windows.PlaySudokuSettingsWindow {
-	{field} -Buttons : [Lcom.sudoku.view.elements.MenuButton;
+class com.sudoku.controller.windows.EndScreenWindow {
+	{field} -endCondition : String
 	{field} -height : int
-	{field} -mbLeftHeld : boolean
 	{field} -mouseX : double
 	{field} -mouseY : double
-	{field} -output : String
-	{field} -textFieldPrime : [F
 	{field} -width : int
+	{method} +create () : void
+	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} -holdOver ( paramMenuButton1 : com.sudoku.view.elements.MenuButton ) : void
+	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
+	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
+	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
+	{method} +step () : void
+}
+
+
+class com.sudoku.controller.windows.HintWindow {
+	{field} -mouseX : double
+	{field} -mouseY : double
 	{method} +create () : void
 	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
 	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
 	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
 	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
 	{method} +step () : void
-	{method} -textFieldHover ( paramdouble1 : double , paramdouble2 : double ) : void
 }
 
 
-class com.sudoku.controller.windows.depricatedsudokuWindow {
-	{field} -window : long
-	{method} -init ( paramSudokuBoard1 : com.sudoku.model.SudokuBoard ) : void
-	{method} -loop ( paramSudokuBoard1 : com.sudoku.model.SudokuBoard ) : void
-	{method} +run ( paramSudokuBoard1 : com.sudoku.model.SudokuBoard ) : void
-	{method} +translateCoordinatesToFieldCoordinates ( paramdouble1 : double , paramdouble2 : double , paramint3 : int ) : [I
+class com.sudoku.controller.windows.PlaySudokuSettingsWindow {
+	{field} -Buttons : [Lcom.sudoku.view.elements.MenuButton;
+	{field} -gpadNumpadIndex : int
+	{field} -gpad_selected_before : boolean
+	{field} -height : int
+	{field} -mbLeftHeld : boolean
+	{field} -mouseX : double
+	{field} -mouseY : double
+	{field} -numpad_buffer : long
+	{field} -numpad_buffer_timestamp : long
+	{field} -numpad_type_buffer : long
+	{field} -numpad_type_buffer_timestamp : long
+	{field} -numpad_type_selected_before : boolean
+	{field} -output : String
+	{field} -startButtonShowing : boolean
+	{field} -textFieldPrime : [F
+	{field} -width : int
+	{method} +create () : void
+	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
+	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
+	{method} -numPadHover ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
+	{method} +step () : void
+	{method} -textFieldHover ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} +typeSize ( paramint1 : int ) : void
+	{method} +windowTransition ( paramMenuButton1 : com.sudoku.view.elements.MenuButton , paramboolean2 : boolean ) : void
+}
+
+
+class com.sudoku.controller.windows.SolvedWindow {
+	{field} -a_buffer_max : long
+	{field} -a_buffer_timestamp : long
+	{field} -height : int
+	{field} -mouseX : double
+	{field} -mouseY : double
+	{field} -width : int
+	{method} +create () : void
+	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} -holdOver ( paramMenuButton1 : com.sudoku.view.elements.MenuButton ) : void
+	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
+	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
+	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
+	{method} +step () : void
+	{method} +update ( paramWindowManager1 : com.sudoku.controller.WindowManager , paramint2 : int , paramint3 : int , paramSudokuBoard4 : com.sudoku.model.SudokuBoard , paramSudokuBoard5 : com.sudoku.model.SudokuBoard , paramplaySudokuWindow6 : com.sudoku.controller.windows.playSudokuWindow ) : void
+	{method} +windowTransition ( paramMenuButton1 : com.sudoku.view.elements.MenuButton ) : void
 }
 
 
@@ -109,42 +173,38 @@ class com.sudoku.controller.windows.mainMenuWindow {
 	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
 	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
 	{method} +step () : void
+	{method} +windowTransition ( paramMenuButton1 : com.sudoku.view.elements.MenuButton , paramboolean2 : boolean ) : void
 }
 
 
 class com.sudoku.controller.windows.playSudokuWindow {
-	{field} -buttonArray : [[Lcom.sudoku.view.elements.FieldButton;
-	{field} -fieldsize : double
+	{field} -a_buffer_max : long
+	{field} -a_buffer_timestamp : long
+	{field} -boardButtons : [[Lcom.sudoku.view.elements.FieldButton;
+	{field} -classIsCreated : boolean
+	{field} -gpadNumpadIndex : int
+	{field} -gpad_selected_before : boolean
 	{field} -height : int
 	{field} -mouseX : double
 	{field} -mouseY : double
+	{field} -numpad_buffer : long
+	{field} -numpad_buffer_timestamp : long
 	{field} -selectedField : [I
 	{field} -size : int
+	{field} -wasOnBoardLastFrame : boolean
 	{field} -width : int
-	{field} -xStart : double
-	{field} -yStart : double
-	{method} -bigfieldline () : void
 	{method} +create () : void
 	{method} +cursorPosCallback ( paramdouble1 : double , paramdouble2 : double ) : void
+	{method} -holdOver ( paramMenuButton1 : com.sudoku.view.elements.MenuButton ) : void
 	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
+	{method} -lastValidation () : void
 	{method} +mouseButtonCallback ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
-	{method} -regularline () : void
+	{method} -numPadHover () : void
 	{method} +resizeCallback ( paramint1 : int , paramint2 : int ) : void
 	{method} +step () : void
-}
-
-
-class com.sudoku.controller.windows.textWindow {
-	{method} +create () : void
-	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
-	{method} +step () : void
-}
-
-
-class com.sudoku.controller.windows.textWindow2 {
-	{method} +create () : void
-	{method} +keyCallback ( paramint1 : int , paramint2 : int , paramint3 : int , paramint4 : int ) : void
-	{method} +step () : void
+	{method} -typeBoard ( paramint1 : int ) : void
+	{method} +validateInput ( param[I1 : [I ) : void
+	{method} +windowTransition ( paramMenuButton1 : com.sudoku.view.elements.MenuButton , paramboolean2 : boolean ) : void
 }
 
 
@@ -164,6 +224,7 @@ class com.sudoku.model.Field {
 	{field} -boardSize : int
 	{field} -colour : [D
 	{field} -legalEntries : java.util.ArrayList
+	{field} +locked : boolean
 	{field} +value : int
 	{field} -x : int
 	{field} -y : int
@@ -181,6 +242,32 @@ class com.sudoku.model.Field {
 	{method} +removeEdges () : void
 	{method} +removeLE ( paramint1 : int ) : void
 	{method} +removeValueFromLegalEntriesOfNeighbours () : void
+}
+
+
+class com.sudoku.model.Gamepad {
+	{field} -aBuffer : long
+	{field} -aTimestamp : long
+	{field} -buffer : long
+	{field} -buffer_timestamp : long
+	{field} -connected : boolean
+	{field} -deadzone : double
+	{field} -entered : boolean
+	{field} +moveLocked : boolean
+	{field} +position : com.sudoku.model.Gamepad$Position
+	{field} -pressed : boolean
+	{field} -x : com.sudoku.model.Gamepad$X_Input
+	{field} -y : com.sudoku.model.Gamepad$Y_Input
+	{method} +addElement ( paramElement1 : com.sudoku.view.elements.Element , paramint2 : int , paramint3 : int ) : void
+	{method} -findNearest ( paramGamepad$X_Input1 : com.sudoku.model.Gamepad$X_Input , paramGamepad$Y_Input2 : com.sudoku.model.Gamepad$Y_Input ) : com.sudoku.model.Gamepad$Position
+	{method} +getCurrentElement () : com.sudoku.view.elements.Element
+	{method} +getElementAt ( paramint1 : int , paramint2 : int ) : com.sudoku.view.elements.Element
+	{method} +getXDir () : int
+	{method} +getYDir () : int
+	{method} +isSelected ( paramElement1 : com.sudoku.view.elements.Element ) : boolean
+	{method} +removeElement ( paramElement1 : com.sudoku.view.elements.Element ) : void
+	{method} +step () : void
+	{method} +updateElement ( paramElement1 : com.sudoku.view.elements.Element , paramint2 : int , paramint3 : int ) : void
 }
 
 
@@ -212,18 +299,22 @@ class com.sudoku.model.SudokuBoard {
 	{field} -bigFieldSize : int
 	{field} +difficultyScale : double
 	{field} -fieldsAmount : int
+	{field} -nrOfFieldsLeft : int
 	{field} -size : int
 	{field} +solutions : int
-	{field} -wholeBoard : [[Lcom.sudoku.model.Field;
+	{field} +wholeBoard : [[Lcom.sudoku.model.Field;
 	{method} +changeField ( paramint1 : int , paramint2 : int , paramint3 : int ) : void
 	{method} +clear () : void
 	{method} +getDifficultyString () : String
 	{method} +getFieldsToRemove ( paramdouble1 : double ) : int
 	{method} +getSingleField ( paramint1 : int , paramint2 : int ) : com.sudoku.model.Field
+	{method} +inputDetected () : void
 	{method} +isValid ( paramint1 : int , paramint2 : int , paramint3 : int ) : Boolean
 	{method} +makeEdges ( paramField1 : com.sudoku.model.Field ) : void
+	{method} +populate () : void
 	{method} +populate ( paramdouble1 : double ) : void
 	{method} +readIntoBoard ( param[[I1 : [[I ) : void
+	{method}  {static} +readOutOffBoard ( paramSudokuBoard1 : com.sudoku.model.SudokuBoard ) : [[I
 	{method} +solve () : void
 	{method} +uniquenessTest () : Boolean
 	{method} +updateLegalEntriesOfField ( paramField1 : com.sudoku.model.Field ) : void
@@ -253,8 +344,10 @@ class com.sudoku.view.CreateString {
 	{field} -WINDOWX : float
 	{field} -WINDOWY : float
 	{field} -indices : [I
+	{field} -normalizedAspect : float
 	{field} -projection : org.joml.Matrix4f
 	{field} -size : int
+	{field} -startaspect : float
 	{field} -vao : int
 	{field} -vbo : int
 	{field} -vertices : [F
@@ -263,6 +356,7 @@ class com.sudoku.view.CreateString {
 	{method} -generateEBO () : void
 	{method} +makeText ( paramString1 : String , paramfloat2 : float , paramfloat3 : float , paramfloat4 : float , param[F5 : [F ) : void
 	{method} -processChar ( paramCharInfo1 : com.sudoku.view.fonts.CharInfo , paramfloat2 : float , paramfloat3 : float , paramfloat4 : float , param[F5 : [F ) : void
+	{method} +setXY ( paramint1 : int , paramint2 : int ) : void
 }
 
 
@@ -301,20 +395,26 @@ interface com.sudoku.view.elements.Element {
 class com.sudoku.view.elements.FieldButton {
 	{field} -colour : [D
 	{field} -error : boolean
+	{field} -isSolved : boolean
 	{field} -notValid : boolean
 	{field} -selected : boolean
-	{field} -size : double
+	{field} -sizeX : double
+	{field} -sizeY : double
 	{field} -snumber : boolean
 	{field} -touching : boolean
+	{field} -userGess : boolean
 	{field} -value : int
 	{field} -x : double
 	{field} -y : double
 	{method} +draw () : void
 	{method} -fieldIsTouching () : void
 	{method} +getPos () : [D
+	{method} +getSize () : [D
 	{method} -samenumber () : void
 	{method} +selected ( paramboolean1 : boolean ) : void
 	{method} -selectedcolour () : void
+	{method} +setFieldSize ( param[D1 : [D ) : void
+	{method} +setXY ( param[D1 : [D ) : void
 	{method} -whiteColour () : void
 }
 
@@ -357,6 +457,7 @@ class com.sudoku.view.elements.NumPadButton {
 class com.sudoku.view.elements.Slider {
 	{field} -deltaTime : double
 	{field} -diamondScale : double
+	{field} -gpadSpd : double
 	{field} -half : double
 	{field} -height : double
 	{field} -heldOver : boolean
@@ -390,6 +491,31 @@ class com.sudoku.view.elements.Slider {
 	{method} +update ( paramdouble1 : double , paramdouble2 : double , paramdouble3 : double , paramdouble4 : double , paramboolean5 : boolean ) : void
 	{method} +updatePrefix ( paramString1 : String ) : void
 	{method} +updateSuffix ( paramString1 : String ) : void
+}
+
+
+class com.sudoku.view.elements.Sudoku {
+	{field} -aspect : double
+	{field} -buttonArray : [[Lcom.sudoku.view.elements.FieldButton;
+	{field} -fieldsizeX : double
+	{field} -fieldsizeY : double
+	{field} -height : int
+	{field} -size : int
+	{field} -sudokuSize : double
+	{field} -width : int
+	{field} -xAspect : double
+	{field} -xOffset : double
+	{field} -xStart : double
+	{field} -yAspect : double
+	{field} -yOffset : double
+	{field} -yStart : double
+	{method} -bigfieldline () : void
+	{method} +draw () : void
+	{method} +leftClick ( paramdouble1 : double , paramdouble2 : double ) : [I
+	{method} -regularline () : void
+	{method} +resize ( paramint1 : int , paramint2 : int ) : void
+	{method} +setNotValidInput ( paramboolean1 : boolean , param[I2 : [I ) : void
+	{method} +setNotValidInputToFalse ( param[I1 : [I ) : void
 }
 
 
@@ -438,12 +564,12 @@ class com.sudoku.view.fonts.CreateFont {
 
 
 com.sudoku.App -->  com.sudoku.controller.WindowManager : wm
-com.sudoku.controller.Window "1" o-- "0..*"  com.sudoku.view.elements.Element : Elements
 com.sudoku.controller.Window -->  com.sudoku.controller.WindowManager : wm
 com.sudoku.controller.WindowManager -->  com.sudoku.controller.WindowInterface : activeWindow
 com.sudoku.controller.WindowManager -->  com.sudoku.view.Shader : fontShader
 com.sudoku.controller.WindowManager -->  com.sudoku.view.fonts.CreateFont : font
 com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.model.Gamepad : gpad
 com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.model.SudokuBoard : sudokuBoard
 com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.view.CreateString : text
 com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.view.CreateString : textInfo
@@ -454,20 +580,47 @@ com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.view.elements.Tex
 com.sudoku.controller.windows.CreateMenuWindow -->  com.sudoku.view.fonts.CreateFont : font
 com.sudoku.controller.windows.CreateMenuWindow --|>  com.sudoku.controller.Window
 com.sudoku.controller.windows.CreateMenuWindow ..|>  com.sudoku.controller.WindowInterface
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.model.Gamepad : gpad
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.model.SudokuBoard : sudokuBoard
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.view.CreateString : text
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.view.Shader : fontShader
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.view.elements.MenuButton : returnButton
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.view.elements.Sudoku : sudokuUI
+com.sudoku.controller.windows.EndScreenWindow -->  com.sudoku.view.fonts.CreateFont : font
+com.sudoku.controller.windows.EndScreenWindow --|>  com.sudoku.controller.Window
+com.sudoku.controller.windows.EndScreenWindow ..|>  com.sudoku.controller.WindowInterface
+com.sudoku.controller.windows.HintWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.HintWindow --|>  com.sudoku.controller.Window
+com.sudoku.controller.windows.HintWindow ..|>  com.sudoku.controller.WindowInterface
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.model.Gamepad : gpad
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.model.SudokuBoard : sb
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.CreateString : text
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.CreateString : textInfo
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.elements.MenuButton : backButton
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.elements.MenuButton : startButton
+com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.elements.NumPadButton : numPad
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.elements.Slider : difficultySlider
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.elements.TextFieldButton : textField
 com.sudoku.controller.windows.PlaySudokuSettingsWindow -->  com.sudoku.view.fonts.CreateFont : font
 com.sudoku.controller.windows.PlaySudokuSettingsWindow --|>  com.sudoku.controller.Window
 com.sudoku.controller.windows.PlaySudokuSettingsWindow ..|>  com.sudoku.controller.WindowInterface
-com.sudoku.controller.windows.depricatedsudokuWindow -->  com.sudoku.controller.WindowManager : wm
-com.sudoku.controller.windows.depricatedsudokuWindow --|>  com.sudoku.controller.Window
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.controller.windows.playSudokuWindow : pw
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.model.Gamepad : gpad
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.model.SudokuBoard : solvedSudokuBoard
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.model.SudokuBoard : sudokuBoard
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.CreateString : text
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.Shader : fontShader
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.elements.MenuButton : end
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.elements.MenuButton : returnButton
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.elements.Sudoku : sudokuUI
+com.sudoku.controller.windows.SolvedWindow -->  com.sudoku.view.fonts.CreateFont : font
+com.sudoku.controller.windows.SolvedWindow --|>  com.sudoku.controller.Window
+com.sudoku.controller.windows.SolvedWindow ..|>  com.sudoku.controller.WindowInterface
 com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.model.Gamepad : gpad
 com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.view.CreateString : text
 com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.view.Shader : fontShader
 com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.view.elements.MenuButton : createButton
@@ -477,26 +630,25 @@ com.sudoku.controller.windows.mainMenuWindow -->  com.sudoku.view.fonts.CreateFo
 com.sudoku.controller.windows.mainMenuWindow --|>  com.sudoku.controller.Window
 com.sudoku.controller.windows.mainMenuWindow ..|>  com.sudoku.controller.WindowInterface
 com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.model.Gamepad : gpad
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.model.SudokuBoard : solvedSudokuBoard
 com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.model.SudokuBoard : sudokuBoard
 com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.CreateString : text
 com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.Shader : fontShader
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.elements.MenuButton : hintButton
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.elements.MenuButton : returnButton
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.elements.MenuButton : solveButton
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.elements.NumPadButton : numPad
+com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.elements.Sudoku : sudokuFront
 com.sudoku.controller.windows.playSudokuWindow -->  com.sudoku.view.fonts.CreateFont : font
 com.sudoku.controller.windows.playSudokuWindow --|>  com.sudoku.controller.Window
 com.sudoku.controller.windows.playSudokuWindow ..|>  com.sudoku.controller.WindowInterface
-com.sudoku.controller.windows.textWindow -->  com.sudoku.controller.WindowManager : wm
-com.sudoku.controller.windows.textWindow -->  com.sudoku.view.CreateString : text
-com.sudoku.controller.windows.textWindow -->  com.sudoku.view.fonts.CreateFont : font
-com.sudoku.controller.windows.textWindow --|>  com.sudoku.controller.Window
-com.sudoku.controller.windows.textWindow ..|>  com.sudoku.controller.WindowInterface
-com.sudoku.controller.windows.textWindow2 -->  com.sudoku.controller.WindowManager : wm
-com.sudoku.controller.windows.textWindow2 -->  com.sudoku.view.CreateString : text
-com.sudoku.controller.windows.textWindow2 -->  com.sudoku.view.fonts.CreateFont : font
-com.sudoku.controller.windows.textWindow2 --|>  com.sudoku.controller.Window
-com.sudoku.controller.windows.textWindow2 ..|>  com.sudoku.controller.WindowInterface
 com.sudoku.controller.windows.windowTemplate -->  com.sudoku.controller.WindowManager : wm
+com.sudoku.controller.windows.windowTemplate -->  com.sudoku.model.Gamepad : gpad
 com.sudoku.controller.windows.windowTemplate --|>  com.sudoku.controller.Window
 com.sudoku.controller.windows.windowTemplate ..|>  com.sudoku.controller.WindowInterface
 com.sudoku.model.Field "1" o-- "0..*"  com.sudoku.model.Field : Edges
+com.sudoku.model.Gamepad "1" o-- "0..*"  com.sudoku.view.elements.Element : buttonMap
 com.sudoku.model.Node -->  com.sudoku.model.Node : down
 com.sudoku.model.Node -->  com.sudoku.model.Node : left
 com.sudoku.model.Node -->  com.sudoku.model.Node : right
@@ -516,9 +668,14 @@ com.sudoku.view.elements.MenuButton ..|>  com.sudoku.view.elements.Element
 com.sudoku.view.elements.NumPadButton -->  com.sudoku.view.CreateString : text
 com.sudoku.view.elements.NumPadButton -->  com.sudoku.view.Shader : fontShader
 com.sudoku.view.elements.NumPadButton ..|>  com.sudoku.view.elements.Element
+com.sudoku.view.elements.Slider -->  com.sudoku.model.Gamepad : gpad
 com.sudoku.view.elements.Slider -->  com.sudoku.view.CreateString : text
 com.sudoku.view.elements.Slider -->  com.sudoku.view.Shader : fontShader
 com.sudoku.view.elements.Slider ..|>  com.sudoku.view.elements.Element
+com.sudoku.view.elements.Sudoku -->  com.sudoku.model.SudokuBoard : sudokuBoard
+com.sudoku.view.elements.Sudoku -->  com.sudoku.view.CreateString : text
+com.sudoku.view.elements.Sudoku -->  com.sudoku.view.Shader : fontShader
+com.sudoku.view.elements.Sudoku ..|>  com.sudoku.view.elements.Element
 com.sudoku.view.elements.TextFieldButton -->  com.sudoku.view.CreateString : text
 com.sudoku.view.elements.TextFieldButton -->  com.sudoku.view.Shader : fontShader
 com.sudoku.view.elements.TextFieldButton ..|>  com.sudoku.view.elements.Element

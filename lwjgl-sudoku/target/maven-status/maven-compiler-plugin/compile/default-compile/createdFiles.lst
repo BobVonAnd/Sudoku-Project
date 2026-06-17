@@ -10,7 +10,6 @@ com\sudoku\view\TerminalView.class
 com\sudoku\controller\windows\windowTemplate.class
 com\sudoku\controller\windows\playSudokuWindow.class
 com\sudoku\model\Solver.class
-com\sudoku\controller\windows\textWindow2.class
 com\sudoku\view\elements\MenuButton.class
 com\sudoku\view\elements\Element.class
 com\sudoku\controller\WindowManager.class
@@ -19,11 +18,9 @@ com\sudoku\view\Shader.class
 com\sudoku\controller\windows\PlaySudokuSettingsWindow.class
 com\sudoku\view\fonts\CharInfo.class
 com\sudoku\model\Node.class
-com\sudoku\controller\windows\textWindow.class
 com\sudoku\model\algoXSolver.class
 com\sudoku\model\SudokuBoard.class
 com\sudoku\controller\WindowInterface.class
 com\sudoku\model\Field.class
 com\sudoku\view\elements\NumPadButton.class
 com\sudoku\model\ColumnNode.class
-com\sudoku\controller\windows\depricatedsudokuWindow.class
