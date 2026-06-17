@@ -11,7 +11,7 @@ public class Solver {
         while(progress){
             progress = false;
             for (Field f : sudokuboard.getFields()){
-                if (!f.getEdges().isEmpty()){
+                if (!f.getEdges().isEmpty() && f.getValue() == 0){
                     edgeSolver(f);
                 }
             }
@@ -23,7 +23,7 @@ public class Solver {
         pointingSingleInBox(field);
         if (field.getLegalEntries().size() == 2){
             XY_wing(field);
-            XY_Chain(field);
+            //XY_Chain(field);
             nakedPair(field);   
         }
         hiddenPair(field);
@@ -215,16 +215,14 @@ public class Solver {
         Field result = XY_Chain_Link(hinge, hinge, legalEntries.get(0), legalEntries.get(1));
         ArrayList<Field> visited = new ArrayList<>();
         if (result != null){
-            removeLegalEntryFromIntersection(hinge, result, legalEntries.get(0), visited);
+            removeLegalEntryFromIntersection(hinge, result, legalEntries.get(0));
         }
         if (result == null){
-            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0), visited);
+            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0));
             if (result != null){
                 removeLegalEntryFromIntersection(hinge, result, legalEntries.get(1));
             }
         }
-
-
     }
     public Field XY_Chain_Link(Field link, Field hinge, Integer legalEntry, Integer connection){
         if (link.getLeSize() != 2){
