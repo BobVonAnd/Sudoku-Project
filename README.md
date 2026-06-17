@@ -76,3 +76,7 @@ On Windows or MacOS:
 ```bash
 java -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
 ```
+On MacOS:
+```bash
+java -XstartOnFirstThread -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
+```
