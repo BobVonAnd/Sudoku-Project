@@ -24,6 +24,12 @@ To check if java is installed correctly, you can run the command:
 java -version
 ```
 
+Now you need to install Maven. You can so by following this guide:
+
+https://maven.apache.org/
+
+Install any version that is 3.8+.
+
 ## Running the packaged release
 First. Follow the installation instructions.
 
