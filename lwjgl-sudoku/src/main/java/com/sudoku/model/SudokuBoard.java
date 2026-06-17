@@ -19,6 +19,8 @@ public class SudokuBoard {
     private algoXSolver algoX = new algoXSolver();
     private int fieldsAmount = 0;
 
+    private int nrOfFieldsLeft;
+
     private int solutions; // for generating the sudoku
 
     public SudokuBoard(int size) {
@@ -31,7 +33,13 @@ public class SudokuBoard {
                 fields.add(wholeBoard[i][j]);
             }
         }
+        nrOfFieldsLeft = size*size;
     }
+
+    public void inputDetected(){
+        nrOfFieldsLeft -= 1;
+    }
+    
 
     public void setWholeBoard(Field[][] wholeBoard){
         this.wholeBoard = wholeBoard;
