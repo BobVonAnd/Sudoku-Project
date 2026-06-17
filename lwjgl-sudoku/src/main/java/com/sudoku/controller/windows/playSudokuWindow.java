@@ -59,7 +59,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     private boolean classIsCreated = false;
 
-    // private EndScreenWindow = endScreen;
 
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb) {
         super(wm);
@@ -70,6 +69,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         sudokuBoard.populate();
         wm.setActiveWindow(this);
         classIsCreated = true;
+
     }
 
     public void create() {
@@ -290,7 +290,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void keyCallback(int key, int scancode, int action, int mods) {
 
         int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-        
+
         if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
             value = value * 10 + 0;
             sudokuBoard.changeField(selectedField[0], selectedField[1], value);
@@ -378,11 +378,40 @@ public class playSudokuWindow extends Window implements WindowInterface {
     }
 
     public void validateInput(int[] selectedField) {
-        boolean validInput = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() != solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-        sudokuFront.setNotValidInput(validInput , selectedField);
-        sudokuBoard.getSingleField(selectedField[0], selectedField[1]).setLocked(!validInput);
-        if(!validInput){
-            gpad.removeElement(sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]]);
+        //detecter if (0,0) was selected since selectedField get set at (0,0) at default
+        if(sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected()) {
+            
+            //detects if the input matches the solution
+            boolean validInput = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue() == 
+            solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
+
+            sudokuFront.setNotValidInput(validInput, selectedField);
+            sudokuBoard.getSingleField(selectedField[0], selectedField[1]).setLocked(validInput);
+
+            if (validInput) {
+                gpad.removeElement(sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]]);
+                sudokuBoard.inputDetected();
+                if(sudokuBoard.getNrOfFieldsLeft() == 0){
+                    lastValidation();
+                }
+            }
+        }
+
+    }
+
+    private void lastValidation(){
+        boolean isComplete = false;
+        for(int i = 0; i < sudokuBoard.getSize(); i++){
+            for(int j = 0; j <sudokuBoard.getSize(); j++){
+                if(sudokuBoard.getSingleField(i, j).getValue() == solvedSudokuBoard.getSingleField(i, j).getValue()){
+                    isComplete = true;
+                }else{
+                    isComplete = false;
+                }
+            }
+        }
+        if(isComplete){
+            new EndScreenWindow(wm, sudokuBoard, width, height, "win");
         }
     }
 
