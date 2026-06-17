@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import com.sudoku.view.TerminalView;
+import com.sudoku.view.elements.FieldButton;
 
 public class SudokuBoard {
 
@@ -61,7 +62,7 @@ public class SudokuBoard {
         double sudokuBoardDuration = sudokuBoardEndTIme - sudokuBoardStartTime;
         System.out.println("It took " + duration + " ms to check if it is unique with algox");
         System.out.println("It took " + sudokuBoardDuration + " ms to check if it is unique without algox");
-        System.out.println("The sudoku is unique " + this.solutions);
+        System.out.println("The sudoku is unique " + String.valueOf(this.solutions == 0));
     }
 
     public algoXSolver getAlgoX() {
@@ -115,33 +116,31 @@ public class SudokuBoard {
         TerminalView solved = new TerminalView(this);
         solved.printBoard();
         System.out.println("Solved Sudoku (Before removal)^^");
-        
+        ArrayList<Field> notRemoved = new ArrayList<>();
+        for (int i = 0 ; i < size ; i++) {
+            for (int j = 0 ; j < size ; j++) {
+                notRemoved.add(wholeBoard[i][j]);
+            }
+        }
         int amountToRemove = getFieldsToRemove(this.difficultyScale);
         Random rand = new Random();
-        int removed = 0;
-        int attempts = 0;
+        int beforesize = notRemoved.size();
         
-        while (removed < amountToRemove) {
-            int x = rand.nextInt(this.size);
-            int y = rand.nextInt(this.size);
-
-            // if chosen value is 0, try again (brute force, this is temp)
-            if (wholeBoard[x][y].getValue() == 0) {
-                continue;
-            }
-
-            attempts++;
+        while (notRemoved.size() > beforesize-amountToRemove) {
+            Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
+            int x = f.getCoordinates()[0];
+            int y = f.getCoordinates()[1];
 
             // temp removal of field
             int tempVal = wholeBoard[x][y].getValue();
             wholeBoard[x][y].setValue(0);
             wholeBoard[x][y].setLocked(false);
-            boolean isUnique = algoX.algoXIsUnique(this);
+            boolean isUnique = uniquenessTest();
             if (!isUnique) {
                 wholeBoard[x][y].setValue(tempVal);
             } else if (isUnique) {
-                removed++;
-                System.out.println(removed);
+                notRemoved.remove(wholeBoard[x][y]);
+                System.out.println(String.valueOf(beforesize-notRemoved.size()));
             } else {
                 wholeBoard[x][y].setValue(tempVal);
             }
