@@ -23,7 +23,7 @@ public class Solver {
         pointingSingleInBox(field);
         if (field.getLegalEntries().size() == 2){
             XY_wing(field);
-            //XY_Chain(field);
+            XY_Chain(field);
             nakedPair(field);   
         }
         hiddenPair(field);
@@ -212,47 +212,50 @@ public class Solver {
             return;
         }
         ArrayList<Integer> legalEntries = hinge.getLegalEntries();
-        Field result = XY_Chain_Link(hinge, hinge, legalEntries.get(0), legalEntries.get(1));
         ArrayList<Field> visited = new ArrayList<>();
+        Field result = XY_Chain_Link(hinge, hinge, legalEntries.get(0), legalEntries.get(1), visited);
         if (result != null){
             removeLegalEntryFromIntersection(hinge, result, legalEntries.get(0));
         }
         if (result == null){
-            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0));
+            result = XY_Chain_Link(hinge, hinge, legalEntries.get(1), legalEntries.get(0), visited);
             if (result != null){
                 removeLegalEntryFromIntersection(hinge, result, legalEntries.get(1));
             }
         }
     }
-    public Field XY_Chain_Link(Field link, Field hinge, Integer legalEntry, Integer connection){
+    public Field XY_Chain_Link(Field link, Field hinge, Integer legalEntry, Integer connection, ArrayList<Field> visited){
+        if (visited.contains(link)){
+            return null;
+        }
+        visited.add(link);
+        if (intersect(link, hinge) && link != hinge){
+            return null;
+        }
         if (link.getLeSize() != 2){
             return null;
         }
         if (!link.getLegalEntries().contains(connection)){
             return null;
         }
-        if (link != hinge && !intersect(link, hinge) && link.getLegalEntries().contains(legalEntry)){
+        if (link.getLegalEntries().contains(legalEntry) && link != hinge){
             return link;
         }
         for (Field edge : link.getEdges()){
-            ArrayList<Integer> legalEntries = edge.getLegalEntries();
-            if (edge == hinge){
-                continue;
-            }
-            if (edge.getLeSize() != 2){
-                continue;
-            }
-            Field result = XY_Chain_Link(edge, hinge, legalEntry, legalEntries.get(1));
-            if (result == null){
-                result = XY_Chain_Link(edge, hinge, legalEntry, legalEntries.get(0));
-            }
-            if (result != null){
-                return result;
+            ArrayList<Integer> edgeLegalEntries = edge.getLegalEntries();
+            for (Integer entry : edgeLegalEntries){
+                if (entry.equals(connection)){
+                    continue;
+                }
+                Integer nextConnection = entry;
+                Field result = XY_Chain_Link(edge, hinge, legalEntry, nextConnection, visited);
+                if (result != null){
+                    return result;
+                }
             }
         }
         return null;
     }
-
     public boolean legalEntryInFields(ArrayList<Field> fields, int legalEntry){
         for (Field field : fields){
             if (field.getLegalEntries().contains(legalEntry)){
