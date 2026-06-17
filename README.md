@@ -3,6 +3,7 @@
 Project contributors:
 * Nikolaj s245909
 * Simon s214528
+* Frederik s215062
 * Victor s224230
 
 Advisor \& Professor:
