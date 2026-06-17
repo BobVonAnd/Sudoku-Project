@@ -162,7 +162,10 @@ public class Sudoku implements Element {
     }
 
     public void setNotValidInput(boolean isValidInput, int[] selectedField){
-        buttonArray[selectedField[0]][selectedField[1]].setNotValid(!isValidInput);
+        if ( buttonArray[selectedField[0]][selectedField[1]].isSelected()) {
+            buttonArray[selectedField[0]][selectedField[1]].setNotValid(!isValidInput);
+        }
+        
     }
     public void setNotValidInputToFalse(int[] selectedField){
         buttonArray[selectedField[0]][selectedField[1]].setNotValid(false);
