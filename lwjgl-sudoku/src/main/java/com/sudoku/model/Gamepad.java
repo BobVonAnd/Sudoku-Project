@@ -56,11 +56,11 @@ public class Gamepad {
     private boolean pressed = false;
 
     public boolean isSelected(Element e) {
-            if (connected && e != null) {
-                return e.equals(buttonMap.get(position));
-            }
-            return false;
+        if (connected && e != null) {
+            return e.equals(buttonMap.get(position));
         }
+        return false;
+
     }
 
     public boolean isMoveLocked() {
