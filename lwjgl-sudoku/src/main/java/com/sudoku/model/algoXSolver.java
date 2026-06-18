@@ -308,10 +308,6 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution);
         while (removed < fieldsToRemove){
-            while (removed < size*4){
-                solution.remove(solution.size()-1);
-                removed++;
-            }
             if (counter > size*size*4){
                 totalcounter++;
                 System.out.println("Trying new sudoku number " + totalcounter);
