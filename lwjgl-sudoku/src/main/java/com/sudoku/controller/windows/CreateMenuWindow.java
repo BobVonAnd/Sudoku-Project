@@ -117,18 +117,21 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
-        // button juggle
-        if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
-                returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
-                !gpad.isConnected()&
 
-                returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
-                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
-            returnButton.heldOver(true);
-            windowTransition(returnButton,false);
-        } else {
-            returnButton.heldOver(false);
-        }
+        // // button juggle
+        // if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+        //         returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+        //         !gpad.isConnected()&
+
+        //         returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
+        //         returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
+        //     returnButton.heldOver(true);
+        //     windowTransition(returnButton,false);
+        // } else {
+        //     returnButton.heldOver(false);
+        // }
+        holdOver(returnButton);
+        
 
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
@@ -240,6 +243,22 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
 
 
+    }
+
+
+    // inout a MenuButton and it will track if the mouse if hovering the button
+    private void holdOver(MenuButton button) {
+        double mouseXt = mouseX / (width / 2) - 1;
+        double mouseYt = -mouseY / (height / 2) + 1;
+        if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
+                button.getPos()[0] + button.getSize() / 2 > mouseXt &
+
+                button.getPos()[1] - button.getSize() / 2 < mouseYt &
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {
+            button.heldOver(true);
+        } else {
+            button.heldOver(false);
+        }
     }
 
     private void bigfieldline() {
