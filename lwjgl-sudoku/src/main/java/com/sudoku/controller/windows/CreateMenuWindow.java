@@ -216,9 +216,14 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 selectedField[0],
                 selectedField[1],
                 value)) {
-    
-            boolean algoUnique =
+            boolean algoUnique = false;
+            try {
+                algoUnique =
                 sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            
     
             unique = algoUnique;
             solveable = !algoUnique || algoUnique;
@@ -387,7 +392,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     value = value / 10;
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     errorDetected = true;
-                }
+                } 
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
                     updateBoardState(value);
                 }
