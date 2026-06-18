@@ -31,12 +31,13 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
-        this.bigfield = (int)Math.sqrt(size);
+       
         
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font , width, height);
 
         size = sudokuBoard.getSize();
+        this.bigfield = (int)Math.sqrt(size);
         buttonArray = new FieldButton[size][size];
         
         yStart = sudokuSize/2;
@@ -68,12 +69,13 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
-        this.bigfield = (int)Math.sqrt(size);
+        
         
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font, width, height);
 
         size = sudokuBoard.getSize();
+        this.bigfield = (int)Math.sqrt(size);
         buttonArray = new FieldButton[size][size];
 
         yStart = sudokuSize/2;
