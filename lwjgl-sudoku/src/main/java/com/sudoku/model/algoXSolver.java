@@ -300,6 +300,8 @@ public class algoXSolver {
         int removed = 0;
         int counter = 0;
         int totalcounter = 0;
+        int startCounter = 0;
+        int bestAttempt = 0;
 
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         solution = new ArrayList<>();
@@ -309,8 +311,9 @@ public class algoXSolver {
         java.util.Collections.shuffle(solution);
         while (removed < fieldsToRemove){
             if (counter > size*size*4){
+                if (bestAttempt < removed){ bestAttempt = removed;}
                 totalcounter++;
-                System.out.println("Trying new sudoku number " + totalcounter);
+                System.out.println("Trying new sudoku number " + totalcounter + " best attempt is " + bestAttempt);
                 solution = new ArrayList<>();
                 root = initializeNodes(size);
                 shuffleNodes(root, size);
@@ -318,6 +321,7 @@ public class algoXSolver {
                 java.util.Collections.shuffle(solution);
                 removed = 0;
                 counter = 0;
+                startCounter = 0;
                 continue;
             }
             counter ++;
