@@ -26,7 +26,10 @@ public class NumPadButton implements Element{
     private float x;
     private float y;
     private float scale = 0.4f;
-    private float[] rgb = new float[]{1.0f,0.0f,0.0f};
+    private float[] rgb = new float[]{1.0f,1.0f,1.0f};
+
+    private boolean numPadAnimate = false;
+    private double startTime = System.currentTimeMillis();
 
     private float width;
     private float height;
@@ -97,7 +100,7 @@ public class NumPadButton implements Element{
         glLineWidth(1.0f);
         glBegin(GL_LINES);
 
-        glColor3d(0f, 0f, 0f);
+        glColor3d(0f, 0f, 0.4f);
 
         // vertical lines
         glVertex2f(x, y);
@@ -172,17 +175,36 @@ public class NumPadButton implements Element{
 
     private void makeQuads() {
 
+        double currentTime = System.currentTimeMillis() - startTime;
+        double spd = 0.01;
+
+        float xOffset = numPadAnimate ? (float)(Math.sin(currentTime * spd) / 500.0) : 0f;
+        float yOffset = numPadAnimate ? (float)((Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) / 500.0) : 0f;
+
+        float totalWidth = width * 3;
+        float totalHeight = height * 4;
+        float height_offset = -totalHeight * 0.05f;
+        float width_offset = -totalWidth * 0.05f;
         glBegin(GL_QUADS);
 
+        // Wiggle box behind numpad
+        glColor3d(0.0f, 0.0f, numPadAnimate ? 0.8f : 0.4f);
+
+        glVertex2f(x - 0.01f + xOffset + width_offset, y + 0.01f - yOffset + height_offset);
+        glVertex2f(x - 0.01f - xOffset + width_offset, y - totalHeight + yOffset + height_offset);
+        glVertex2f(x + totalWidth + 0.01f + xOffset + width_offset, y - totalHeight - yOffset + height_offset);
+        glVertex2f(x + totalWidth + 0.01f - xOffset + width_offset, y + 0.01f + yOffset + height_offset);
+
+        numPadAnimate = false;
+        
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 3; col++) {
 
                 int index = row * 3 + col;
-
-                float shade = selected[index] ? 0.5f : 0.82745f;
-
-                glColor3d(shade, shade, shade);
-
+                glColor3d(selected[index] ? 0f : 0.2, selected[index] ? 0f : 0.3, selected[index] ? 0.4f : 0.7);
+                if (selected[index]) {
+                    numPadAnimate = selected[index];
+                }
                 float left = x + (width * col);
                 float right = left + width;
 
