@@ -189,7 +189,7 @@ public class Sudoku implements Element {
                     fieldButton.selected(true);
                     selectedField[0] = i;
                     selectedField[1] = j;
-                    setcolours(i, j);
+                    isTouching(i, j);
                 } else {
                     fieldButton.selected(false);
                 }
@@ -198,18 +198,24 @@ public class Sudoku implements Element {
         return selectedField;
     }
 
-    private void setcolours(int x, int y){
-        int xMod = x % bigfield;
-        int yMod = y % bigfield;
-        int number = buttonArray[x][y].getnumber();
+    private void isTouching(int x, int y){
+        int xDiv = x / bigfield;
+        int yDiv = y / bigfield;
         for (int i = 0; i < size; i++){
-            int iMod = i % bigfield;
+            int iDiv = i / bigfield;
             for (int j = 0; j < size; j++){
-                if (i == x || j == y || (xMod == iMod && yMod == j % bigfield)){
+                if (i == x || j == y || (xDiv == iDiv && yDiv == j / bigfield)){
                     buttonArray[i][j].setTouching(true);
                 } else {
                     buttonArray[i][j].setTouching(false);
                 }
+            }
+        }
+    }
+
+    public void setMatchingNumber(int x, int y, int number){
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
                 if (number > 0 && number == buttonArray[i][j].getnumber()){
                     buttonArray[i][j].setMatchingNumber(true);
                 } else {
@@ -218,6 +224,7 @@ public class Sudoku implements Element {
             }
         }
     }
+
 
     public void resize(int width, int height){
         this.width = width;
