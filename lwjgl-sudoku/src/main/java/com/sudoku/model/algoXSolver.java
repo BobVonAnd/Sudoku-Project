@@ -309,9 +309,8 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution);
         while (removed < fieldsToRemove){
-            while (startCounter < size*4){
+            while (removed < size*4){
                 solution.remove(solution.size()-1);
-                startCounter++;
                 removed++;
             }
             if (counter > size*size*4){
