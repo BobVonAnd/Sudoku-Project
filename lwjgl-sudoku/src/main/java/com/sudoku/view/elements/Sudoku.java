@@ -101,6 +101,9 @@ public class Sudoku implements Element {
     }
     
     public void draw(){
+
+        
+
         fontShader.detach();
         glBegin(GL_LINES);
 

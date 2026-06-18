@@ -8,6 +8,9 @@ public class Field {
     private ArrayList<Field> Edges = new ArrayList<>();
     private double[] colour;
 
+    private boolean[] notesFields = new boolean[] {true, true, true, true, true, true, true, true, true};
+    //false, false, false, false, false, false, false, false, false
+
     //if value is correct then it can't be changed
     private boolean locked = true;
 
@@ -19,9 +22,19 @@ public class Field {
         this.boardSize = size;
         this.colour = colour;
 
+        
+
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
         }
+    }
+
+    public void setNote(int noteIndex, boolean isOn){
+        notesFields[noteIndex] = isOn;
+    }
+
+    public boolean[] getNote(){
+        return notesFields;
     }
 
     public void setLocked(boolean isLocked){
