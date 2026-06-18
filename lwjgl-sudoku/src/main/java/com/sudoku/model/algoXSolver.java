@@ -324,59 +324,9 @@ public class algoXSolver {
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         SudokuBoard copyBoard = new SudokuBoard(size);
         shuffleNodes(root, size);
-        uniqueSolution = uniqueSearch(root, solution);
-        ArrayList<Node> testSolution = new ArrayList<>(uniqueSolution);
-        if (solution == null){
-            return null;
-        }
-        do {
-            int[] numberCounter = new int[size];
-            int i = 0;
-            int allRemoved = 0;
-            testSolution = new ArrayList<>(uniqueSolution);
-            copyBoard.clear();
-            java.util.Collections.shuffle(testSolution);
-            for (i = 0; i < fieldsToRemove/2 ; i++){
-                Node node = testSolution.get(testSolution.size() - 1);
-                numberCounter[node.getNum()] ++;
-                if (numberCounter[node.getNum()] == 8){
-                    if (allRemoved > 0){
-                    java.util.Collections.shuffle(testSolution);
-                    i--;
-                    continue;
-                    }
-                    allRemoved ++;
-                }
-                testSolution.remove(testSolution.size()-1);
-            }
-            for (Node n : testSolution) {
-                int row = n.getRow();
-                int col = n.getCol();
-                int value = n.getNum() + 1;
-
-                copyBoard.changeField(row, col, value);
-            }
-            if (algoXIsUnique(copyBoard)){
-                copyBoard.clear();
-                while (i < fieldsToRemove){
-                    Node candidate = testSolution.get(testSolution.size()-1);
-                    testSolution.remove(testSolution.size()-1);
-                    for (Node n : testSolution) {
-                        int row = n.getRow();
-                        int col = n.getCol();
-                        int value = n.getNum() + 1;
-
-                        copyBoard.changeField(row, col, value);
-                    }
-                    if (!algoXIsUnique(copyBoard)){
-                        testSolution.add(candidate);
-                        java.util.Collections.shuffle(testSolution);
-                    }
-                    i++;
-                }
-            }
-        } while (!algoXIsUnique(copyBoard));
-        for (Node n : testSolution) {
+        uniqueSearch(root, uniqueSolution, 20, copyBoard);
+      
+        for (Node n : uniqueSolution) {
             int row = n.getRow();
             int col = n.getCol();
             int value = n.getNum() + 1;
@@ -418,7 +368,7 @@ public class algoXSolver {
     }
     public ArrayList<Node> uniqueSearch(ColumnNode root, ArrayList<Node> solution){
         //If the matrix is empty, we have found a solution
-        if (root.right == root ){
+        if (root.right == root){
             return new ArrayList<>(solution);
         }
         else {
