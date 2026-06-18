@@ -18,23 +18,7 @@ public class algoXSolver {
         solution = new ArrayList<>();
         root = initializeNodes(size);
         //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                int value = sudokuBoard.getSingleField(i,j).getValue();
-                if (value != 0 ){
-                    int n = value - 1;
-                    Node node = findRowInSolution(i, j, n);
-                    solution.add(node);
-
-                    //Now covering the node so the solver is more efficient and so the solver actually solves the sudoku given
-                    Node tempNode = node;
-                    do {
-                        cover(tempNode.column);
-                        tempNode = tempNode.right;
-                    } while (tempNode != node);
-                }
-            }
-        }
+        readCluesIntoRoot(sudokuBoard, solution);
 
         //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
@@ -43,13 +27,7 @@ public class algoXSolver {
         long duration = (endTime - startTime) / 1000000;
         System.out.println("The algo itself took "+ duration + "ms");
         //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
-        for (Node n : solution){
-            int i = n.getRow();
-            int j = n.getCol();
-            int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
-            //Then we update the sudokuboards field
-            sudokuBoard.changeField( i, j , value);
-        }
+        readNodesToBoard(sudokuBoard, solution);
     }
 
 
@@ -319,21 +297,50 @@ public class algoXSolver {
         return solutionCounter == 1;
     }
     public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove){
-        ArrayList<Node> uniqueSolution = new ArrayList<>();
-        root = initializeNodes(size);
+        int removed = 0;
+        int counter = 0;
+        int totalcounter = 0;
+        int startCounter = 0;
+
         SudokuBoard sudokuBoard = new SudokuBoard(size);
-        SudokuBoard copyBoard = new SudokuBoard(size);
+        solution = new ArrayList<>();
+        root = initializeNodes(size);
         shuffleNodes(root, size);
-        uniqueSearch(root, uniqueSolution, 20, copyBoard);
-      
-        for (Node n : uniqueSolution) {
-            int row = n.getRow();
-            int col = n.getCol();
-            int value = n.getNum() + 1;
+        search(root, solution);
+        java.util.Collections.shuffle(solution);
+        while (removed < fieldsToRemove){
+            while (startCounter < size*4){
+                solution.remove(solution.size()-1);
+                startCounter++;
+            }
+            if (counter > size*size*4){
+                totalcounter++;
+                System.out.println("Trying new sudoku number " + totalcounter);
+                solution = new ArrayList<>();
+                root = initializeNodes(size);
+                shuffleNodes(root, size);
+                search(root, solution);
+                java.util.Collections.shuffle(solution);
+                removed = 0;
+                counter = 0;
+            }
+            counter ++;
+            solutionCounter = 0;
+            Node candidate = solution.get(solution.size()-1);
+            solution.remove(solution.size()-1);
 
-            sudokuBoard.changeField(row, col, value);
+            root = initializeNodes(size);
+            coverCluesInRoot(root, solution);
+            algoXUniqueTest(root, solution);
+            if (solutionCounter == 1){
+                removed++;
+            }
+            else {
+                solution.add(candidate);
+                java.util.Collections.shuffle(solution);
+            }
         }
-
+        readNodesToBoard(sudokuBoard, solution);
         return sudokuBoard;
     }
     public void shuffleNodes(ColumnNode root, int size){
@@ -366,48 +373,48 @@ public class algoXSolver {
 
         return node;
     }
-    public ArrayList<Node> uniqueSearch(ColumnNode root, ArrayList<Node> solution){
-        //If the matrix is empty, we have found a solution
-        if (root.right == root){
-            return new ArrayList<>(solution);
-        }
-        else {
-            //Start with the column right of the root
-            ColumnNode columnNode = getBestColumnNode(root);
-            if (columnNode.size == 0){
-                return null;
+    public void coverCluesInRoot(ColumnNode root, ArrayList<Node> clues){
+        for (Node clue : clues) {
+            Node node = findRowInSolution(
+                clue.getRow(),
+                clue.getCol(),
+                clue.getNum()
+            );
+
+            cover(node.column);
+
+            for (Node temp = node.right; temp != node; temp = temp.right) {
+                cover(temp.column);
             }
-            //Cover the first column to start
-            cover(columnNode);
-            //Go down into the matrix
-            Node firstNode = columnNode.down;
-            //While the node we went into isn't the original node
-            while (firstNode != columnNode){
-                //We try to add the row to the solution
-                solution.add(firstNode);
-                Node rightNode = firstNode.right;
-                //We cover the entire row
-                while (rightNode != firstNode){
-                    cover(rightNode.column);
-                    rightNode = rightNode.right;
-                }
-                //We search for a solution one depth further in
-                ArrayList<Node> result = uniqueSearch(root, solution);
-                //As we are looking for one solution we exit if we have gotten a solution
-                if (result != null) {
-                    uncover(columnNode);
-                    return result;
-                }
-                solution.remove(solution.size() - 1);
-                //We get ready to uncover the nodes that were covered
-                for (Node j = firstNode.left; j != firstNode; j = j.left){
-                    uncover(j.column);
-                }
-                //We go down to the next row
-                firstNode = firstNode.down;
-            }
-            uncover(columnNode);
         }
-        return null;
     }
+    public void readCluesIntoRoot(SudokuBoard sudokuBoard, ArrayList<Node> clues){
+        int size = sudokuBoard.getSize();
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                int value = sudokuBoard.getSingleField(i,j).getValue();
+                if (value != 0 ){
+                    int n = value - 1;
+                    Node node = findRowInSolution(i, j, n);
+                    clues.add(node);
+
+                    //Now covering the node so the solver is more efficient and so the solver actually solves the sudoku given
+                    Node tempNode = node;
+                    do {
+                        cover(tempNode.column);
+                        tempNode = tempNode.right;
+                    } while (tempNode != node);
+                }
+            }
+        }
+    }
+    public void readNodesToBoard(SudokuBoard sudokuBoard,ArrayList<Node> solution){
+        for (Node n : solution){
+            int i = n.getRow();
+            int j = n.getCol();
+            int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
+            //Then we update the sudokuboards field
+            sudokuBoard.changeField( i, j , value);
+        }
+    }   
 }

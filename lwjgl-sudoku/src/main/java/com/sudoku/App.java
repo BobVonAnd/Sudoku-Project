@@ -16,7 +16,7 @@ public class App {
 		mainMenuWindow window = new mainMenuWindow(wm,width, height);
 		algoXSolver xSolver = new algoXSolver();
 		long startTime = System.nanoTime();
-		SudokuBoard sudokuBoard = xSolver.algoXCreateUnique(9, 60);
+		SudokuBoard sudokuBoard = xSolver.algoXCreateUnique(9, 61);
 		if (xSolver.algoXIsUnique(sudokuBoard)){
 			System.out.println("I am unique");
 		}
