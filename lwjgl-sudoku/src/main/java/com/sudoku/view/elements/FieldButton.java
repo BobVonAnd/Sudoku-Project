@@ -180,7 +180,15 @@ public class FieldButton implements Element {
         this.sizeY = xy[1];
     }
 
-    public void setTouching(boolean set){
-        touching = set;
+    public void setTouching(boolean touching){
+        this.touching = touching;
+    }
+
+    public int getnumber(){
+        return field.getValue();
+    }
+
+    public void setMatchingNumber(boolean snumber){
+        this.snumber = snumber;
     }
 }

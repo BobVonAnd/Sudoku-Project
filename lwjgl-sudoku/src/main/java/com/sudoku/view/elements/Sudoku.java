@@ -31,6 +31,7 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
+        this.bigfield = (int)Math.sqrt(size);
         
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font , width, height);
@@ -186,7 +187,7 @@ public class Sudoku implements Element {
                     fieldButton.selected(true);
                     selectedField[0] = i;
                     selectedField[1] = j;
-                    isTouching(i, j);
+                    setcolours(i, j);
                 } else {
                     fieldButton.selected(false);
                 }
@@ -195,9 +196,10 @@ public class Sudoku implements Element {
         return selectedField;
     }
 
-    private void isTouching(int x, int y){
+    private void setcolours(int x, int y){
         int xMod = x % bigfield;
         int yMod = y % bigfield;
+        int number = buttonArray[x][y].getnumber();
         for (int i = 0; i < size; i++){
             int iMod = i % bigfield;
             for (int j = 0; j < size; j++){
@@ -205,6 +207,11 @@ public class Sudoku implements Element {
                     buttonArray[i][j].setTouching(true);
                 } else {
                     buttonArray[i][j].setTouching(false);
+                }
+                if (number > 0 && number == buttonArray[i][j].getnumber()){
+                    buttonArray[i][j].setMatchingNumber(true);
+                } else {
+                    buttonArray[i][j].setMatchingNumber(true);
                 }
             }
         }
