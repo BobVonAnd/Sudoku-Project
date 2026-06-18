@@ -301,6 +301,7 @@ public class algoXSolver {
         int counter = 0;
         int totalcounter = 0;
 
+        ArrayList<Node> removedNodes = new ArrayList<>();
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         solution = new ArrayList<>();
         root = initializeNodes(size);
@@ -309,6 +310,7 @@ public class algoXSolver {
         java.util.Collections.shuffle(solution);
         while (removed < fieldsToRemove){
             while (removed < size*4){
+                removedNodes.add(solution.get(solution.size()-1));
                 solution.remove(solution.size()-1);
                 removed++;
             }
@@ -322,6 +324,7 @@ public class algoXSolver {
                 java.util.Collections.shuffle(solution);
                 removed = 0;
                 counter = 0;
+                continue;
             }
             counter ++;
             solutionCounter = 0;
@@ -332,6 +335,7 @@ public class algoXSolver {
             coverCluesInRoot(root, solution);
             algoXUniqueTest(root, solution);
             if (solutionCounter == 1){
+                removedNodes.add(candidate);
                 removed++;
             }
             else {
