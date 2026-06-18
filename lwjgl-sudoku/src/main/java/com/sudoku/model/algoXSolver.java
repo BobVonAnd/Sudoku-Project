@@ -300,7 +300,6 @@ public class algoXSolver {
         int removed = 0;
         int counter = 0;
         int totalcounter = 0;
-        int startCounter = 0;
 
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         solution = new ArrayList<>();
@@ -323,7 +322,6 @@ public class algoXSolver {
                 java.util.Collections.shuffle(solution);
                 removed = 0;
                 counter = 0;
-                startCounter = 0;
             }
             counter ++;
             solutionCounter = 0;
