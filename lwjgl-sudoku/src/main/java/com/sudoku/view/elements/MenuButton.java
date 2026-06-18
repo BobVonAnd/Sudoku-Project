@@ -77,7 +77,7 @@ public class MenuButton implements Element {
             xOffset = (Math.sin(currentTime * spd)) / 250 ;
             yOffset = ((Math.sin(currentTime * spd) + Math.cos(currentTime * spd))) / 250;
         }else{
-            glColor3d(0.0, 0.0, 0.3);
+            glColor3d(0.0, 0.0, 0.4);
             xOffset = 0;
             yOffset = 0;
         }
