@@ -30,6 +30,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private CreateString textInfo;
     private TextFieldButton textField;
     private NumPadButton numPad;
+    
     private boolean unique, solveable;
     
     private Gamepad gpad;
@@ -47,6 +48,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private float[] textFieldPrime = new float[] { -0.6f, 0.7f, 0.3f, 0.0f, 0.1f };
 
     private SudokuBoard sudokuBoard = new SudokuBoard(1);
+    private SudokuBoard solvedSudokuBoard;
     private int standardSize = 9;
     private int size = standardSize;
     private int width;
@@ -61,6 +63,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private boolean errorDetected = false;
 
     private MenuButton returnButton;
+    private MenuButton playButton;
+    private MenuButton solveButton;
     private Sudoku sudokuFront;
 
     private FieldButton[][] boardButtons;
@@ -94,11 +98,23 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         // return to menu button
         returnButton = new MenuButton(-0.8, 0.8, 0.2, text, fontShader, "Menu");
+        playButton = new MenuButton(-0.8, 0.55, 0.2, text, fontShader, "Play");
+        solveButton = new MenuButton(-0.8, 0.30, 0.2, text, fontShader, "Solve");
         addElement(returnButton, 0);
+        addElement(playButton, 0);
+        addElement(solveButton, 0);
+        
 
         // Add base elements to gamepad
         gpad.addElement(returnButton,1,0);
         gpad.addElement(textField, 2, 0);
+
+
+        // creates a copy of the sudokuboard which we solve
+            solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+            int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+            solvedSudokuBoard.readIntoBoard(integerBoard);
+            solvedSudokuBoard.solve();
     }
 
     public void step() {
@@ -501,6 +517,10 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if(returnButton.isHeldOver()){
                 new mainMenuWindow(wm, width, height);
+            } else if(playButton.isHeldOver()){
+                new playSudokuWindow(wm, width, height, sudokuBoard);
+            } else if(solveButton.isHeldOver()){
+                new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard, this);
             }
 
         }

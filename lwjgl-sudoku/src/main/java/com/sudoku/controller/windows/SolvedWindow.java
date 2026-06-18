@@ -23,6 +23,7 @@ public class SolvedWindow extends Window implements WindowInterface {
     private SudokuBoard sudokuBoard;
     private SudokuBoard solvedSudokuBoard;
     private playSudokuWindow pw;
+    private CreateMenuWindow cmw;
     private Gamepad gpad;
 
     private int width;
@@ -43,6 +44,18 @@ public class SolvedWindow extends Window implements WindowInterface {
         sudokuBoard = sb;
         solvedSudokuBoard = solvedsb;
         this.pw = pw;
+        this.width = width;
+        this.height = height;
+        wm.setActiveWindow(this);
+        
+    }
+
+     public SolvedWindow(WindowManager wm, int width, int height, SudokuBoard sb, SudokuBoard solvedsb, CreateMenuWindow cmw) {
+        super(wm);
+        this.wm = wm;
+        sudokuBoard = sb;
+        solvedSudokuBoard = solvedsb;
+        this.cmw = cmw;
         this.width = width;
         this.height = height;
         wm.setActiveWindow(this);
