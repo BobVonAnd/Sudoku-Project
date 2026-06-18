@@ -230,6 +230,15 @@ public class Sudoku implements Element {
         }
     }
 
+    public void openAllLocks(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                sudokuBoard.getSingleField(i, j).setLocked(false);;
+            }
+        }
+    }
+
+
     private void isTouching(int x, int y) {
         System.out.println(x + "x  " + y + " y" + " bool " + buttonArray[x][y].isSelected());
         int xDiv = x / bigfield;

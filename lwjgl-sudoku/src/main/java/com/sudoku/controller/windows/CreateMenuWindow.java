@@ -1,14 +1,6 @@
 package com.sudoku.controller.windows;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_2;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_3;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_4;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_5;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_6;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_7;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_8;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
@@ -353,10 +345,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             size = Integer.parseInt(textField.getInput());
             System.out.println(size);
             sudokuBoard = new SudokuBoard(size);
+            
            
             sudokuCreated = true;
             sudokuFront = new Sudoku(width, height, 1.3, 0,-0.1, sudokuBoard, font, fontShader, this);
             addElement(sudokuFront, 0);
+            sudokuFront.openAllLocks();
 
             boardButtons = sudokuFront.getButtonArray();
             for (int i = 0; i < size; i++) {
@@ -436,6 +430,12 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             action == GLFW_PRESS) {
 
             if(sudokuCreated){
+                System.out.println("lalals");
+                for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                System.out.println(sudokuBoard.getSingleField(i, j).getLocked());
+            }
+        }
                 selectedField = sudokuFront.leftClick(mouseX, mouseY);
             }
            

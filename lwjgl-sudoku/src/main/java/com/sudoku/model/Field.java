@@ -46,6 +46,7 @@ public class Field {
         return locked;
     }
 
+    
     public void setValue(int value){
         this.value = value;
     }
