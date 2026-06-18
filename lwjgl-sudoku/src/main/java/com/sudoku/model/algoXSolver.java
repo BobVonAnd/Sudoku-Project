@@ -312,6 +312,7 @@ public class algoXSolver {
             while (startCounter < size*4){
                 solution.remove(solution.size()-1);
                 startCounter++;
+                removed++;
             }
             if (counter > size*size*4){
                 totalcounter++;
@@ -323,6 +324,7 @@ public class algoXSolver {
                 java.util.Collections.shuffle(solution);
                 removed = 0;
                 counter = 0;
+                startCounter = 0;
             }
             counter ++;
             solutionCounter = 0;
