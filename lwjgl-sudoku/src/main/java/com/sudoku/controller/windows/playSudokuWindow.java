@@ -377,11 +377,6 @@ public class playSudokuWindow extends Window implements WindowInterface {
                 
             }
         }
-
-        System.out.println();
-        for(int i = 0; i < f.getNote().length; i++){
-            System.out.println("after on " + f.getNote()[i] + " " + (i+1));
-        }
         
     }
 
