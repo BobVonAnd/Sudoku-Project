@@ -182,50 +182,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 
             }
         } 
-        
-
-        // // sudokuBoard
-        // if (textField.getValidity()) {
-        //     fontShader.detach();
-        //     glBegin(GL_LINES);
-
-        //     float x = (float) xStart;
-        //     float boardlenth = (float) (size * fieldsize);
-        //     int bigfield = (int) Math.sqrt(size);
-        //     for (int i = 0; i <= size; i++) {
-        //         if (i % bigfield == 0) {
-        //             bigfieldline();
-        //         } else {
-        //             regularline();
-        //         }
-        //         glVertex2f(x, (float) yStart);
-        //         glVertex2f(x, (float) yStart - boardlenth);
-
-        //         x += (float) fieldsize;
-        //     }
-
-        //     float y = (float) yStart;
-        //     for (int i = 0; i <= size; i++) {
-        //         if (i % bigfield == 0) {
-        //             bigfieldline();
-        //         } else {
-        //             regularline();
-        //         }
-        //         glVertex2f((float) xStart, y);
-        //         glVertex2f((float) xStart + boardlenth, y);
-        //         y -= (float) fieldsize;
-        //     }
-
-        //     glEnd();
-
-
-            // if(errorDetected){
-            //     text.makeText("Invalid input", -0.1f, 0.85f, 0.45f, new float[] {1f,0f,0f});
-            //     text.flush();
-            // }
-        //}
-
-
+    
 
     }
 

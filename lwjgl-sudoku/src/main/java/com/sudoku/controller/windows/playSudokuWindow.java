@@ -351,13 +351,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     private void isNote(int value){
         Field f = sudokuBoard.getSingleField(selectedField[0], selectedField[1]);
-        System.out.println();
-        System.out.println("input detected");
-        System.out.println("val " +value);
-        System.out.println("toggle " +noteButton.getToggle());
-        for(int i = 0; i < f.getNote().length; i++){
-            System.out.println("bfore on " + f.getNote()[i] + " " + (i+1));
-        }
+        
         if(noteButton.getToggle()){
             if(value > 0 && value <= sudokuBoard.getSize() && sudokuBoard.getSize() <= 9){
                 if(f.getNote()[value-1] == false){
