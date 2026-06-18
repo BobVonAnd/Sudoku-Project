@@ -8,8 +8,9 @@ public class Field {
     private ArrayList<Field> Edges = new ArrayList<>();
     private double[] colour;
 
-    private boolean[] notesFields = new boolean[] {true, true, true, true, true, true, true, true, true};
-    //false, false, false, false, false, false, false, false, false
+    private boolean[] notesFields = new boolean[] {false, false, false, false, false, false, false, false, false};
+    //
+    //true, true, true, true, true, true, true, true, true
 
     //if value is correct then it can't be changed
     private boolean locked = true;
@@ -30,7 +31,7 @@ public class Field {
     }
 
     public void setNote(int noteIndex, boolean isOn){
-        notesFields[noteIndex] = isOn;
+        notesFields[noteIndex-1] = isOn;
     }
 
     public boolean[] getNote(){

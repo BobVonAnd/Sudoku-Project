@@ -40,6 +40,7 @@ public class FieldButton implements Element {
     private float yOffset = 0.18f;
     private float xIncrement = 0.27f;
     private float yIncrement = -0.24f;
+    private boolean disable = false;
 
     public FieldButton(Field f, double x, double y, double sizeX, double sizeY, SudokuBoard sudokuBoard,
             CreateString text, Shader fontShader) {
@@ -89,6 +90,14 @@ public class FieldButton implements Element {
             }
             notePos.add(new Float[] { newX, newY });
         }
+    }
+
+    public void setDisable(boolean isDisable){
+        disable = isDisable;
+    }
+
+    public boolean getDisable(){
+        return disable;
     }
 
     public ArrayList<Float[]> getNotePos() {
@@ -159,7 +168,7 @@ public class FieldButton implements Element {
             }
 
         }
-        if (!field.getLocked() && sb.getSize() <= 9) {
+        if (!field.getLocked() && !disable && sb.getSize() <= 9) {
             for (int i = 0; i < sb.getSize(); i++) {
                 if (field.getNote()[i]) {
                     text.makeText(i + 1 + "", notePos.get(i)[0], notePos.get(i)[1], 2f * (float) sizeX,
