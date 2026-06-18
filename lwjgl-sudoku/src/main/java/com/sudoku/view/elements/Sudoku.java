@@ -16,7 +16,7 @@ import com.sudoku.view.fonts.CreateFont;
 public class Sudoku implements Element {
 
     private SudokuBoard sudokuBoard;
-    private int size, width, height;
+    private int size, bigfield, width, height;
 	private CreateString text;
     private Shader fontShader;
     private FieldButton[][] buttonArray;
@@ -67,6 +67,7 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
+        this.bigfield = (int)Math.sqrt(size);
         
 		//creates a shader and a class that can display strings
 		text = new CreateString(fontShader, font, width, height);
@@ -105,7 +106,6 @@ public class Sudoku implements Element {
         glBegin(GL_LINES);
 
         float boardlenth = (float)(size * fieldsizeY);
-        int bigfield = (int)Math.sqrt(size);
 
         regularline();
         float x = (float)xAspect;
@@ -186,12 +186,28 @@ public class Sudoku implements Element {
                     fieldButton.selected(true);
                     selectedField[0] = i;
                     selectedField[1] = j;
+                    isTouching(i, j);
                 } else {
                     fieldButton.selected(false);
                 }
             }
         }
         return selectedField;
+    }
+
+    private void isTouching(int x, int y){
+        int xMod = x % bigfield;
+        int yMod = y % bigfield;
+        for (int i = 0; i < size; i++){
+            int iMod = i % bigfield;
+            for (int j = 0; j < size; j++){
+                if (i == x || j == y || (xMod == iMod && yMod == j % bigfield)){
+                    buttonArray[i][j].setTouching(true);
+                } else {
+                    buttonArray[i][j].setTouching(false);
+                }
+            }
+        }
     }
 
     public void resize(int width, int height){

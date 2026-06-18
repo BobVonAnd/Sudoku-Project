@@ -179,4 +179,8 @@ public class FieldButton implements Element {
         this.sizeX = xy[0];
         this.sizeY = xy[1];
     }
+
+    public void setTouching(boolean set){
+        touching = set;
+    }
 }
