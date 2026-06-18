@@ -220,10 +220,13 @@ public class Sudoku implements Element {
                 xy[1] = fieldsizeY;
                 buttonArray[i][j].setFieldSize(xy);
                 y -= fieldsizeY;
+                buttonArray[i][j].posField();
             }
             x += fieldsizeX;
         }
         text.setXY(width, height);
+
+
     }
 
     private void setAspect(){

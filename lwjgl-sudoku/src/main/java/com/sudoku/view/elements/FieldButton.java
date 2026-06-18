@@ -76,7 +76,7 @@ public class FieldButton implements Element {
         posField();
     }
 
-    private void posField() {
+    public void posField() {
 
         float newX = (float) x + xOffset * (float) sizeX;
         float newY = (float) y - yOffset * (float) sizeY;
