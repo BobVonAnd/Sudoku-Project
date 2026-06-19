@@ -2,6 +2,9 @@ package com.sudoku;
 
 import com.sudoku.controller.WindowManager;
 import com.sudoku.controller.windows.mainMenuWindow;
+import com.sudoku.model.SudokuBoard;
+import com.sudoku.model.algoXSolver;
+import com.sudoku.view.TerminalView;
 
 
 public class App {
@@ -15,17 +18,17 @@ public class App {
 		// algoXSolver xSolver = new algoXSolver();
 		// long startTime;
 		// SudokuBoard sudokuBoard;
-		// int attempts = 10;
-		// long times = 0;
+		// int attempts = 1000;
+		// double times = 0;
 		// for (int i = 0; i < attempts; i++){
 		// 	startTime = System.nanoTime();
 		// 	xSolver.newSeed();
-		// 	sudokuBoard = xSolver.algoXCreateUnique(25,60);
+		// 	sudokuBoard = xSolver.algoXCreateUnique(4,12);
 		// 	if (xSolver.algoXIsUnique(sudokuBoard)){
 		// 		System.out.println("I am unique");
 		// 	}
-		// 	long endTime = System.nanoTime();
-		// 	long totalTime = (endTime-startTime)/1000000;
+		// 	double endTime = System.nanoTime();
+		// 	double totalTime = (endTime-startTime)/1000000;
 		// 	System.out.println("It took: " + totalTime + "ms");
 		// 	times += totalTime;
 		// 	// sudokuBoard.populate(1);
