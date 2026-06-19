@@ -223,15 +223,47 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 selectedField[1],
                 0);
 
+        boolean validInput = sudokuBoard.isValid(
+                selectedField[0],
+                selectedField[1],
+                value);
+      
         System.out.println(sudokuBoard.isValid(
                 selectedField[0],
                 selectedField[1],
                 value));
-                
-        if (sudokuBoard.isValid(
+
+        if(value == 0){
+            System.out.println("in");
+            validInput = true;
+            for(int i = 0; i < size; i++){
+                for(int j = 0; j < size; j++){
+                    int num = sudokuBoard.getSingleField(i, j).getValue();
+                    System.out.println("forfor " + num + " " + i + " " +j);
+                    if(num != 0){
+
+                        sudokuBoard.changeField(i,j,0);
+
+                        boolean isAllValid = sudokuBoard.isValid(i,j,num);
+                        System.out.println(isAllValid);
+                        if(!isAllValid){
+                            System.out.println("ups");
+                            validInput = false;
+                        }
+
+                        sudokuBoard.changeField(i,j,num);
+                    } 
+                }
+            }
+        }
+
+          
+        sudokuBoard.changeField(
                 selectedField[0],
                 selectedField[1],
-                value)) {
+                value);
+        System.out.println(validInput);
+        if (validInput) {
             boolean algoUnique = false;
             try {
                 algoUnique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
@@ -242,6 +274,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             unique = algoUnique;
             solveable = sudokuBoard.getAlgoX().getSolutionCounter() > 0;
+            System.out.println(sudokuBoard.getAlgoX().getSolutionCounter() + " j");
             if(solveable){
                 playButton.setValid(true);
                 solveButton.setValid(true);
@@ -257,10 +290,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             solveButton.setValid(false);
         }
 
-        sudokuBoard.changeField(
-                selectedField[0],
-                selectedField[1],
-                value);
+        
 
         sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].setNotValid(!solveable);
     }
