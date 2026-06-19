@@ -72,6 +72,7 @@ public class SudokuBoard {
             solved.printBoard();
             System.out.println("Solutions: " + solutions);
             System.out.println("Solved Sudoku (Before removal)^^");
+            System.out.println(emptyCells.size());
             int removed = 0;
             int attempts = 0;
             
@@ -87,18 +88,18 @@ public class SudokuBoard {
 
                 // temp removal of field
                 int tempVal = wholeBoard[x][y].getValue();
-                wholeBoard[x][y].setValue(0);
-                wholeBoard[size-x-1][size-y-1].setValue(0);
+                changeField(x, y, 0); // wholeBoard[x][y].setValue(0);
+                changeField(size-x-1, size-y-1, 0); // wholeBoard[size-x-1][size-y-1].setValue(0);
                 this.solutions = 0;
                 uniquenessTest();
                 if (this.solutions > 1) {
-                    wholeBoard[x][y].setValue(tempVal);
-                    wholeBoard[size-x-1][size-y-1].setValue(tempVal);
+                    changeField(x, y, tempVal); // wholeBoard[x][y].setValue(tempVal);
+                    changeField(size-x-1, size-y-1, tempVal); // wholeBoard[size-x-1][size-y-1].setValue(tempVal);
                 } else if (this.solutions == 1) {
                     removed+=2;
                 } else {
-                    wholeBoard[x][y].setValue(tempVal);
-                    wholeBoard[size-x-1][size-y-1].setValue(tempVal);
+                    changeField(x, y, tempVal); // wholeBoard[x][y].setValue(tempVal);
+                    changeField(size-x-1, size-y-1, tempVal); // wholeBoard[size-x-1][size-y-1].setValue(tempVal);
                 }
             }
             System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
