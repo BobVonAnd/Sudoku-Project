@@ -9,8 +9,6 @@ public class Field {
     private double[] colour;
 
     private boolean[] notesFields = new boolean[] {false, false, false, false, false, false, false, false, false};
-    //
-    //true, true, true, true, true, true, true, true, true
 
     //if value is correct then it can't be changed
     private boolean locked = true;
