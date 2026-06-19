@@ -332,13 +332,11 @@ import com.sudoku.view.TerminalView;
 
         }
 
-        public Field[][] getWholeBoard() {
-            return this.wholeBoard;
-        }
-
     public Field[][] getWholeBoard() {
         return this.wholeBoard;
     }
+
+    
     public SudokuBoard getCopy(){
         ArrayList<Field> fields = this.getFields();
         SudokuBoard copyBoard = new SudokuBoard(this.size);
