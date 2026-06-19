@@ -56,25 +56,10 @@ public class SudokuBoard {
             this.clear();
             double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
-            for (int i = 0; i < this.bigFieldSize; i++) {
-                // Get choices
-                ArrayList<Integer> choices = new ArrayList<>(
-                        Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-                Collections.shuffle(choices);
-                int counter = 0;
-                // Insert Field
-                for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                    for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                        changeField(k, j, choices.get(counter));
-                        counter++;
-                    }
-                }
-            }
-            TerminalView before = new TerminalView(this);
-            before.printBoard();
             algoXSolver algoX = new algoXSolver(); 
             algoX.algoXManager(this);
-
+            TerminalView before = new TerminalView(this);
+            before.printBoard();
             TerminalView solved = new TerminalView(this);
             solved.printBoard();
             System.out.println("Solved Sudoku (Before removal)^^");
