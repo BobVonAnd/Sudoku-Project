@@ -20,22 +20,22 @@ public class App {
 		int attempts = 10;
 		long times = 0;
 		for (int i = 0; i < attempts; i++){
-		startTime = System.nanoTime();
-		sudokuBoard = xSolver.algoXCreateUnique(9, 60);
-		if (xSolver.algoXIsUnique(sudokuBoard)){
-			System.out.println("I am unique");
+			startTime = System.nanoTime();
+			xSolver.newSeed();
+			sudokuBoard = xSolver.algoXCreateUnique(9,59);
+			if (xSolver.algoXIsUnique(sudokuBoard)){
+				System.out.println("I am unique");
+			}
+			long endTime = System.nanoTime();
+			long totalTime = (endTime-startTime)/1000000;
+			System.out.println("It took: " + totalTime + "ms");
+			times += totalTime;
+			// sudokuBoard.populate(1);
+			// sudokuBoard.solve();
+			TerminalView terminalView = new TerminalView(sudokuBoard);
+			terminalView.printBoard();
 		}
-		long endTime = System.nanoTime();
-		long totalTime = (endTime-startTime)/1000000;
-		System.out.println("It took: " + totalTime + "ms");
-		times += totalTime;
-		// sudokuBoard.populate(1);
-		// sudokuBoard.solve();
-		TerminalView terminalView = new TerminalView(sudokuBoard);
-		terminalView.printBoard();
-		}
-
-		System.out.println("It took: " + times + "ms and " + times/attempts + " per attempt");
+		System.out.println("It took: " + times + "ms and " + times/attempts + "ms per attempt");
 		// wm.run();
 	}
 	

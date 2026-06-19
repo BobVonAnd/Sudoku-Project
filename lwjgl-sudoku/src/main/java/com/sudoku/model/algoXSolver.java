@@ -9,7 +9,8 @@ public class algoXSolver {
     private ColumnNode root;
     private ArrayList<Node> solution = new ArrayList<>();
     private int solutionCounter = 0;
-    private final Random random = new Random();
+    long seed = System.currentTimeMillis();
+    private Random random = new Random(seed);
     private Node[] rowHeads;
 
     public void algoXManager(SudokuBoard sudokuBoard){
@@ -296,6 +297,22 @@ public class algoXSolver {
         algoXUniqueTest(root, solution);
         return solutionCounter == 1;
     }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public long newSeed() {
+        seed = System.currentTimeMillis();
+        random = new Random(seed);
+        return seed;
+    }
+
+    public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove, long seed) {
+        random = new Random(seed);
+        return algoXCreateUnique(size, fieldsToRemove);
+    }
+
     public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove){
         int removed = 0;
         int counter = 0;
@@ -308,7 +325,7 @@ public class algoXSolver {
         root = initializeNodes(size);
         shuffleNodes(root, size);
         search(root, solution);
-        java.util.Collections.shuffle(solution);
+        java.util.Collections.shuffle(solution,random);
         while (removed < fieldsToRemove){
             if (counter > size*size*4){
                 if (bestAttempt < removed){ bestAttempt = removed;}
@@ -318,7 +335,7 @@ public class algoXSolver {
                 root = initializeNodes(size);
                 shuffleNodes(root, size);
                 search(root, solution);
-                java.util.Collections.shuffle(solution);
+                java.util.Collections.shuffle(solution,random);
                 removed = 0;
                 counter = 0;
                 startCounter = 0;
@@ -337,7 +354,7 @@ public class algoXSolver {
             }
             else {
                 solution.add(candidate);
-                java.util.Collections.shuffle(solution);
+                java.util.Collections.shuffle(solution, random);
             }
         }
         readNodesToBoard(sudokuBoard, solution);
