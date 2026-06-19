@@ -72,8 +72,6 @@ public class SudokuBoard {
             solved.printBoard();
             System.out.println("Solutions: " + solutions);
             System.out.println("Solved Sudoku (Before removal)^^");
-            
-            Random rand = new Random();
             int removed = 0;
             int attempts = 0;
             
