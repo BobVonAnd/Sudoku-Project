@@ -78,6 +78,7 @@ public class SudokuBoard {
             
             while (removed < amountToRemove) {
                 attempts++;
+                //System.out.println("attempts " + String.valueOf(attempts));
                 int x = rand.nextInt(this.size);
                 int y = rand.nextInt(this.size);
 
@@ -91,6 +92,7 @@ public class SudokuBoard {
                 changeField(x, y, 0); // wholeBoard[x][y].setValue(0);
                 this.solutions = 0;
                 uniquenessTest();
+                System.out.println(solutions == 1);
                 if (this.solutions > 1) {
                     changeField(x, y, tempVal); // wholeBoard[x][y].setValue(tempVal);
                 } else if (this.solutions == 1) {
@@ -123,7 +125,6 @@ public class SudokuBoard {
                 return (int) (-7 * scale + 12); 
 
             case 9:
-                System.out.println(String.valueOf((int) (-20 * scale + 56)));
                 return (int) (-20 * scale + 56); 
 
             case 16:
