@@ -38,7 +38,7 @@ public class SudokuBoard {
     public void clear() {
         for (int i = 0 ; i < wholeBoard.length ; i++) {
             for (int j = 0 ; j < wholeBoard.length ; j++) {
-                wholeBoard[i][j].setValue(0);
+                changeField(i,j,0);
             }
         }
     }
@@ -53,7 +53,7 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         double cumulatedTime = 0;
-        int tests = 100;
+        int tests = 1000;
         for (int p = 0 ; p < tests ; p++) {
             this.clear();
             double startTime = System.nanoTime();
@@ -104,6 +104,7 @@ public class SudokuBoard {
             System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
             TerminalView after = new TerminalView(this);
             after.printBoard();
+            System.out.println(String.valueOf(emptyCells.size())+" empty cells");
             System.out.println("Stopped initialising here");
             double endTime = System.nanoTime();
             double durationOfPopulate = (endTime - startTime)/1000000;
@@ -124,6 +125,7 @@ public class SudokuBoard {
                 return (int) (-7 * scale + 12); 
 
             case 9:
+                System.out.println(String.valueOf((int) (-20 * scale + 56)));
                 return (int) (-20 * scale + 56); 
 
             case 16:
@@ -144,7 +146,7 @@ public class SudokuBoard {
 
     public Boolean uniquenessTest() {
         if (this.solutions > 1) {
-            return false;
+            return true;
         }
         
         for (int i = 0; i < emptyCells.size(); i++) {
@@ -186,11 +188,10 @@ public class SudokuBoard {
         if (value != 0) {
             field.clearLe();
             emptyCells.remove(field);
-        } else if (!emptyCells.contains(field)) {
+        } else if (!emptyCells.contains(field) && value == 0) {
             emptyCells.add(field);
         }
         field.removeValueFromLegalEntriesOfNeighbours();
-        //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
     }
 
     public void updateLegalEntriesOfField(Field field) {
