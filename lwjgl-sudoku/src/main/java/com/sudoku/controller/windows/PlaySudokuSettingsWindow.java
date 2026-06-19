@@ -1,14 +1,12 @@
 package com.sudoku.controller.windows;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -311,7 +309,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         if (mouseClick || gpad.isEntered()) {
             if (b.isHeldOver() && elementExists(b)) {
                 if (b == startButton) {
-                    new playSudokuWindow(wm, width, height, sb);
+                    new playSudokuWindow(wm, width, height, sb, false);
                 } else if (b == backButton) {
                     new mainMenuWindow(wm, width, height);
                 }

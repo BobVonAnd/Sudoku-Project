@@ -110,11 +110,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         gpad.addElement(textField, 2, 0);
 
 
-        // creates a copy of the sudokuboard which we solve
-            solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
-            int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
-            solvedSudokuBoard.readIntoBoard(integerBoard);
-            solvedSudokuBoard.solve();
+       
     }
 
     public void step() {
@@ -124,6 +120,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseYt = -mouseY / (720 / 2) + 1;
 
         holdOver(returnButton);
+        holdOver(playButton);
+        holdOver(solveButton);
 
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
@@ -380,7 +378,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 }
             }
             
-        } else if (!textField.getValidity()) {
+        } else if (!textField.getValidity() && sudokuCreated == true) {
             sudokuFront.clear();
             sudokuCreated = false;
         }
@@ -396,7 +394,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9 && action == GLFW_PRESS) {
                     value = value * 10 + (key-48);
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                   // sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     System.out.println(String.valueOf(value)+" pressed!");
                 } 
                 if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
@@ -406,7 +404,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 }
                 if (!(value <= size)) {
                     value = value / 10;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+                    //sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     errorDetected = true;
                 } 
                 if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
@@ -523,8 +521,24 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             if(returnButton.isHeldOver()){
                 new mainMenuWindow(wm, width, height);
             } else if(playButton.isHeldOver()){
-                new playSudokuWindow(wm, width, height, sudokuBoard);
+                for(int i = 0; i < size; i++){
+                    for(int j = 0; j < size; j++){
+                        if(sudokuBoard.getSingleField(i, j).getValue() == 0){
+                            sudokuBoard.inputRemoved();
+                        }else{
+                            sudokuBoard.getSingleField(i, j).setLocked(true);
+                        }
+                    }
+                }
+                playSudokuWindow pw = new playSudokuWindow(wm, width, height, sudokuBoard, true);
             } else if(solveButton.isHeldOver()){
+
+                 // creates a copy of the sudokuboard which we solve
+                solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+                int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+                solvedSudokuBoard.readIntoBoard(integerBoard);
+                solvedSudokuBoard.solve();
+
                 new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard, this);
             }
 
