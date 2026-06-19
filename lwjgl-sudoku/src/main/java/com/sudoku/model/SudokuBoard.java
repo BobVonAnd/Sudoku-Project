@@ -332,10 +332,6 @@ import com.sudoku.view.TerminalView;
 
         }
 
-        public Field[][] getWholeBoard() {
-            return this.wholeBoard;
-        }
-
     public Field[][] getWholeBoard() {
         return this.wholeBoard;
     }

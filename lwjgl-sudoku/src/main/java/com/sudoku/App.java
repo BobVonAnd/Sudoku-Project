@@ -36,7 +36,7 @@ public class App {
 			terminalView.printBoard();
 		}
 		System.out.println("It took: " + times + "ms and " + times/attempts + "ms per attempt");
-		// wm.run();
+		wm.run();
 	}
 	
 }
