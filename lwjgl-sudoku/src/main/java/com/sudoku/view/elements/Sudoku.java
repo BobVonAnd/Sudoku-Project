@@ -205,6 +205,8 @@ public class Sudoku implements Element {
                         fieldButton.selected(true);
                         selectedField[0] = i;
                         selectedField[1] = j;
+                    }else{
+                        fieldButton.selected(false);
                     }
             
                     isTouching(i, j);
