@@ -59,7 +59,7 @@ public class App {
 
 	public void run() {
 
-		sudokuBoard = new SudokuBoard(25);
+		sudokuBoard = new SudokuBoard(36);
 		sudokuBoard.populate(1);
 		long startTime = System.nanoTime();
 		sudokuBoard.solve();
