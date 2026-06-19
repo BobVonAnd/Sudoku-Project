@@ -22,7 +22,7 @@ public class App {
 		for (int i = 0; i < attempts; i++){
 			startTime = System.nanoTime();
 			xSolver.newSeed();
-			sudokuBoard = xSolver.algoXCreateUnique(9,60);
+			sudokuBoard = xSolver.algoXCreateUnique(25,60);
 			if (xSolver.algoXIsUnique(sudokuBoard)){
 				System.out.println("I am unique");
 			}
