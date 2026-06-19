@@ -6,14 +6,10 @@ public class Field {
     private int value, x, y, boardSize;
     private ArrayList<Integer> legalEntries = new ArrayList<>();
     private ArrayList<Field> Edges = new ArrayList<>();
+    private ArrayList<Field> boxEdges = new ArrayList<>();
+    private ArrayList<Field> yEdges = new ArrayList<>();
+    private ArrayList<Field> xEdges = new ArrayList<>();
     private double[] colour;
-
-    private boolean[] notesFields = new boolean[] {false, false, false, false, false, false, false, false, false};
-    //
-    //true, true, true, true, true, true, true, true, true
-
-    //if value is correct then it can't be changed
-    private boolean locked = true;
 
     public Field(int x, int y, int value, int size, double[] colour){
 
@@ -23,35 +19,28 @@ public class Field {
         this.boardSize = size;
         this.colour = colour;
 
-        
-
         for(int i = 1; i <= size; i++){
             legalEntries.add(i);
         }
     }
-
-    public void setNote(int noteIndex, boolean isOn){
-        notesFields[noteIndex-1] = isOn;
+    public void addLegalEntry(int entry){
+        this.legalEntries.add(entry);
     }
-
-    public boolean[] getNote(){
-        return notesFields;
-    }
-
-    public void setLocked(boolean isLocked){
-        this.locked = isLocked;
-    }
-
-    public boolean getLocked(){
-        return locked;
-    }
-
     public void setValue(int value){
         this.value = value;
     }
     public void addEdge(Field field){
         if (Edges.contains(field) == false){
             Edges.add(field);
+        }
+        if (isBoxEdge(this, field)){
+            boxEdges.add(field);
+        }
+        if (isColumnEdge(this, field)){
+            yEdges.add(field);
+        }
+        else if (isRowEdge(this, field)){
+            xEdges.add(field);
         }
         
     }
@@ -69,6 +58,14 @@ public class Field {
     }
     public void removeLE(int LE){
         this.legalEntries.remove(Integer.valueOf(LE));
+        this.legalEntries = new ArrayList<>(this.legalEntries);
+    }
+    public void removeLEs(ArrayList<Integer> Le){
+        this.legalEntries.removeAll(Le);
+    }
+    public void updateLes(ArrayList<Integer> newLe){
+        this.legalEntries.clear();
+        this.legalEntries = newLe;
     }
     public void removeEdge(Field field){//This method removes an incoming edge
         Edges.remove(field);
@@ -79,8 +76,11 @@ public class Field {
         coordinates[1] = this.y;
         return coordinates;
     }
+    public String getStringCoords(){
+        return ("[" + this.x + "," + this.y + "]");
+    }
     public void removeValueFromLegalEntriesOfNeighbours(){
-        for (Field f : Edges){
+        for (Field f : this.Edges){
             f.removeLE(this.value);
         }
     }
@@ -117,6 +117,78 @@ public class Field {
     }
         public double getBlue(){
         return this.colour[2];
+    }
+    public ArrayList<Field> getBoxEdges(){
+        return this.boxEdges;
+    }
+    public ArrayList<Field> getRowEdges(){
+        return this.xEdges;
+    }
+    public ArrayList<Field> getColumnEdges(){
+        return this.yEdges;
+    }
+    public static Boolean isBoxEdge(Field f, Field otherField){
+    int x_coordinate = f.getCoordinates()[0];
+    int y_coordinate = f.getCoordinates()[1];
+
+    int cornerX = x_coordinate-f.getPosition()[0];
+    int cornerY = y_coordinate-f.getPosition()[1];
+
+    int otherField_x = otherField.getCoordinates()[0];
+    int otherField_y = otherField.getCoordinates()[1];
+    if (otherField_x == x_coordinate && otherField_y == y_coordinate){
+        return false;
+    }
+
+    for (int j = 0; j<3 ; j++){
+        for (int k = 0; k<3; k++){
+            if(cornerX+j == otherField_x && cornerY+k == otherField_y ){
+                return true;
+            }
+        }
+    }
+    return false;    
+    }
+    public static Boolean isRowEdge(Field f, Field otherField){
+        return otherField.getCoordinates()[1]!=f.getCoordinates()[1] && otherField.getCoordinates()[0] == f.getCoordinates()[0];
+    }
+    public static Boolean isColumnEdge(Field f, Field otherField){
+        return otherField.getCoordinates()[0]!=f.getCoordinates()[0] && otherField.getCoordinates()[1] == f.getCoordinates()[1];
+    }
+    public void updateField(int number){
+        this.setValue(number);
+        this.removeValueFromLegalEntriesOfNeighbours();
+        this.clearLe();
+    }
+    public static ArrayList<Integer> getComplementOfLegalEntries(Integer legalEntry, Field field){
+        ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
+        legalEntries.remove(legalEntry);
+        return legalEntries;
+    }
+    public static Integer getOtherLegalEntry(Integer legalEntry, Field field){
+        if (field.getLeSize() != 2){
+            return null;
+        }
+        ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
+        legalEntries.remove(legalEntry);
+        return legalEntries.get(0);
+    }
+    public static ArrayList<Integer> getUnionOfFieldsLegalEntries(ArrayList<Field> fields){
+        ArrayList<Integer> union = new ArrayList<>();
+        for (Field field : fields){
+            union.addAll(field.getLegalEntries());
+        }
+        return union;
+    }
+    public static ArrayList<Integer> getIntersectionOfFieldsLegalEntries(ArrayList<Field> fields){
+        ArrayList<Integer> intersection = new ArrayList<>();
+        int size = fields.size();
+        intersection.addAll(fields.get(0).getLegalEntries());
+        for (int i = 1; i< size; i++){
+            ArrayList<Integer> legalEntries = fields.get(i).getLegalEntries();
+            intersection.retainAll(legalEntries);
+        }
+        return intersection;
     }
 }
 
