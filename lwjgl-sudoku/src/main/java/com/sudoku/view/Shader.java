@@ -1,9 +1,8 @@
 package com.sudoku.view;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.FloatBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -51,17 +50,25 @@ public class Shader {
     public Shader(String filepath) {
         this.filepath = filepath;
         try {
-            String source = new String(Files.readAllBytes(Paths.get(filepath)));
+            InputStream is = Shader.class.getResourceAsStream(filepath);
+
+            if (is == null) {
+                throw new RuntimeException("Shader not found: " + filepath);
+            }
+
+            String source = new String(is.readAllBytes());
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
             // Find the first pattern after #type 'pattern'
             int index = source.indexOf("#type") + 6;
             int eol = source.indexOf("\r\n", index);
+            if (eol == -1) eol = source.indexOf("\n", index);
             String firstPattern = source.substring(index, eol).trim();
 
             // Find the second pattern after #type 'pattern'
             index = source.indexOf("#type", eol) + 6;
             eol = source.indexOf("\r\n", index);
+            if (eol == -1) eol = source.indexOf("\n", index);
             String secondPattern = source.substring(index, eol).trim();
 
             if (firstPattern.equals("vertex")) {

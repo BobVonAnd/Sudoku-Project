@@ -195,8 +195,8 @@ public class WindowManager {
 		// Make the window visible
 		glfwShowWindow(window);
 		GL.createCapabilities();
-		font = new CreateFont("Sudoku-Project/lwjgl-sudoku/assets/fonts/ARIAL.TTF", 128);
-		fontShader = new Shader("lwjgl-sudoku/assets/fonts/fontShader.glsl");
+		font = new CreateFont("/fonts/ARIAL.TTF", 128);
+		fontShader = new Shader("/shaders/fontShader.glsl");
 	}
 
 

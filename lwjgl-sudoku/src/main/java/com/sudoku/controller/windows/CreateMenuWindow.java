@@ -117,18 +117,21 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
-        // button juggle
-        if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
-                returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
-                !gpad.isConnected()&
 
-                returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
-                returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
-            returnButton.heldOver(true);
-            windowTransition(returnButton,false);
-        } else {
-            returnButton.heldOver(false);
-        }
+        // // button juggle
+        // if ((returnButton.getPos()[0] - returnButton.getSize() / 2 < mouseXt &
+        //         returnButton.getPos()[0] + returnButton.getSize() / 2 > mouseXt &
+        //         !gpad.isConnected()&
+
+        //         returnButton.getPos()[1] - returnButton.getSize() / 2 < mouseYt &
+        //         returnButton.getPos()[1] + returnButton.getSize() / 2 > mouseYt) || gpad.isSelected(returnButton)) {
+        //     returnButton.heldOver(true);
+        //     windowTransition(returnButton,false);
+        // } else {
+        //     returnButton.heldOver(false);
+        // }
+        holdOver(returnButton);
+        
 
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
@@ -142,25 +145,28 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         if (gpad.isConnected() && (gpad.isSelected(textField) || gpad.isSelected(numPad))) {
             boolean entered = gpad.isEntered();
             // select when the gpad is over it
+
             if (gpad.isSelected(textField)) {
                 textField.setSelected(true);
+            // press a to enter
+                if (entered) {
+                    gpad.addElement(numPad, 37, 0);
+                    gpad.setPosition(37, 0);
+                    numpad_for_board = false;
+                }
             } else {
                 textField.setSelected(false);
-            }
-            // press a to enter
-            if (entered && textField.isSelected()) {
-                gpad.addElement(numPad, 37, 0);
-                gpad.setPosition(37, 0);
-                numpad_for_board = false;
-            }
-            // reset the numpad if enter
-            if (entered && gpad.isSelected(numPad)) {
-                if (numpad_for_board) {
-                    typeBoard(gpadNumpadIndex);
-                } else {
-                    typeSize(gpadNumpadIndex);
+                // reset the numpad if enter
+                if (entered && gpad.isSelected(numPad)) {
+                    if (numpad_for_board) {
+                        typeBoard(gpadNumpadIndex);
+                    } else {
+                        typeSize(gpadNumpadIndex);
+                    }
                 }
             }
+
+            
         }
 
         // Sudoku board gamepad
@@ -237,6 +243,22 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
 
 
+    }
+
+
+    // inout a MenuButton and it will track if the mouse if hovering the button
+    private void holdOver(MenuButton button) {
+        double mouseXt = mouseX / (width / 2) - 1;
+        double mouseYt = -mouseY / (height / 2) + 1;
+        if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
+                button.getPos()[0] + button.getSize() / 2 > mouseXt &
+
+                button.getPos()[1] - button.getSize() / 2 < mouseYt &
+                button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {
+            button.heldOver(true);
+        } else {
+            button.heldOver(false);
+        }
     }
 
     private void bigfieldline() {
@@ -453,47 +475,11 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 // sudokuBoard
                 errorDetected = false;
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-                if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
-                    value = value * 10 + 0;
+                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9 && action == GLFW_PRESS) {
+                    value = value * 10 + (key-48);
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("0 pressed!");
-                } else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
-                    value = value * 10 + 1;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("1 pressed!");
-                } else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
-                    value = value * 10 + 2;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("2 pressed!");
-                } else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
-                    value = value * 10 + 3;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("3 pressed!");
-                } else if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
-                    value = value * 10 + 4;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("4 pressed!");
-                } else if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
-                    value = value * 10 + 5;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("5 pressed!");
-                } else if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
-                    value = value * 10 + 6;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("6 pressed!");
-                } else if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
-                    value = value * 10 + 7;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("7 pressed!");
-                } else if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
-                    value = value * 10 + 8;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("8 pressed!");
-                } else if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
-                    value = value * 10 + 9;
-                    sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-                    System.out.println("9 pressed!");
-                }
+                    System.out.println(String.valueOf(value) + " pressed!");
+                } 
                 if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
                     System.out.println();
                     value = value / 10;

@@ -53,11 +53,14 @@ public class Gamepad {
     private boolean entered = false;
     private boolean moveLocked = false;
 
+    private boolean pressed = false;
+
     public boolean isSelected(Element e) {
-        if (connected) {
+        if (connected && e != null) {
             return e.equals(buttonMap.get(position));
         }
         return false;
+
     }
 
     public boolean isMoveLocked() {
@@ -252,12 +255,13 @@ public class Gamepad {
                     buffer_timestamp = now;
                 }
             }
-
-            boolean aPressed = state.buttons(GLFW_GAMEPAD_BUTTON_A) == GLFW_PRESS;
+            
+            boolean aPressed = state.buttons(GLFW_GAMEPAD_BUTTON_A) == GLFW_RELEASE && pressed;
             if (aPressed && now - aTimestamp >= aBuffer) {
                 entered = true;
                 aTimestamp = now;
             }
+            pressed = state.buttons(GLFW_GAMEPAD_BUTTON_A) == GLFW_PRESS;
         } else {
             connected = false;
         }

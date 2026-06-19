@@ -1,11 +1,17 @@
 package com.sudoku.view.elements;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glColor3d;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2d;
+
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-import com.sudoku.view.fonts.CreateFont;
-import org.lwjgl.glfw.GLFW;
-import java.nio.IntBuffer;
-import org.lwjgl.BufferUtils;
 
 public class MenuButton implements Element {
     private double size;
@@ -15,6 +21,7 @@ public class MenuButton implements Element {
     private String textString;
     private CreateString text;
     private Shader fontShader;
+    private boolean toggle;
 
     public MenuButton(double x, double y, double size, CreateString text, Shader fontShader, String textString) {   
         this.size = size;
@@ -26,6 +33,14 @@ public class MenuButton implements Element {
         this.text = text;
         this.textString = textString;
         this.fontShader = fontShader;
+    }
+
+    public void setToggle(boolean isOn){
+        toggle = isOn;
+    }
+
+    public boolean getToggle(){
+        return toggle;
     }
 
     public double[] getPos() {
@@ -48,13 +63,25 @@ public class MenuButton implements Element {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
         double overSpd = 0.05;
-        double xOffset = (heldOver ? (Math.sin(currentTime * spd)) : 0) / 250 ;
-        double yOffset = (heldOver ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 250;
+        double xOffset;
+        double yOffset;
 
         fontShader.detach();
         glBegin(GL_QUADS);
-
-        glColor3d(0.0, 0.0, heldOver ? 0.8 : 0.3);
+        if(heldOver){
+            glColor3d(0.0, 0.0, 0.8);
+            xOffset = (Math.sin(currentTime * spd)) / 250 ;
+            yOffset = ((Math.sin(currentTime * spd) + Math.cos(currentTime * spd))) / 250;
+        }else if(toggle){
+            glColor3d(1.0, 0.9216, 0.1294);
+            xOffset = (Math.sin(currentTime * spd)) / 250 ;
+            yOffset = ((Math.sin(currentTime * spd) + Math.cos(currentTime * spd))) / 250;
+        }else{
+            glColor3d(0.0, 0.0, 0.4);
+            xOffset = 0;
+            yOffset = 0;
+        }
+        
         glVertex2d(x - half - ten*2 + ten + xOffset, y - half + ten - yOffset);
         glVertex2d(x + half + ten - xOffset, y - half + ten + yOffset);
         glVertex2d(x + half + ten*2 + ten + xOffset, y + half + ten - yOffset);

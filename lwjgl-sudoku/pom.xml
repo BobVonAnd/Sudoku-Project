@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- LWJGL Bill of Materials -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -31,44 +30,45 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- JUnit 5 -->
-          <dependency>
-              <groupId>org.junit.jupiter</groupId>
-              <artifactId>junit-jupiter</artifactId>
-              <version>5.10.1</version>
-              <scope>test</scope>
-          </dependency>
-        <!-- LWJGL Core -->
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- LWJGL -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
         </dependency>
 
-        <!-- GLFW -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-glfw</artifactId>
         </dependency>
 
-        <!-- OpenGL -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
         </dependency>
 
-        <!-- Natives (Windows) -->
-        <dependency>
-            <groupId>org.lwjgl</groupId>
-            <artifactId>lwjgl</artifactId>
-            <classifier>natives-windows</classifier>
-        </dependency>
-
+        <!-- JOML -->
         <dependency>
             <groupId>org.joml</groupId>
             <artifactId>joml</artifactId>
             <version>1.10.5</version>
         </dependency>
 
+        <!-- Windows natives -->
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <classifier>natives-windows</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-glfw</artifactId>
@@ -81,6 +81,7 @@
             <classifier>natives-windows</classifier>
         </dependency>
 
+        <!-- Apple Silicon natives -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -98,17 +99,35 @@
             <artifactId>lwjgl-opengl</artifactId>
             <classifier>natives-macos-arm64</classifier>
         </dependency>
-    
-      <dependency>
-        <groupId>org.processing</groupId>
-        <artifactId>pde</artifactId>
-        <version>3.3.7</version>
-      </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Allows: mvn compile exec:java -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <transformers>
+                                <transformer implementation=
+                                    "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.sudoku.App</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>de.elnarion.maven</groupId>
                 <artifactId>plantuml-generator-maven-plugin</artifactId>
@@ -131,34 +150,40 @@
                     </scanPackages>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
+
                 <configuration>
                     <mainClass>com.sudoku.App</mainClass>
                 </configuration>
+
+                <executions>
+                    <execution>
+                        <id>run-macos</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-XstartOnFirstThread</argument>
+                                <argument>-cp</argument>
+                                <classpath/>
+                                <argument>com.sudoku.App</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
-
-            <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <configuration>
-                <executable>java</executable>
-                <arguments>
-                    <argument>-XstartOnFirstThread</argument>
-                    <argument>-classpath</argument>
-                    <classpath/>
-                    <argument>com.sudoku.App</argument>
-                </arguments>
-            </configuration>
-        </plugin>
 
         </plugins>
     </build>

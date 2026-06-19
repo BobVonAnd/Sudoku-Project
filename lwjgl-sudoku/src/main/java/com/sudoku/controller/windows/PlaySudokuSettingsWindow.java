@@ -263,7 +263,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         difficultySlider.updateSuffix(" (Removes " + sb.getFieldsToRemove(1 - difficultySlider.getValue()) + " Fields)");
         textFieldHover(mouseXt, mouseYt);
     
-        textInfo.makeText("You Can Customize a 4x4, 9x9, 16x16, 25x25", (textFieldPrime[0] - 0.005f), (textFieldPrime[1] - 0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
+        textInfo.makeText("You Can Customize a 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f), (textFieldPrime[1] - 0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
         textInfo.flush();
     }
 
