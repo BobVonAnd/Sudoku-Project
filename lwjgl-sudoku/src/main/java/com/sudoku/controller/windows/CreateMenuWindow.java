@@ -78,6 +78,16 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         wm.setActiveWindow(this);
     }
 
+     public void update(WindowManager wm, int width, int height, SudokuBoard sb, Sudoku sbr){
+        this.wm = wm;
+        this.width = width;
+        this.height = height;
+        this.sudokuBoard = sb;
+        this.sudokuFront = sbr;
+        sudokuCreated = true;
+        wm.setActiveWindow(this);
+    }
+
     public void create() {
         // This code runs once
         gpad = new Gamepad();
@@ -362,7 +372,6 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void createSudoku() {
         if (textField.getValidity()) {
             size = Integer.parseInt(textField.getInput());
-            System.out.println(size);
             sudokuBoard = new SudokuBoard(size);
             
            
@@ -449,12 +458,6 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             action == GLFW_PRESS) {
 
             if(sudokuCreated){
-                System.out.println("lalals");
-                for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                System.out.println(sudokuBoard.getSingleField(i, j).getLocked());
-            }
-        }
                 selectedField = sudokuFront.leftClick(mouseX, mouseY);
             }
            
@@ -520,7 +523,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
             if(returnButton.isHeldOver()){
                 new mainMenuWindow(wm, width, height);
-            } else if(playButton.isHeldOver()){
+            } else if(solveable && playButton.isHeldOver()){
                 for(int i = 0; i < size; i++){
                     for(int j = 0; j < size; j++){
                         if(sudokuBoard.getSingleField(i, j).getValue() == 0){
@@ -531,7 +534,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     }
                 }
                 playSudokuWindow pw = new playSudokuWindow(wm, width, height, sudokuBoard, true);
-            } else if(solveButton.isHeldOver()){
+            } else if(solveable && solveButton.isHeldOver()){
 
                  // creates a copy of the sudokuboard which we solve
                 solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());

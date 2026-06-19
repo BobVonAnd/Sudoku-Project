@@ -61,6 +61,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     private boolean classIsCreated = false;
 
+    
+
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb, boolean copy) {
         super(wm);
         this.wm = wm;
@@ -73,8 +75,10 @@ public class playSudokuWindow extends Window implements WindowInterface {
         
         wm.setActiveWindow(this);
         classIsCreated = true;
-
+        
     }
+
+   
 
     public void create() {
         // This code runs once

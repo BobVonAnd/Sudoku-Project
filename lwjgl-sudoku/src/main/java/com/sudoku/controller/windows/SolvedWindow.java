@@ -158,7 +158,12 @@ public class SolvedWindow extends Window implements WindowInterface {
 
     public void windowTransition(MenuButton e) {
         if(e == returnButton && returnButton.isHeldOver()){
-            wm.setActiveWindow(pw);
+            if(pw == null && cmw != null){
+                wm.setActiveWindow(cmw);
+            }else{
+                wm.setActiveWindow(pw);
+            }
+            
         }else if(e == end && end.isHeldOver()){
             new mainMenuWindow(wm, width, height);
         }
