@@ -51,13 +51,15 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         double accumulatedTime = 0;
-        int tests = 1000;
+        int tests = 10;
         for (int l = 0 ; l < tests ; l++) {
             this.clear();
             double startTime = System.nanoTime();
             this.difficultyScale = difficultyScale;
             Random rand = new Random(System.currentTimeMillis());
-            algoXSolver algoX = new algoXSolver(); 
+            changeField(rand.nextInt(this.size), rand.nextInt(this.size), rand.nextInt(this.size));
+            algoXSolver algoX = new algoXSolver();
+            algoX.shuffleNodes(algoX.initializeNodes(size), size); 
             algoX.algoXManager(this);
             TerminalView before = new TerminalView(this);
             before.printBoard();
