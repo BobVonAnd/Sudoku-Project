@@ -86,6 +86,9 @@ import com.sudoku.view.TerminalView;
             for (int y = 0; y < this.size; y++) {
                 for (int x = 0; x < this.size; x++) {
                     changeField(x, y, integerBoard[y][x]);
+                    if(integerBoard[y][x]== 0){
+                        getSingleField(x, y).setLocked(false);
+                    }
                 }
             }
         }
@@ -108,65 +111,74 @@ import com.sudoku.view.TerminalView;
 
         public void populate() {
             this.clear();
-            for (int i = 0; i < this.bigFieldSize; i+=2) {
-                // Get choices
-                ArrayList<Integer> choices = new ArrayList<>(
-                        Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-                Collections.shuffle(choices);
-                int counter = 0;
-                // Insert Field
-                for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                    for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                        changeField(k, j, choices.get(counter));
-                        counter++;
-                    }
-                }
-            }
-            TerminalView before = new TerminalView(this);
-            before.printBoard();
-            algoX.algoXManager(this);
+            int fieldsToRemove = getFieldsToRemove(difficultyScale);
+            SudokuBoard sudokuBoard = algoX.algoXCreateUnique(this.size, fieldsToRemove);
+            int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+            this.readIntoBoard(integerBoard);
 
-        TerminalView solved = new TerminalView(this);
-        solved.printBoard();
-        System.out.println("Solved Sudoku (Before removal)^^");
-        ArrayList<Field> notRemoved = new ArrayList<>();
-        for (int i = 0 ; i < size ; i++) {
-            for (int j = 0 ; j < size ; j++) {
-                notRemoved.add(wholeBoard[i][j]);
-            }
-        }
-        int amountToRemove = getFieldsToRemove(this.difficultyScale);
-        Random rand = new Random();
-        int beforesize = notRemoved.size();
+
+
+
+        //     this.clear();
+        //     for (int i = 0; i < this.bigFieldSize; i+=2) {
+        //         // Get choices
+        //         ArrayList<Integer> choices = new ArrayList<>(
+        //                 Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+        //         Collections.shuffle(choices);
+        //         int counter = 0;
+        //         // Insert Field
+        //         for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
+        //             for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
+        //                 changeField(k, j, choices.get(counter));
+        //                 counter++;
+        //             }
+        //         }
+        //     }
+        //     TerminalView before = new TerminalView(this);
+        //     before.printBoard();
+        //     algoX.algoXManager(this);
+
+        // TerminalView solved = new TerminalView(this);
+        // solved.printBoard();
+        // System.out.println("Solved Sudoku (Before removal)^^");
+        // ArrayList<Field> notRemoved = new ArrayList<>();
+        // for (int i = 0 ; i < size ; i++) {
+        //     for (int j = 0 ; j < size ; j++) {
+        //         notRemoved.add(wholeBoard[i][j]);
+        //     }
+        // }
+        // int amountToRemove = getFieldsToRemove(this.difficultyScale);
+        // Random rand = new Random();
+        // int beforesize = notRemoved.size();
         
-        while (notRemoved.size() > beforesize-amountToRemove) {
-            Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
-            int x = f.getCoordinates()[0];
-            int y = f.getCoordinates()[1];
+        // while (notRemoved.size() > beforesize-amountToRemove) {
+        //     Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
+        //     int x = f.getCoordinates()[0];
+        //     int y = f.getCoordinates()[1];
 
-            // temp removal of field
-            int tempVal = wholeBoard[x][y].getValue();
-            wholeBoard[x][y].setValue(0);
+        //     // temp removal of field
+        //     int tempVal = wholeBoard[x][y].getValue();
+        //     wholeBoard[x][y].setValue(0);
             
             
 
-            boolean isUnique = algoX.algoXIsUnique(this);
-            if (!isUnique) {
-                wholeBoard[x][y].setValue(tempVal);
-            } else if (isUnique) {
-                notRemoved.remove(wholeBoard[x][y]);
-                wholeBoard[x][y].setLocked(false);
-                nrOfFieldsLeft += 1;
-                System.out.println(String.valueOf(beforesize-notRemoved.size()));
-            } else {
-                wholeBoard[x][y].setValue(tempVal);
-            }
+        //     boolean isUnique = algoX.algoXIsUnique(this);
+        //     if (!isUnique) {
+        //         wholeBoard[x][y].setValue(tempVal);
+        //     } else if (isUnique) {
+        //         notRemoved.remove(wholeBoard[x][y]);
+        //         wholeBoard[x][y].setLocked(false);
+        //         nrOfFieldsLeft += 1;
+        //         System.out.println(String.valueOf(beforesize-notRemoved.size()));
+        //     } else {
+        //         wholeBoard[x][y].setValue(tempVal);
+        //     }
 
-            }
-            System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
-            TerminalView after = new TerminalView(this);
-            after.printBoard();
-            System.out.println("Stopped initialising here");
+        //     }
+        //     System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
+        //     TerminalView after = new TerminalView(this);
+        //     after.printBoard();
+        //     System.out.println("Stopped initialising here");
         }
 
 
@@ -178,7 +190,7 @@ import com.sudoku.view.TerminalView;
                     return (int) (-7 * scale + 12); 
 
                 case 9:
-                    return (int) (-20 * scale + 56); 
+                    return (int) (-20 * scale + 59); 
 
                 case 16:
                     return (int) (-82 * scale + 160); 
