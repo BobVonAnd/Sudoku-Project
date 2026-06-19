@@ -250,7 +250,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             
     
             unique = algoUnique;
-            solveable = !algoUnique || algoUnique;
+            solveable = sudokuBoard.getAlgoX().getSolutionCounter() > 0;
     
         } else {
             unique = false;

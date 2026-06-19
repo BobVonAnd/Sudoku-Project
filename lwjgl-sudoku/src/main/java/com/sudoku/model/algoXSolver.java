@@ -47,6 +47,9 @@ public class algoXSolver {
         }
     }
 
+    public int getSolutionCounter() {
+        return solutionCounter;
+    }
 
     public ColumnNode initializeNodes(int size){
         int constraints = 4;
