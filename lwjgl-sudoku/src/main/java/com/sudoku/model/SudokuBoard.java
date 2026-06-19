@@ -33,6 +33,9 @@ import com.sudoku.view.TerminalView;
                 }
             }
         }
+        public void inputRemoved(){
+              nrOfFieldsLeft += 1;
+        }
 
         public void inputDetected(){
             nrOfFieldsLeft -= 1;

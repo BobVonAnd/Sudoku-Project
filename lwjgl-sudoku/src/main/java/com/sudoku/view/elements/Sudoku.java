@@ -15,6 +15,7 @@ import com.sudoku.view.fonts.CreateFont;
 
 public class Sudoku implements Element {
 
+    private Window wp;
     private SudokuBoard sudokuBoard;
     private int size, bigfield, width, height;
     private CreateString text;
@@ -31,6 +32,7 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
+        this.wp = window;
 
         // creates a shader and a class that can display strings
         text = new CreateString(fontShader, font, width, height);
@@ -70,6 +72,7 @@ public class Sudoku implements Element {
         this.sudokuBoard = sb;
         this.fontShader = fontShader;
         this.sudokuSize = sudokuSize;
+        this.wp = window;
 
         // creates a shader and a class that can display strings
         text = new CreateString(fontShader, font, width, height);
@@ -98,6 +101,16 @@ public class Sudoku implements Element {
             }
             x += fieldsizeX;
         }
+    }
+
+    public void clear(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                wp.removeElement(buttonArray[i][j]);
+            }
+        }
+        wp.removeElement(this);
+        
     }
 
     public FieldButton[][] getButtonArray() {
@@ -216,6 +229,15 @@ public class Sudoku implements Element {
             }
         }
     }
+
+    public void openAllLocks(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                sudokuBoard.getSingleField(i, j).setLocked(false);;
+            }
+        }
+    }
+
 
     private void isTouching(int x, int y) {
         System.out.println(x + "x  " + y + " y" + " bool " + buttonArray[x][y].isSelected());

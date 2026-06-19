@@ -31,6 +31,9 @@ public class algoXSolver {
         readNodesToBoard(sudokuBoard, solution);
     }
 
+    public int getSolutionCounter() {
+        return solutionCounter;
+    }
 
     public ColumnNode initializeNodes(int size){
         int constraints = 4;

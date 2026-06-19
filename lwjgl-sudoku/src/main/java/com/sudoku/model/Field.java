@@ -47,6 +47,7 @@ public class Field {
         return locked;
     }
 
+    
     public void addLegalEntry(int entry){
         this.legalEntries.add(entry);
     }

@@ -22,6 +22,7 @@ public class MenuButton implements Element {
     private CreateString text;
     private Shader fontShader;
     private boolean toggle;
+    private boolean valid = true;
 
     public MenuButton(double x, double y, double size, CreateString text, Shader fontShader, String textString) {   
         this.size = size;
@@ -33,6 +34,14 @@ public class MenuButton implements Element {
         this.text = text;
         this.textString = textString;
         this.fontShader = fontShader;
+    }
+
+    public void setValid(boolean isValid){
+        valid = isValid;
+    }
+
+    public boolean getValid(){
+        return valid;
     }
 
     public void setToggle(boolean isOn){
@@ -68,7 +77,11 @@ public class MenuButton implements Element {
 
         fontShader.detach();
         glBegin(GL_QUADS);
-        if(heldOver){
+        if (!valid){
+            glColor3d(1.0, 0.2941, 0.1020);
+            xOffset = 0;
+            yOffset = 0;
+        }else if(heldOver){
             glColor3d(0.0, 0.0, 0.8);
             xOffset = (Math.sin(currentTime * spd)) / 250 ;
             yOffset = ((Math.sin(currentTime * spd) + Math.cos(currentTime * spd))) / 250;
