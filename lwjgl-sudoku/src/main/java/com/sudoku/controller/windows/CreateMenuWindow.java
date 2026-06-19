@@ -158,7 +158,6 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     }
                 }
             }
-
         }
 
         // Sudoku board gamepad
@@ -198,7 +197,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         double mouseYt = -mouseY / (height / 2) + 1;
         if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
                 button.getPos()[0] + button.getSize() / 2 > mouseXt &
-
+                !gpad.isConnected() &&
                 button.getPos()[1] - button.getSize() / 2 < mouseYt &
                 button.getPos()[1] + button.getSize() / 2 > mouseYt) || gpad.isSelected(button)) {
             button.heldOver(true);
