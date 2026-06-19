@@ -57,9 +57,12 @@ public class SudokuBoard {
         for (int p = 0 ; p < tests ; p++) {
             this.clear();
             double startTime = System.nanoTime();
-            this.difficultyScale = difficultyScale;
-            algoXSolver algoX = new algoXSolver(); 
+            this.difficultyScale = difficultyScale; 
             int amountToRemove = getFieldsToRemove(this.difficultyScale);
+            Random rand = new Random(System.currentTimeMillis());
+            changeField(rand.nextInt(this.size), rand.nextInt(this.size), rand.nextInt(this.size));
+            algoXSolver algoX = new algoXSolver();
+            algoX.shuffleNodes(algoX.initializeNodes(size), size); 
             algoX.algoXManager(this);
             TerminalView before = new TerminalView(this);
             before.printBoard();
