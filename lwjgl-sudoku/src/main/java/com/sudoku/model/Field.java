@@ -11,6 +11,12 @@ public class Field {
     private ArrayList<Field> xEdges = new ArrayList<>();
     private double[] colour;
 
+    private boolean[] notesFields = new boolean[] {false, false, false, false, false, false, false, false, false};
+
+    //if value is correct then it can't be changed
+    private boolean locked = true;
+
+
     public Field(int x, int y, int value, int size, double[] colour){
 
         this.x = x;
@@ -23,6 +29,24 @@ public class Field {
             legalEntries.add(i);
         }
     }
+
+
+    public void setNote(int noteIndex, boolean isOn){
+        notesFields[noteIndex-1] = isOn;
+    }
+
+    public boolean[] getNote(){
+        return notesFields;
+    }
+
+    public void setLocked(boolean isLocked){
+        this.locked = isLocked;
+    }
+
+    public boolean getLocked(){
+        return locked;
+    }
+
     public void addLegalEntry(int entry){
         this.legalEntries.add(entry);
     }
