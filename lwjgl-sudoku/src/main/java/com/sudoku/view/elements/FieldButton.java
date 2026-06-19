@@ -112,6 +112,10 @@ public class FieldButton implements Element {
         this.notValid = notValid;
     }
 
+    public boolean getNotValid(){
+        return notValid;
+    }
+
     public void setUserGess(boolean isGess) {
         userGess = isGess;
     }

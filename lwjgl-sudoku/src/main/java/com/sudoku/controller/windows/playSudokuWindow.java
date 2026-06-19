@@ -441,6 +441,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             validateInput(selectedField);
 
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
+            
             windowTransition(returnButton, true);
             windowTransition(solveButton, true);
             windowTransition(hintButton, true);
