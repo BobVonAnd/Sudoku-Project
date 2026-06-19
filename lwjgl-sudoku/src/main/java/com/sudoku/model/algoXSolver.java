@@ -309,7 +309,7 @@ public class algoXSolver {
     }
     public ArrayList<Node> algoXCreateUnique(ColumnNode root, ArrayList<Node> solution){
     //If the matrix is empty, we have found a solution
-    Random rand = new Random();
+        Random rand = new Random();
         if (root.right == root ){
             return new ArrayList<>(solution);
         }
