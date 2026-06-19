@@ -335,17 +335,27 @@ import com.sudoku.view.TerminalView;
 
         }
 
-        public Field[][] getWholeBoard() {
-            return this.wholeBoard;
-        }
+    public Field[][] getWholeBoard() {
+        return this.wholeBoard;
+    }
 
-        public int getSize() {
-            return this.size;
+    
+    public SudokuBoard getCopy(){
+        ArrayList<Field> fields = this.getFields();
+        SudokuBoard copyBoard = new SudokuBoard(this.size);
+        for (Field field : fields){
+            Integer value = field.getValue();
+            if (value == 0){
+                continue;
+            }
+            int[] coords = field.getCoordinates();
+            copyBoard.getSingleField(coords[0], coords[1]).setValue(value);
         }
-
-        public int getSolutions() {
-            return this.solutions;
-        }
+        return copyBoard;
+    }
+    public int getSize() {
+        return this.size;
+    }
 
         public void setSolutions(int sol) {
             this.solutions = sol;
