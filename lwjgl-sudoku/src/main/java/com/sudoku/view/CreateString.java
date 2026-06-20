@@ -52,9 +52,8 @@ public class CreateString {
     public CreateString(Shader shader, CreateFont font, int width, int height){
         this.shader = shader;
         this.font = font;
-        WINDOWX = (float)width;
-        WINDOWY = (float)height;
         startaspect = WINDOWX/WINDOWY;
+        setXY(width, height);
         createBatch();
     }
 
