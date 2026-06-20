@@ -12,6 +12,7 @@ public class algoXSolver {
     long seed = System.currentTimeMillis();
     private Random random = new Random(seed);
     private Node[] rowHeads;
+    private int numberOfSolutions = 0;
 
     public void algoXManager(SudokuBoard sudokuBoard){
         //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
@@ -139,15 +140,14 @@ public class algoXSolver {
                 //We search for a solution one depth further in
                 ArrayList<Node> result = search(root, solution);
                 //As we are looking for one solution we exit if we have gotten a solution
+                for (Node j = firstNode.left; j != firstNode; j = j.left){
+                    uncover(j.column);
+                }
                 if (result != null) {
                     uncover(columnNode);
                     return result;
                 }
                 solution.remove(solution.size() - 1);
-                //We get ready to uncover the nodes that were covered
-                for (Node j = firstNode.left; j != firstNode; j = j.left){
-                    uncover(j.column);
-                }
                 //We go down to the next row
                 firstNode = firstNode.down;
             }
@@ -436,4 +436,57 @@ public class algoXSolver {
             sudokuBoard.changeField( i, j , value);
         }
     }   
+
+    public ArrayList<ArrayList<Node>> multipleSolutions(ColumnNode root, ArrayList<Node> solution, ArrayList<ArrayList<Node>> multSolutions, int maxSolutions){
+        //If the matrix is empty, we have found a solution
+        
+        if (root.right == root ){
+            multSolutions.add(new ArrayList<>(solution));
+            numberOfSolutions++;
+            if (multSolutions.size() >= maxSolutions){
+                return multSolutions;
+            }
+            return null;
+        }
+        else {
+            //Start with the column right of the root
+            ColumnNode columnNode = getBestColumnNode(root);
+            if (columnNode.size == 0){
+                return null;
+            }
+            //Cover the first column to start
+            cover(columnNode);
+            //Go down into the matrix
+            Node firstNode = columnNode.down;
+            //While the node we went into isn't the original node
+            while (firstNode != columnNode){
+                //We try to add the row to the solution
+                solution.add(firstNode);
+                Node rightNode = firstNode.right;
+                //We cover the entire row
+                while (rightNode != firstNode){
+                    cover(rightNode.column);
+                    rightNode = rightNode.right;
+                }
+                //We search for a solution one depth further in
+                ArrayList<ArrayList<Node>> result = multipleSolutions(root, solution, multSolutions, maxSolutions);
+                //As we are looking for one solution we exit if we have gotten a solution
+                for (Node j = firstNode.left; j != firstNode; j = j.left){
+                    uncover(j.column);
+                }
+                if (result != null) {
+                    uncover(columnNode);
+                    return result;
+                }
+                solution.remove(solution.size() - 1);
+                //We get ready to uncover the nodes that were covered
+                
+                //We go down to the next row
+                firstNode = firstNode.down;
+            }
+            uncover(columnNode);
+        }
+        return null;
+    }
+    public 
 }
