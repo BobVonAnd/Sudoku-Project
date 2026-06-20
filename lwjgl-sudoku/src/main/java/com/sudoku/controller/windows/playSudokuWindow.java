@@ -106,8 +106,10 @@ public class playSudokuWindow extends Window implements WindowInterface {
             addElement(hintButton, 0);
             gpad.addElement(hintButton, size + 2, 2);
 
-            noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
-            addElement(noteButton, 0);
+            if (size == 9){
+                noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
+                addElement(noteButton, 0);
+            }
 
             // numpad
             float aspect = 1280f / 720f;
@@ -137,8 +139,9 @@ public class playSudokuWindow extends Window implements WindowInterface {
         holdOver(returnButton);
         holdOver(solveButton);
         holdOver(hintButton);
-        holdOver(noteButton);
-
+        if (size == 9){
+            holdOver(noteButton);
+        }
         numPadHover();
 
         if (gpad.isConnected()) {
@@ -359,7 +362,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private void isNote(int value){
         Field f = sudokuBoard.getSingleField(selectedField[0], selectedField[1]);
         
-        if(noteButton.getToggle()){
+        if(size == 9 && noteButton.getToggle()){
             if(value > 0 && value <= sudokuBoard.getSize() && sudokuBoard.getSize() <= 9){
                 if(f.getNote()[value-1] == false){
                     f.setNote(value, true);
@@ -431,7 +434,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-            if(noteButton.isHeldOver()){
+            if(size == 9 && noteButton.isHeldOver()){
                 if(noteButton.getToggle()){
                     noteButton.setToggle(false);
                 }else{
