@@ -51,7 +51,7 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         double accumulatedTime = 0;
-        int tests = 100;
+        int tests = 1000;
         for (int l = 0 ; l < tests ; l++) {
             this.clear();
             double startTime = System.nanoTime();
