@@ -51,7 +51,7 @@ public class SudokuBoard {
 
     public void populate(double difficultyScale) {
         double accumulatedTime = 0;
-        int tests = 1000;
+        int tests = 100;
         for (int l = 0 ; l < tests ; l++) {
             this.clear();
             double startTime = System.nanoTime();
@@ -71,8 +71,13 @@ public class SudokuBoard {
             
             int removed = 0;
             int attempts = 0;
+            boolean retryWithNewBoard = false;
             
             while (removed < amountToRemove) {
+                if (attempts >= size * size * 10) {
+                    retryWithNewBoard = true;
+                    break;
+                }
                 attempts++;
                 int x = rand.nextInt(this.size);
                 int y = rand.nextInt(this.size);
@@ -95,6 +100,11 @@ public class SudokuBoard {
                     wholeBoard[x][y].setValue(tempVal);
                 }
 
+            }
+            if (retryWithNewBoard) {
+                System.out.println("Too many attempts (" + attempts + "), retrying with a new board...");
+                l--;
+                continue;
             }
             System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
             TerminalView after = new TerminalView(this);
