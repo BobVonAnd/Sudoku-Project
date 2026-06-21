@@ -527,7 +527,9 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
-        sudokuFront.resize(width, height);
+        if (textField.getValidity()){
+            sudokuFront.resize(width, height);
+        }
         text.setXY(width, height);
         System.out.println("New size: " + width + "x" + height);
     }
