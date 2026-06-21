@@ -49,10 +49,9 @@ public class Gamepad {
     private long aTimestamp = System.currentTimeMillis();
     private long aBuffer = 200; // in ms
     private boolean connected = false;
-    private double deadzone = 0.45;
+    private double deadzone = 0.4;
     private boolean entered = false;
     private boolean moveLocked = false;
-
     private boolean pressed = false;
 
     public boolean isSelected(Element e) {

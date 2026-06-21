@@ -106,7 +106,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             addElement(hintButton, 0);
             gpad.addElement(hintButton, size + 2, 2);
 
-            if (size == 9){
+            if (size == 9 && !gpad.isConnected()){
                 noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
                 addElement(noteButton, 0);
             }
@@ -136,6 +136,12 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void step() {
         // This code runs every frame
         gpad.step();
+        if (size == 9 && !gpad.isConnected() && !elementExists(noteButton)){
+            noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
+            addElement(noteButton, 0);
+        } else if (gpad.isConnected() && elementExists(noteButton)) {
+            removeElement(noteButton);
+        }
         holdOver(returnButton);
         holdOver(solveButton);
         holdOver(hintButton);
@@ -430,6 +436,23 @@ public class playSudokuWindow extends Window implements WindowInterface {
         text.setXY(width, height);
     }
 
+    private void giveHint() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                int current = sudokuBoard.getSingleField(i, j).getValue();
+                int solution = solvedSudokuBoard.getSingleField(i, j).getValue();
+                if (current != solution && !sudokuBoard.getSingleField(i, j).getLocked()) {
+                    selectedField[0] = i;
+                    selectedField[1] = j;
+                    sudokuBoard.changeField(i, j, solution);
+                    sudokuFront.getButtonArray()[i][j].selected(true);
+                    validateInput(selectedField);
+                    return; // one hint at a time
+                }
+            }
+        }
+    }
+
     @Override // If you don't need a mouse button callback, just delete this
     public void mouseButtonCallback(int button, int action, int mods) {
 
@@ -467,7 +490,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
                     } else if (b == solveButton) {
                         new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard, this);
                     } else if (b == hintButton) {
-                        new EndScreenWindow(wm, sudokuBoard, width, height, "win");
+                        giveHint();
                     }
                 }
             }

@@ -110,6 +110,8 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             // Add base elements to gamepad
             gpad.addElement(returnButton, 1, 0);
             gpad.addElement(textField, 2, 0);
+            gpad.addElement(playButton, 1, 1);
+            gpad.addElement(solveButton, 1, 2);
 
         }
 
@@ -127,9 +129,11 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
-
-        textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f),
-                (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
+        if (elementExists(textField)) {
+            textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f),
+            (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
+        }
+        
         textInfo.makeText("Solveable: " + String.valueOf(solveable) + "   Unique: " + String.valueOf(unique), -.9f,
                 -.9f, .3f, new float[] { 1.0f, 0.0f, 0.0f });
         textInfo.flush();
@@ -162,10 +166,17 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
         // Sudoku board gamepad
         if (gpad.isConnected()) {
+            boolean entered = gpad.isEntered();
+            windowTransition(returnButton, false, entered);
+            windowTransition(playButton, false, entered);
+            windowTransition(solveButton, false, entered);
             if (textField.getValidity() && sudokuCreated) {
-                boolean entered = gpad.isEntered();
                 FieldButton fieldButton;
-                if (!gpad.isSelected(returnButton) && !gpad.isSelected(textField) && !gpad.isSelected(numPad)) {
+                if (!gpad.isSelected(returnButton)
+                    && !gpad.isSelected(playButton)
+                    && !gpad.isSelected(solveButton)
+                    && !gpad.isSelected(textField)
+                    && !gpad.isSelected(numPad)) {
                     for (int i = 0; i < size; i++) {
                         for (int j = 0; j < size; j++) {
                             fieldButton = sudokuFront.getButtonArray()[i][j];
@@ -183,11 +194,15 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                         numpad_for_board = true;
                         gpad.addElement(numPad, 37, 0);
                         gpad.setPosition(37, 0);
+                        removeElement(textField);
+                        gpad.removeElement(textField);
                     }
                 }
 
             }
         }
+
+
 
     }
 
@@ -383,7 +398,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         if (canMove) {
             if (idx == 11) { // enter
                 gpad.removeElement(numPad);
-                gpad.setPosition(2, 0);
+                gpad.setPosition(2 + selectedField[0], 2 + selectedField[1]);
                 numpad_for_board = true;
                 gpad.setMoveLocked(false);
                 numpad_type_selected_before = true;
@@ -402,28 +417,30 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         int value = sudokuBoard.getSingleField(
                 selectedField[0],
                 selectedField[1]).getValue();
-
+    
         if (idx == 11) {
             gpad.removeElement(numPad);
             gpad.setMoveLocked(false);
-            gpad.setPosition(1 + selectedField[0], 1 + selectedField[1]);
+            gpad.setPosition(2 + selectedField[0], 2 + selectedField[1]);
+            updateBoardState(value);
             return;
         }
-
-        if (idx == 10) { // backspace
+    
+        if (idx == 10) {
             sudokuFront.setNotValidInputToFalse(selectedField);
             value /= 10;
-        } else if (idx == 9) { // 0
+        } else if (idx == 9) {
             value = value * 10;
-        } else { // 1–9
+        } else {
             value = value * 10 + (idx + 1);
         }
-
+    
         if (value > sudokuBoard.getSize()) {
             return;
         }
-
+    
         sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+        updateBoardState(value);
     }
 
     public void createSudoku() {
@@ -439,7 +456,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             boardButtons = sudokuFront.getButtonArray();
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    gpad.addElement(boardButtons[i][j], 1 + i, 1 + j);
+                    gpad.addElement(boardButtons[i][j], 2 + i, 2 + j);
                 }
             }
 
@@ -519,7 +536,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
-                action == GLFW_PRESS) {
+                action == GLFW_PRESS && !gpad.isConnected()) {
 
             if (sudokuCreated) {
 
@@ -613,11 +630,33 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
     }
 
-    public void windowTransition(MenuButton b, boolean mouseClick) {
-        if (mouseClick || gpad.isEntered()) {
+    public void windowTransition(MenuButton b, boolean mouseClick, boolean entered) {
+        if (mouseClick || entered) {
             if (b.isHeldOver() && elementExists(b)) {
                 if (b == returnButton) {
                     new mainMenuWindow(wm, width, height);
+    
+                } else if (b == playButton && solveable) {
+    
+                    for (int i = 0; i < size; i++) {
+                        for (int j = 0; j < size; j++) {
+                            if (sudokuBoard.getSingleField(i, j).getValue() == 0) {
+                                sudokuBoard.inputRemoved();
+                            } else {
+                                sudokuBoard.getSingleField(i, j).setLocked(true);
+                            }
+                        }
+                    }
+                    new playSudokuWindow(wm, width, height, sudokuBoard, true);
+    
+                } else if (b == solveButton && solveable) {
+    
+                    solvedSudokuBoard = new SudokuBoard(sudokuBoard.getSize());
+                    int[][] integerBoard = SudokuBoard.readOutOffBoard(sudokuBoard);
+                    solvedSudokuBoard.readIntoBoard(integerBoard);
+                    solvedSudokuBoard.solve();
+    
+                    new SolvedWindow(wm, width, height, sudokuBoard, solvedSudokuBoard, this);
                 }
             }
         }
