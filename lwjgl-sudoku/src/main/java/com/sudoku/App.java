@@ -17,13 +17,14 @@ public class App {
 		wm.run();
 		// algoXSolver xSolver = new algoXSolver();
 		// long startTime;
-		// SudokuBoard sudokuBoard;
-		// int attempts = 1000;
+		// int size = 36;
+		// SudokuBoard sudokuBoard = new SudokuBoard(size);
+		// int attempts = 10;
 		// double times = 0;
 		// for (int i = 0; i < attempts; i++){
 		// 	startTime = System.nanoTime();
 		// 	xSolver.newSeed();
-		// 	sudokuBoard = xSolver.algoXCreateUnique(4,12);
+		// 	sudokuBoard = xSolver.algoXCreateUnique(size,sudokuBoard.getFieldsToRemove(0.3));
 		// 	if (xSolver.algoXIsUnique(sudokuBoard)){
 		// 		System.out.println("I am unique");
 		// 	}
