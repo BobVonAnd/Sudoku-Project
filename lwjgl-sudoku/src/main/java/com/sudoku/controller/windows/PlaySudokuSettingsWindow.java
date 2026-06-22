@@ -19,7 +19,7 @@ import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.NumPadButton;
 import com.sudoku.view.elements.Slider;
 import com.sudoku.view.elements.TextFieldButton;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 public class PlaySudokuSettingsWindow extends Window implements WindowInterface {
     

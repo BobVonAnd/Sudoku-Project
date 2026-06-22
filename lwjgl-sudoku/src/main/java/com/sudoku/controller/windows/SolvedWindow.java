@@ -14,7 +14,7 @@ import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.Sudoku;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 public class SolvedWindow extends Window implements WindowInterface {
     

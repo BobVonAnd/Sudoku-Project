@@ -11,7 +11,7 @@ import com.sudoku.controller.WindowManager;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.elements.MenuButton;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 /// THIS IS PURELY FOR THE DEVELOPERS TO BE ABLE TO MAKE A WINDOW
 public class mainMenuWindow extends Window implements WindowInterface {

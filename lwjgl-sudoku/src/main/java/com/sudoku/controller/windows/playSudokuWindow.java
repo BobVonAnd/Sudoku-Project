@@ -26,7 +26,7 @@ import com.sudoku.view.elements.FieldButton;
 import com.sudoku.view.elements.MenuButton;
 import com.sudoku.view.elements.NumPadButton;
 import com.sudoku.view.elements.Sudoku;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 public class playSudokuWindow extends Window implements WindowInterface {
 
