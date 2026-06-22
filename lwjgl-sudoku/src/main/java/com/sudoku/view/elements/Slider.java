@@ -5,7 +5,8 @@ import com.sudoku.controller.windows.playSudokuWindow;
 import com.sudoku.model.Gamepad;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
+
 import org.lwjgl.glfw.GLFW;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;

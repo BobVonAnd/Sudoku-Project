@@ -55,7 +55,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.sudoku.view.Shader;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 public class WindowManager {
     private WindowInterface activeWindow;

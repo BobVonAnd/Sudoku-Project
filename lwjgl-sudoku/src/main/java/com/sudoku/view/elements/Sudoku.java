@@ -11,7 +11,7 @@ import com.sudoku.controller.Window;
 import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
-import com.sudoku.view.fonts.CreateFont;
+import com.sudoku.view.font.CreateFont;
 
 public class Sudoku implements Element {
 
