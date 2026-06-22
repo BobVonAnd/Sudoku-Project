@@ -466,6 +466,13 @@ public class playSudokuWindow extends Window implements WindowInterface {
             }
             validateInput(selectedField);
 
+            if (!gpad.isConnected()) {
+                int idx = numPad.getIndexSelec();
+            if (numPad.isSelected()[idx]) {
+                typeBoard(idx);
+            }
+        }
+
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
             
             windowTransition(returnButton, true);
@@ -473,12 +480,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             windowTransition(hintButton, true);
         }
 
-        if (!gpad.isConnected()) {
-            int idx = numPad.getIndexSelec();
-            if (numPad.isSelected()[idx]) {
-                typeBoard(idx);
-            }
-        }
+        
     }
 
     public void windowTransition(MenuButton b, boolean mouseClick) {
