@@ -173,28 +173,29 @@ public class playSudokuWindow extends Window implements WindowInterface {
             long now = System.currentTimeMillis();
             boolean entered = gpad.isEntered() && (now - a_buffer_timestamp >= a_buffer_max);
 
-            if (entered) {
-                a_buffer_timestamp = now;
-            }
-
             if (onBoard && !onMenu && !gpad.isSelected(numPad) && entered && wasOnBoardLastFrame) {
                 gpadNumpadIndex = 0;
                 gpad.addElement(numPad, 37, 0);
                 gpad.setPosition(37, 0);
+                a_buffer_timestamp = now;
             }
 
             if (gpad.isSelected(numPad) && entered) {
                 typeBoard(gpadNumpadIndex);
+                a_buffer_timestamp = now;
             }
 
             if (gpad.isSelected(returnButton) && entered) {
                 windowTransition(returnButton, false);
+                a_buffer_timestamp = now;
             }
             if (gpad.isSelected(solveButton) && entered) {
                 windowTransition(solveButton, false);
+                a_buffer_timestamp = now;
             }
             if (gpad.isSelected(hintButton) && entered) {
                 windowTransition(hintButton, false);
+                a_buffer_timestamp = now;
             }
 
             wasOnBoardLastFrame = onBoard && !gpad.isSelected(numPad);
@@ -281,30 +282,31 @@ public class playSudokuWindow extends Window implements WindowInterface {
         int value = sudokuBoard.getSingleField(
                 selectedField[0],
                 selectedField[1]).getValue();
+        if (System.currentTimeMillis() - a_buffer_timestamp > a_buffer_max) {
+            if (idx == 11) {
+                gpad.removeElement(numPad);
+                gpad.setMoveLocked(false);
+                wasOnBoardLastFrame = false;
+                gpad.setPosition(1 + selectedField[0], 1 + selectedField[1]);
+                return;
+            }
 
-        if (idx == 11) {
-            gpad.removeElement(numPad);
-            gpad.setMoveLocked(false);
-            wasOnBoardLastFrame = false;
-            gpad.setPosition(1 + selectedField[0], 1 + selectedField[1]);
-            return;
+            if (idx == 10) { // backspace
+                sudokuFront.setNotValidInputToFalse(selectedField);
+                value /= 10;
+            } else if (idx == 9) { // 0
+                value = value * 10;
+            } else { // 1–9
+                value = value * 10 + (idx + 1);
+            }
+
+            if (value > sudokuBoard.getSize()) {
+                return;
+            }
+
+            sudokuBoard.changeField(selectedField[0], selectedField[1], value);
+            validateInput(selectedField);
         }
-
-        if (idx == 10) { // backspace
-            sudokuFront.setNotValidInputToFalse(selectedField);
-            value /= 10;
-        } else if (idx == 9) { // 0
-            value = value * 10;
-        } else { // 1–9
-            value = value * 10 + (idx + 1);
-        }
-
-        if (value > sudokuBoard.getSize()) {
-            return;
-        }
-
-        sudokuBoard.changeField(selectedField[0], selectedField[1], value);
-        validateInput(selectedField);
     }
 
     @Override // If you don't need a key callback, just delete this
