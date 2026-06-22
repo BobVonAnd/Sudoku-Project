@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
+
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
