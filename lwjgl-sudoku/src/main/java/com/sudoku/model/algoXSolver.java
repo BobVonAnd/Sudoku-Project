@@ -358,6 +358,7 @@ public class algoXSolver {
                 //java.util.Collections.shuffle(solution, random);
                 java.util.Collections.rotate(solution, 1);
             }
+            
         }
         readNodesToBoard(sudokuBoard, solution);
         return sudokuBoard;
@@ -488,5 +489,13 @@ public class algoXSolver {
         }
         return null;
     }
-    public 
+    // public ArrayList<Node> nodeIntersection(ArrayList<ArrayList<Node>> multipleSolutions){
+    //     ArrayList<Node> intersection = new ArrayList<>();
+    //     for (ArrayList<Node> solution : multipleSolutions){
+    //         for (Node solNode : solution){
+    //             if (intersection.con)
+    //         }
+    //     }
+    //     return intersection;
+    // }
 }
