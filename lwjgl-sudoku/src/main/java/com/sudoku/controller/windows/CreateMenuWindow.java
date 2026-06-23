@@ -3,6 +3,8 @@ package com.sudoku.controller.windows;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_9;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
@@ -476,9 +478,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 errorDetected = false;
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
 
-                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9 && action == GLFW_PRESS) {
+                if ((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_9)) {
 
-                    value = value * 10 + (key - 48);
+                    if (key <= 57){
+                        value = value * 10 + (key - GLFW_KEY_0);
+                    } else {
+                        value = value * 10 + (key - GLFW_KEY_KP_0);
+                    }
                     if (!(value <= size)) {
                         value = value / 10;
                         errorDetected = true;
@@ -487,7 +493,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     // updateBoardState(value);
                     System.out.println(String.valueOf(value) + " pressed!");
 
-                } else if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
+                } else if (key == GLFW_KEY_BACKSPACE) {
 
                     value = value / 10;
                     if (!(value <= size)) {
@@ -503,8 +509,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             }
             // creation of sudoku
             if (textField.isSelected()) {
-                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
-                    char c = (char) ('0' + (key - GLFW_KEY_0));
+                if ((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_9)) {
+                    char c;
+                    if (key <= 57){
+                        c = (char) ('0' + (key - GLFW_KEY_0));
+                    } else {
+                        c = (char) ('0' + (key - GLFW_KEY_KP_0));
+                    }
                     textField.updateInput(c);
                     clearSelectField();
                 } else if (key == GLFW_KEY_BACKSPACE) {

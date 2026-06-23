@@ -1,18 +1,6 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_2;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_3;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_4;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_5;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_6;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_7;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_8;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -106,7 +94,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             addElement(hintButton, 0);
             gpad.addElement(hintButton, size + 2, 2);
 
-            if (size == 9 && !gpad.isConnected()){
+            if (size <= 9 && !gpad.isConnected()){
                 noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
                 addElement(noteButton, 0);
             }
@@ -136,7 +124,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void step() {
         // This code runs every frame
         gpad.step();
-        if (size == 9 && !gpad.isConnected() && !elementExists(noteButton)){
+        if (size <= 9 && !gpad.isConnected() && !elementExists(noteButton)){
             noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
             addElement(noteButton, 0);
         } else if (gpad.isConnected() && elementExists(noteButton)) {
@@ -145,7 +133,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         holdOver(returnButton);
         holdOver(solveButton);
         holdOver(hintButton);
-        if (size == 9){
+        if (size <= 9){
             holdOver(noteButton);
         }
         numPadHover();
@@ -314,43 +302,43 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
         int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
         if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected()) {
-            if (value > 0 && key == GLFW_KEY_0 && action == GLFW_PRESS) {
+            if (value > 0 && (key == GLFW_KEY_0 || key == GLFW_KEY_KP_0) && action == GLFW_PRESS) {
                 value = value * 10 + 0;
                 isNote(value);
                 System.out.println("0 pressed!");
-            } else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_1 || key == GLFW_KEY_KP_1) && action == GLFW_PRESS) {
                 value = value * 10 + 1;
                 isNote(value);
                 System.out.println("1 pressed!");
-            } else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_2 || key == GLFW_KEY_KP_2) && action == GLFW_PRESS) {
                 value = value * 10 + 2;
                 isNote(value);
                 System.out.println("2 pressed!");
-            } else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_3 || key == GLFW_KEY_KP_3) && action == GLFW_PRESS) {
                 value = value * 10 + 3;
                 isNote(value);
                 System.out.println("3 pressed!");
-            } else if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_4 || key == GLFW_KEY_KP_4) && action == GLFW_PRESS) {
                 value = value * 10 + 4;
                 isNote(value);
                 System.out.println("4 pressed!");
-            } else if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_5 || key == GLFW_KEY_KP_5) && action == GLFW_PRESS) {
                 value = value * 10 + 5;
                 isNote(value);
                 System.out.println("5 pressed!");
-            } else if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_6 || key == GLFW_KEY_KP_6) && action == GLFW_PRESS) {
                 value = value * 10 + 6;
                 isNote(value);
                 System.out.println("6 pressed!");
-            } else if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_7 || key == GLFW_KEY_KP_7) && action == GLFW_PRESS) {
                 value = value * 10 + 7;
                 isNote(value);
                 System.out.println("7 pressed!");
-            } else if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_8 || key == GLFW_KEY_KP_8) && action == GLFW_PRESS) {
                 value = value * 10 + 8;
                 isNote(value);
                 System.out.println("8 pressed!");
-            } else if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
+            } else if ((key == GLFW_KEY_9 || key == GLFW_KEY_KP_9) && action == GLFW_PRESS) {
                 value = value * 10 + 9;
                 isNote(value);
                 System.out.println("9 pressed!");
@@ -370,7 +358,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     private void isNote(int value){
         Field f = sudokuBoard.getSingleField(selectedField[0], selectedField[1]);
         
-        if(size == 9 && noteButton.getToggle()){
+        if(size <= 9 && noteButton.getToggle()){
             if(value > 0 && value <= sudokuBoard.getSize() && sudokuBoard.getSize() <= 9){
                 if(f.getNote()[value-1] == false){
                     f.setNote(value, true);
@@ -459,7 +447,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-            if(size == 9 && noteButton.isHeldOver()){
+            if(size <= 9 && noteButton.isHeldOver()){
                 if(noteButton.getToggle()){
                     noteButton.setToggle(false);
                 }else{

@@ -2,6 +2,8 @@ package com.sudoku.controller.windows;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_9;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
@@ -272,8 +274,14 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
         if (action == GLFW_PRESS) {
             if (textField.isSelected()) {
-                if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
-                char c = (char) ('0' + (key - GLFW_KEY_0));
+                if ((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_9)) {
+                    char c;
+                    if (key <= 57){
+                        c = (char) ('0' + (key - GLFW_KEY_0));
+                    } else {
+                        c = (char) ('0' + (key - GLFW_KEY_KP_0));
+                    }
+                    
                 textField.updateInput(c);
                 }
                 else if(key == GLFW_KEY_BACKSPACE){
