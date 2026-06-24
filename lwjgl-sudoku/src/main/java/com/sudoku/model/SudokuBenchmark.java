@@ -87,7 +87,7 @@ public class SudokuBenchmark {
             double elapsedMs = (end - start) / 1_000_000.0;
             timesMs.add(elapsedMs);
 
-            int attemptsThisRun = sumAttempts(xSolver.attempts);
+            int attemptsThisRun = xSolver.attempts.size();
             xSolver.attempts = new ArrayList<>();
             attemptsPerRun.add(attemptsThisRun);
         }

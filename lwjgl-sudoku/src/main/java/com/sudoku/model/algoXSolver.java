@@ -329,7 +329,7 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution,random);
         while (removed < fieldsToRemove){
-            if ((size == 9 && !recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54) )){
+            if ((size == 9 && !recursiveAttempt)){
                 // System.out.println("Trying recursion at " + solution.size() + " givens");
                 recursiveAttempt = true;                
 
