@@ -12,7 +12,9 @@ public class algoXSolver {
     long seed = System.currentTimeMillis();
     private Random random = new Random(seed);
     private Node[] rowHeads;
-    private int numberOfSolutions = 0;
+    private int recursiveChecks;
+    private static final int MAX_RECURSIVE_CHECKS = 500;
+    public ArrayList<Integer> attempts = new ArrayList<>();
 
     public void algoXManager(SudokuBoard sudokuBoard){
         //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
@@ -20,7 +22,7 @@ public class algoXSolver {
         solution = new ArrayList<>();
         root = initializeNodes(size);
         //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
-        readCluesIntoRoot(sudokuBoard, solution);
+        ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
 
         //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
@@ -30,6 +32,7 @@ public class algoXSolver {
         System.out.println("The algo itself took "+ duration + "ms");
         //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
         readNodesToBoard(sudokuBoard, solution);
+        uncoverCluesInRoot(coveredClues);
     }
 
     public int getSolutionCounter() {
@@ -200,7 +203,7 @@ public class algoXSolver {
         node.right.left = node;
     }
 
-    public Node findRowInSolution(int i, int j, int n){
+    public Node findRowInSolution(ColumnNode root ,int i, int j, int n){
         //Start with the column right of the root
         ColumnNode columnNode = (ColumnNode) root.right;
         while (columnNode != root){
@@ -245,6 +248,9 @@ public class algoXSolver {
         else {
             //Start with the column right of the root
             ColumnNode columnNode = getBestColumnNode(root);
+            if (columnNode.size == 0){
+                return;
+            }
             //Cover the first column to start
             cover(columnNode);
             //Go down into the matrix
@@ -267,7 +273,8 @@ public class algoXSolver {
                 }
                 solution.remove(solution.size() - 1);
                 if (solutionCounter > 1){
-                    break;
+                    uncover(columnNode);
+                    return;
                 }
                 //We go down to the next row and continue looking for multiple solutions
                 firstNode = firstNode.down;
@@ -280,24 +287,17 @@ public class algoXSolver {
         solution = new ArrayList<>();
         int size = sudokuBoard.getSize();
         root = initializeNodes(size);
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                int value = sudokuBoard.getSingleField(i,j).getValue();
-                if (value != 0 ){
-                    int n = value - 1;
-                    Node node = findRowInSolution(i, j, n);
-                    solution.add(node);
-
-                    //Now covering the node so the solver is more efficient and so the solver actually solves the sudoku given
-                    Node tempNode = node;
-                    do {
-                        cover(tempNode.column);
-                        tempNode = tempNode.right;
-                    } while (tempNode != node);
-                }
-            }
-        }
+        ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
         algoXUniqueTest(root, solution);
+        uncoverCluesInRoot(coveredClues);
+        return solutionCounter == 1;
+    }
+
+    public boolean hasUniqueSolution(ColumnNode root, ArrayList<Node> clues){
+        solutionCounter = 0;
+        ArrayList<Node> coveredClues = coverCluesInRoot(root, clues);
+        algoXUniqueTest(root, clues);
+        uncoverCluesInRoot(coveredClues);
         return solutionCounter == 1;
     }
 
@@ -316,11 +316,11 @@ public class algoXSolver {
         return algoXCreateUnique(size, fieldsToRemove);
     }
 
-    public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove){
+    public SudokuBoard algoXCreateUniqueRecursive(int size, int fieldsToRemove){
         int removed = 0;
         int counter = 0;
         int totalcounter = 0;
-        int bestAttempt = 0;
+        boolean recursiveAttempt = false;
 
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         solution = new ArrayList<>();
@@ -329,27 +329,46 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution,random);
         while (removed < fieldsToRemove){
-            if (counter > size*size*3){
-                if (bestAttempt < removed){ bestAttempt = removed;}
+            if ((size == 9 && !recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54) )){
+                // System.out.println("Trying recursion at " + solution.size() + " givens");
+                recursiveAttempt = true;                
+
+                ArrayList<Node> clues = new ArrayList<>(solution);
+                ArrayList<Node> candidates = new ArrayList<>(solution);
+
+                boolean success = removeRecursive(root, clues, candidates, fieldsToRemove-removed);
+
+                if (success){
+                    System.out.println("Recursion worked");
+                    readNodesToBoard(sudokuBoard, clues);
+                    attempts.add(removed);
+                    return sudokuBoard;
+                }
+            }
+            if (counter > size*size*3 || recursiveAttempt){
                 totalcounter++;
-                System.out.println("Trying new sudoku number " + totalcounter + " best attempt is " + bestAttempt);
+                System.out.println("Trying new sudoku number " + totalcounter + " current attempt is " + removed);
                 solution = new ArrayList<>();
                 root = initializeNodes(size);
                 shuffleNodes(root, size);
                 search(root, solution);
                 java.util.Collections.shuffle(solution,random);
+                attempts.add(removed);
                 removed = 0;
                 counter = 0;
+                recursiveChecks = 0;
+                recursiveAttempt = false;
                 continue;
             }
             counter ++;
             solutionCounter = 0;
             Node candidate = solution.get(solution.size()-1);
             solution.remove(solution.size()-1);
-
-            root = initializeNodes(size);
-            coverCluesInRoot(root, solution);
-            algoXUniqueTest(root, solution);
+            // root = initializeNodes(size);
+            ArrayList<Node> coveredNodes = coverCluesInRoot(root, solution);
+            ArrayList<Node> tempSolution = new ArrayList<>(solution);
+            algoXUniqueTest(root, tempSolution);
+            uncoverCluesInRoot(coveredNodes);
             if (solutionCounter == 1){
                 removed++;
             }
@@ -360,9 +379,112 @@ public class algoXSolver {
             }
             
         }
+        attempts.add(removed);
         readNodesToBoard(sudokuBoard, solution);
         return sudokuBoard;
     }
+
+    public SudokuBoard algoXCreateUnique(int size, int fieldsToRemove){
+        int removed = 0;
+        int counter = 0;
+        int totalcounter = 0;
+        boolean recursiveAttempt = false;
+
+        SudokuBoard sudokuBoard = new SudokuBoard(size);
+        solution = new ArrayList<>();
+        root = initializeNodes(size);
+        shuffleNodes(root, size);
+        search(root, solution);
+        java.util.Collections.shuffle(solution,random);
+        while (removed < fieldsToRemove){
+            // if (size == 9 && fieldsToRemove >= 59 && removed >= fieldsToRemove-6 && !recursiveAttempt){
+            //     System.out.println("Trying recursion at " + solution.size() + " givens");
+            //     recursiveAttempt = true;                
+
+            //     ArrayList<Node> clues = new ArrayList<>(solution);
+            //     ArrayList<Node> candidates = new ArrayList<>(solution);
+
+            //     java.util.Collections.shuffle(candidates, random);
+
+            //     boolean success = removeRecursive(root, clues, candidates, fieldsToRemove-removed);
+
+            //     if (success){
+            //         System.out.println("Recursion worked");
+            //         readNodesToBoard(sudokuBoard, clues);
+            //         return sudokuBoard;
+            //     }
+            // }
+            if (counter > size*size*3 || recursiveAttempt){
+                totalcounter++;
+                attempts.add(removed);
+                System.out.println("Trying new sudoku number " + totalcounter + " this attempt was " + removed);
+                solution = new ArrayList<>();
+                root = initializeNodes(size);
+                shuffleNodes(root, size);
+                search(root, solution);
+                java.util.Collections.shuffle(solution,random);
+                removed = 0;
+                counter = 0;
+                recursiveChecks = 0;
+                recursiveAttempt = false;
+                continue;
+            }
+            counter ++;
+            solutionCounter = 0;
+            Node candidate = solution.get(solution.size()-1);
+            solution.remove(solution.size()-1);
+            // root = initializeNodes(size);
+            ArrayList<Node> coveredNodes = coverCluesInRoot(root, solution);
+            ArrayList<Node> tempSolution = new ArrayList<>(solution);
+            algoXUniqueTest(root, tempSolution);
+            uncoverCluesInRoot(coveredNodes);
+            if (solutionCounter == 1){
+                removed++;
+            }
+            else {
+                solution.add(candidate);
+                //java.util.Collections.shuffle(solution, random);
+                java.util.Collections.rotate(solution, 1);
+            }
+            
+        }
+        attempts.add(removed);
+        readNodesToBoard(sudokuBoard, solution);
+        return sudokuBoard;
+    }
+
+
+    public boolean removeRecursive(ColumnNode root, ArrayList<Node> clues, ArrayList<Node> candidates, int fieldLeftToRemove){
+        if (fieldLeftToRemove == 0){
+            return true;
+        }
+        if (candidates.isEmpty()) {
+            return false;
+        }
+        if (recursiveChecks >= MAX_RECURSIVE_CHECKS){
+            return false;
+        }
+        ArrayList<Node> shuffledCandidates = new ArrayList<>(candidates);
+        java.util.Collections.shuffle(shuffledCandidates, random);
+
+        for (Node candidate : shuffledCandidates) {
+            recursiveChecks++;
+            clues.remove(candidate);
+
+            if (hasUniqueSolution(root, clues)){
+                ArrayList<Node> otherCandidates = new ArrayList<>(candidates);
+                otherCandidates.remove(candidate);
+
+                if (removeRecursive(root, clues, otherCandidates, fieldLeftToRemove-1)){
+                    return true;
+                }
+            }
+            clues.add(candidate);
+        }
+        return false;
+    }
+
+
     public void shuffleNodes(ColumnNode root, int size){
         Node[][] rowNodes = new Node[size * size * size][4];
 
@@ -393,13 +515,26 @@ public class algoXSolver {
 
         return node;
     }
-    public void coverCluesInRoot(ColumnNode root, ArrayList<Node> clues){
+    public ArrayList<Node> coverCluesInRoot(ColumnNode root, ArrayList<Node> clues) {
+        ArrayList<Node> coveredNodes = new ArrayList<>();
+
         for (Node clue : clues) {
             Node node = findRowInSolution(
+                root,
                 clue.getRow(),
                 clue.getCol(),
                 clue.getNum()
             );
+
+            if (node == null) {
+                throw new IllegalArgumentException(
+                    "No row found for clue: row=" + clue.getRow()
+                    + ", col=" + clue.getCol()
+                    + ", num=" + clue.getNum()
+                );
+            }
+
+            coveredNodes.add(node);
 
             cover(node.column);
 
@@ -407,28 +542,21 @@ public class algoXSolver {
                 cover(temp.column);
             }
         }
-    }
-    public void readCluesIntoRoot(SudokuBoard sudokuBoard, ArrayList<Node> clues){
-        int size = sudokuBoard.getSize();
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                int value = sudokuBoard.getSingleField(i,j).getValue();
-                if (value != 0 ){
-                    int n = value - 1;
-                    Node node = findRowInSolution(i, j, n);
-                    clues.add(node);
 
-                    //Now covering the node so the solver is more efficient and so the solver actually solves the sudoku given
-                    Node tempNode = node;
-                    do {
-                        cover(tempNode.column);
-                        tempNode = tempNode.right;
-                    } while (tempNode != node);
-                }
+        return coveredNodes;
+    }
+   public void uncoverCluesInRoot(ArrayList<Node> coveredNodes) {
+        for (int i = coveredNodes.size() - 1; i >= 0; i--) {
+            Node node = coveredNodes.get(i);
+
+            for (Node temp = node.left; temp != node; temp = temp.left) {
+                uncover(temp.column);
             }
+
+            uncover(node.column);
         }
     }
-    public void readNodesToBoard(SudokuBoard sudokuBoard,ArrayList<Node> solution){
+    public void readNodesToBoard(SudokuBoard sudokuBoard, ArrayList<Node> solution){
         for (Node n : solution){
             int i = n.getRow();
             int j = n.getCol();
@@ -438,64 +566,4 @@ public class algoXSolver {
         }
     }   
 
-    public ArrayList<ArrayList<Node>> multipleSolutions(ColumnNode root, ArrayList<Node> solution, ArrayList<ArrayList<Node>> multSolutions, int maxSolutions){
-        //If the matrix is empty, we have found a solution
-        
-        if (root.right == root ){
-            multSolutions.add(new ArrayList<>(solution));
-            numberOfSolutions++;
-            if (multSolutions.size() >= maxSolutions){
-                return multSolutions;
-            }
-            return null;
-        }
-        else {
-            //Start with the column right of the root
-            ColumnNode columnNode = getBestColumnNode(root);
-            if (columnNode.size == 0){
-                return null;
-            }
-            //Cover the first column to start
-            cover(columnNode);
-            //Go down into the matrix
-            Node firstNode = columnNode.down;
-            //While the node we went into isn't the original node
-            while (firstNode != columnNode){
-                //We try to add the row to the solution
-                solution.add(firstNode);
-                Node rightNode = firstNode.right;
-                //We cover the entire row
-                while (rightNode != firstNode){
-                    cover(rightNode.column);
-                    rightNode = rightNode.right;
-                }
-                //We search for a solution one depth further in
-                ArrayList<ArrayList<Node>> result = multipleSolutions(root, solution, multSolutions, maxSolutions);
-                //As we are looking for one solution we exit if we have gotten a solution
-                for (Node j = firstNode.left; j != firstNode; j = j.left){
-                    uncover(j.column);
-                }
-                if (result != null) {
-                    uncover(columnNode);
-                    return result;
-                }
-                solution.remove(solution.size() - 1);
-                //We get ready to uncover the nodes that were covered
-                
-                //We go down to the next row
-                firstNode = firstNode.down;
-            }
-            uncover(columnNode);
-        }
-        return null;
-    }
-    // public ArrayList<Node> nodeIntersection(ArrayList<ArrayList<Node>> multipleSolutions){
-    //     ArrayList<Node> intersection = new ArrayList<>();
-    //     for (ArrayList<Node> solution : multipleSolutions){
-    //         for (Node solNode : solution){
-    //             if (intersection.con)
-    //         }
-    //     }
-    //     return intersection;
-    // }
 }

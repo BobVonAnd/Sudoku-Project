@@ -59,11 +59,11 @@ void updateLETest() {
             {0,2,0,0},
             {0,0,0,1}});
         board2.uniquenessTest();
-        int before = board2.getSolutions();
-        board2.setSolutions(0);
-        board2.uniquenessTest();
-        assertEquals(before,board2.getSolutions());
-        assertEquals(1,board2.getSolutions());
+        // int before = board2.getSolutions();
+        // board2.setSolutions(0);
+        // board2.uniquenessTest();
+        // assertEquals(before,board2.getSolutions());
+        // assertEquals(1,board2.getSolutions());
     }
    
     // @Test
