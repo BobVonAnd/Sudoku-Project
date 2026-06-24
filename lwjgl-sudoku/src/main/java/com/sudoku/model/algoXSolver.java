@@ -20,9 +20,9 @@ public class algoXSolver {
         int size = sudokuBoard.getSize();
         solution = new ArrayList<>();
         root = initializeNodes(size);
+        solution = readSudokuBoardToNodes(root, sudokuBoard, solution);
         //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
         ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
-
         //We start the solving of the sudoku using the search method. 
         long startTime = System.nanoTime();
         solution = search(root, solution);
@@ -445,6 +445,24 @@ public class algoXSolver {
 
         return node;
     }
+    public ArrayList<Node> readSudokuBoardToNodes(ColumnNode root, SudokuBoard sudokuBoard, ArrayList<Node> clues){
+        Field[][] wholeBoard = sudokuBoard.getWholeBoard();
+        for (Field[] row : wholeBoard){
+            for (Field f : row){
+                if (f.getValue() != 0){
+                    int rowCoord = f.getCoordinates()[0];
+                    int columnCoord = f.getCoordinates()[1];
+                    int value = f.getValue()-1;
+                    Node node = findRowInSolution(root, rowCoord, columnCoord, value);
+                    if (node != null){
+                        clues.add(node);
+                    }
+                }
+            }
+        }
+        return clues;
+    }
+
     public ArrayList<Node> coverCluesInRoot(ColumnNode root, ArrayList<Node> clues) {
         ArrayList<Node> coveredNodes = new ArrayList<>();
 

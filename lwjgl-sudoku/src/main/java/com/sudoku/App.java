@@ -17,7 +17,7 @@ public class App {
 		wm.run();
 		// algoXSolver xSolver = new algoXSolver();
 		// long startTime;
-		// int size = 36;
+		// int size = 9;
 		// SudokuBoard sudokuBoard = new SudokuBoard(size);
 		// int attempts = 10;
 		// double times = 0;
@@ -32,10 +32,12 @@ public class App {
 		// 	double totalTime = (endTime-startTime)/1000000;
 		// 	System.out.println("It took: " + totalTime + "ms");
 		// 	times += totalTime;
-		// 	// sudokuBoard.populate(1);
-		// 	// sudokuBoard.solve();
+		// 	SudokuBoard sudokuBoard2 = sudokuBoard.getCopy();
+		// 	xSolver.algoXManager(sudokuBoard);
 		// 	TerminalView terminalView = new TerminalView(sudokuBoard);
 		// 	terminalView.printBoard();
+		// 	TerminalView terminalView2 = new TerminalView(sudokuBoard2);
+		// 	terminalView2.printBoard();
 		// }
 		// System.out.println("It took: " + times + "ms and " + times/attempts + "ms per attempt");
 		 
