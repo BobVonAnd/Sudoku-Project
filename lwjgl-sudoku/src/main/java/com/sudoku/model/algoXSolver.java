@@ -328,7 +328,10 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution,random);
         while (removed < fieldsToRemove){
-            if ((!recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54) )){
+            if ((!recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54 && size == 9) || (fieldsToRemove > 150 && removed > 150 && size == 16) 
+            || (fieldsToRemove > 290 && removed > 290 && size == 25 )
+            || (fieldsToRemove > 530 && removed > 530 && size == 36)
+            )){
                 recursiveAttempt = true;                
 
                 ArrayList<Node> clues = new ArrayList<>(solution);
