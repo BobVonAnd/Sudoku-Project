@@ -36,16 +36,16 @@ public class SudokuBenchmark {
 
         List<BenchmarkResult> results = new ArrayList<>();
 
-        // for (int size : sizes) {
-        //     for (int fieldsToRemove : fieldsToRemoveValues) {
-        //         results.add(runBenchmark(size, fieldsToRemove, runsPerTest, false));
-        //     }
-        // }
         for (int size : sizes) {
             for (int fieldsToRemove : fieldsToRemoveValues) {
-                results.add(runBenchmark(size, fieldsToRemove, runsPerTest, true));
+                results.add(runBenchmark(size, fieldsToRemove, runsPerTest, false));
             }
         }
+        // for (int size : sizes) {
+        //     for (int fieldsToRemove : fieldsToRemoveValues) {
+        //         results.add(runBenchmark(size, fieldsToRemove, runsPerTest, true));
+        //     }
+        // }
 
         System.out.println("===== RESULTS =====");
         for (BenchmarkResult result : results) {
