@@ -193,7 +193,7 @@ import com.sudoku.view.TerminalView;
                     return (int) (-20 * scale + 61); 
 
                 case 16:
-                    return (int) (-82 * scale + 160); 
+                    return (int) (-82 * scale + 165); 
 
                 case 25:
                     return (int) (-93 * scale + 311);
