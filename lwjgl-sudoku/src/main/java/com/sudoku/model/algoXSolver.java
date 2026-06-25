@@ -333,7 +333,7 @@ public class algoXSolver {
         while (removed < fieldsToRemove){
             if ((!recursiveAttempt) && ( (fieldsToRemove > 56 && removed > 56 && size == 9) || (fieldsToRemove > 150 && removed > 150 && size == 16) 
             || (fieldsToRemove > 290 && removed > 290 && size == 25 )
-            || (fieldsToRemove > 530 && removed > 530 && size == 36)
+            || (fieldsToRemove > 380 && removed > 380 && size == 36)
             )){
                 recursiveAttempt = true;                
 

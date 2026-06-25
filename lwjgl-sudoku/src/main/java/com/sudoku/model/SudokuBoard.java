@@ -185,16 +185,16 @@
                     return (int) (-7 * scale + 12); 
 
                 case 9:
-                    return (int) (-20 * scale + 61); 
+                    return (int) (-20 * scale + 60); 
 
                 case 16:
-                    return (int) (-82 * scale + 165); 
+                    return (int) (-82 * scale + 163); 
 
                 case 25:
                     return (int) (-93 * scale + 311);
 
                 case 36:
-                    return (int) (-135 * scale + 580);
+                    return (int) (-135 * scale + 400);
 
                 default:
                     double fraction = 0.65 - 0.3 * scale;
