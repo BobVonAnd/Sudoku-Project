@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
-
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
@@ -134,21 +133,6 @@ public class CreateFont {
         int x = 0;
         int y = (int)(fm.getHeight());
 
-        //all chars
-        // for(int i = 0; i < font.getNumGlyphs(); i++){
-        //     if(font.canDisplay(i)){
-        //         CharInfo charInfo = new CharInfo(x,y,fm.charWidth(i),fm.getHeight());
-        //         charMap.put(i, charInfo);
-        //         width = Math.max(fm.charWidth(i) + x, width);
-        //         x += charInfo.width;
-        //         if(x > estimatedWidth){
-        //             x = 0;
-        //             y += fm.getHeight();
-        //             height += fm.getHeight();
-        //         }
-        //     }
-        // }
-
         //specifec chars
         for(char i : atlas){
             if(font.canDisplay(i)){ 
@@ -175,14 +159,6 @@ public class CreateFont {
 
         g2d.setColor(Color.WHITE);
 
-        //all chars
-        // for(int i = 0; i < font.getNumGlyphs(); i++){
-        //     if(font.canDisplay(i)){
-        //         CharInfo info = charMap.get(i);
-        //         info.calTextureCoord(width, height);
-        //         g2d.drawString("" + (char)i, info.x, info.y);
-        //     }
-        // }
 
         //specific chars
         for(char i : atlas){
@@ -196,12 +172,12 @@ public class CreateFont {
 
 
         //Will create a picture of the bitmap. Use for Test
-        try{
-            File file = new File("tmp.png");
-            ImageIO.write(image, "png", file);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        // try{
+        //     File file = new File("tmp.png");
+        //     ImageIO.write(image, "png", file);
+        // }catch (IOException e){
+        //     e.printStackTrace();
+        // }
 
         uploadTexture(image);
     }
