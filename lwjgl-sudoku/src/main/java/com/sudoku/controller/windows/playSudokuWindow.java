@@ -1,6 +1,28 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_2;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_3;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_4;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_5;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_6;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_7;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_8;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_0;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_1;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_2;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_3;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_4;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_5;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_6;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_7;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_8;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_9;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 import com.sudoku.controller.Window;
 import com.sudoku.controller.WindowInterface;
@@ -382,11 +404,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     public void validateInput(int[] selectedField) {
         // detecter if (0,0) was selected since selectedField get set at (0,0) at default
-        if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected()) {
 
+        if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected() && sudokuBoard.getSingleField(selectedField[0],selectedField[1]).getValue() != 0) {
+            System.out.println("hej burf");
             // detects if the input matches the solution
             boolean validInput = sudokuBoard.getSingleField(selectedField[0], selectedField[1])
                     .getValue() == solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
+
+                    //out: bool validInput - xy - xy val - solve val
+            // System.out.println("b " + validInput + " xy " + selectedField[0] + " " +selectedField[1] + " v " + sudokuBoard.getSingleField(selectedField[0], selectedField[1])
+            //         .getValue() + " vv "+ solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue());
 
             sudokuFront.setNotValidInput(validInput, selectedField);
             sudokuBoard.getSingleField(selectedField[0], selectedField[1]).setLocked(validInput);
@@ -454,14 +481,16 @@ public class playSudokuWindow extends Window implements WindowInterface {
                     noteButton.setToggle(true);
                 }
             }
+
+           
             validateInput(selectedField);
 
-            if (!gpad.isConnected()) {
-                int idx = numPad.getIndexSelec();
-            if (numPad.isSelected()[idx]) {
-                typeBoard(idx);
+                if (!gpad.isConnected()) {
+                    int idx = numPad.getIndexSelec();
+                if (numPad.isSelected()[idx]) {
+                    typeBoard(idx);
+                }
             }
-        }
 
             selectedField = sudokuFront.leftClick(mouseX, mouseY);
             
