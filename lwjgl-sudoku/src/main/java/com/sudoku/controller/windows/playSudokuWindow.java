@@ -474,6 +474,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+
             if(size <= 9 && noteButton.isHeldOver()){
                 if(noteButton.getToggle()){
                     noteButton.setToggle(false);

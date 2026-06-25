@@ -1,12 +1,6 @@
     package com.sudoku.model;
 
     import java.util.ArrayList;
-    import java.util.Arrays;
-    import java.util.Collections;
-    import java.util.Random;
-    import java.util.stream.IntStream;
-
-import com.sudoku.view.TerminalView;
 
     public class SudokuBoard {
 
@@ -88,6 +82,7 @@ import com.sudoku.view.TerminalView;
                     changeField(x, y, integerBoard[y][x]);
                     if(integerBoard[y][x]== 0){
                         getSingleField(x, y).setLocked(false);
+                        nrOfFieldsLeft += 1;
                     }
                 }
             }
