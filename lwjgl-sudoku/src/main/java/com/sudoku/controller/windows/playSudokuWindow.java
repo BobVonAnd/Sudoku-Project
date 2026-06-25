@@ -406,7 +406,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         // detecter if (0,0) was selected since selectedField get set at (0,0) at default
 
         if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected() && sudokuBoard.getSingleField(selectedField[0],selectedField[1]).getValue() != 0) {
-            System.out.println("hej burf");
+
             // detects if the input matches the solution
             boolean validInput = sudokuBoard.getSingleField(selectedField[0], selectedField[1])
                     .getValue() == solvedSudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
