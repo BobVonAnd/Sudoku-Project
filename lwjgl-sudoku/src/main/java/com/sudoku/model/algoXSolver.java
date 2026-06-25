@@ -320,6 +320,9 @@ public class algoXSolver {
         int counter = 0;
         int totalcounter = 0;
         boolean recursiveAttempt = false;
+        int bestAttempt = 0;
+        double startTime = System.nanoTime();
+        double timetobest = 0;
 
         SudokuBoard sudokuBoard = new SudokuBoard(size);
         solution = new ArrayList<>();
@@ -328,7 +331,10 @@ public class algoXSolver {
         search(root, solution);
         java.util.Collections.shuffle(solution,random);
         while (removed < fieldsToRemove){
-            if ((!recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54) )){
+            if ((!recursiveAttempt) && ( (fieldsToRemove > 54 && removed > 54 && size == 9) || (fieldsToRemove > 150 && removed > 150 && size == 16) 
+            || (fieldsToRemove > 290 && removed > 290 && size == 25 )
+            || (fieldsToRemove > 530 && removed > 530 && size == 36)
+            )){
                 recursiveAttempt = true;                
 
                 ArrayList<Node> clues = new ArrayList<>(solution);
@@ -343,8 +349,9 @@ public class algoXSolver {
                 }
             }
             if (counter > size*size*3 || recursiveAttempt){
+                if (bestAttempt < removed){ bestAttempt = removed; timetobest = (System.nanoTime()-startTime)/1000000;}
                 totalcounter++;
-                System.out.println("Trying new sudoku number " + totalcounter + " current attempt is " + removed);
+                
                 solution = new ArrayList<>();
                 root = initializeNodes(size);
 
