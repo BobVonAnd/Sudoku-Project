@@ -1,15 +1,13 @@
 package com.sudoku;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.sudoku.model.Field;
 import com.sudoku.model.SudokuBoard;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeEach;
 
 public class SudokuBoardTest {
     private SudokuBoard board;
@@ -98,5 +96,16 @@ void updateLETest() {
         Field[][] boardFields = board.getWholeBoard();
         assertEquals(boardSize, boardFields.length);
         assertEquals(boardSize, boardFields[0].length);
+    }
+
+    @Test
+    void nrOfFieldsLeftTest(){
+        double scale = 0.5;
+        SudokuBoard sb = new SudokuBoard(4);
+        assertTrue(sb.getNrOfFieldsLeft() == 0);
+        sb.populate(scale);
+        assertTrue(sb.getNrOfFieldsLeft() == (int) (-7 * scale + 12));
+
+
     }
 }
