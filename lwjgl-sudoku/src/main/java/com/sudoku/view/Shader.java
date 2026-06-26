@@ -47,6 +47,7 @@ public class Shader {
     private String fragmentSource;
     private String filepath;
 
+    //splits the shader up in vertex and fragment shader
     public Shader(String filepath) {
         this.filepath = filepath;
         try {
@@ -94,6 +95,7 @@ public class Shader {
         compile();
     }
 
+    //complies the shader
     public void compile() {
         // ============================================================
         // Compile and link shaders
@@ -146,6 +148,7 @@ public class Shader {
         }
     }
 
+    //use the shader 
     public void use() {
         if (!beingUsed) {
             // Bind shader program
@@ -154,11 +157,13 @@ public class Shader {
         }
     }
 
+    //don't use the shader
     public void detach() {
         glUseProgram(0);
         beingUsed = false;
     }
 
+    //uploads Values to the shader
     public void uploadMat4f(String varName, Matrix4f mat4) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
