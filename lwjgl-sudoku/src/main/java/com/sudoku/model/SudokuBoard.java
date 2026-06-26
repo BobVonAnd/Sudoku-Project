@@ -21,7 +21,7 @@ import com.sudoku.view.TerminalView;
 
         private int nrOfFieldsLeft = 0;
 
-        private int solutions; // for generating the sudoku
+        private int solutions = 0; // for generating the sudoku
 
         public SudokuBoard(int size) {
             wholeBoard = new Field[size][size];
