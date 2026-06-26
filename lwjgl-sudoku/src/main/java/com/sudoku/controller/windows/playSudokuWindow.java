@@ -71,8 +71,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
     private boolean classIsCreated = false;
 
-    
-
+    //window were you play the sudoku
     public playSudokuWindow(WindowManager wm, int width, int height, SudokuBoard sb, boolean copy) {
         super(wm);
         this.wm = wm;
@@ -89,7 +88,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
     }
 
    
-
+        //adding all the elements that are needed in the window to the elements
     public void create() {
         // This code runs once
         if (!classIsCreated) {
@@ -98,12 +97,12 @@ public class playSudokuWindow extends Window implements WindowInterface {
             // creates a shader and a class that can display strings
             fontShader = wm.getFontShader();
             text = new CreateString(fontShader, font, width, height);
-
+                //adds the sudoku
             sudokuFront = new Sudoku(width, height, 1.6, 0, 0, sudokuBoard, font, fontShader, this);
             addElement(sudokuFront, 0);
             size = sudokuBoard.getSize();
 
-            // return to last window
+            // adds the buttons
             returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
             addElement(returnButton, 0);
             gpad.addElement(returnButton, 0, 0);
@@ -125,7 +124,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             float aspect = 1280f / 720f;
             numPad = new NumPadButton(0.525f, 0.2f, 0.1f, 0.1f * aspect, text, fontShader);
             addElement(numPad, 0);
-
+                //adding controller support
             boardButtons = sudokuFront.getButtonArray();
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -140,11 +139,10 @@ public class playSudokuWindow extends Window implements WindowInterface {
             solvedSudokuBoard.solve();
 
         }
-
     }
-
+        // deals with elements that can change per frame mostly to highlight elements when hovering over it
+        // either with mouse or controller
     public void step() {
-        // This code runs every frame
         gpad.step();
         if (size <= 9 && !gpad.isConnected() && !elementExists(noteButton)){
             noteButton = new MenuButton(-0.7, 0.50, 0.2, text, fontShader, "Notes");
@@ -228,7 +226,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             button.heldOver(false);
         }
     }
-
+        //highlights number in numpad if hovering over
     private void numPadHover() {
         float xNP = numPad.getX();
         float yNP = numPad.getY();
@@ -287,7 +285,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             gpad_selected_before = true;
         }
     }
-
+        //
     private void typeBoard(int idx) {
         int value = sudokuBoard.getSingleField(
                 selectedField[0],
@@ -319,7 +317,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
     }
 
-    @Override // If you don't need a key callback, just delete this
+    @Override // checks if a number gets selected and enters it into a field
     public void keyCallback(int key, int scancode, int action, int mods) {
 
         int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
@@ -376,7 +374,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             }
         }
     }
-
+        //handles notes
     private void isNote(int value){
         Field f = sudokuBoard.getSingleField(selectedField[0], selectedField[1]);
         
@@ -401,7 +399,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
         
     }
-
+        // checks if a entered field is correct and pushes to endscreen if no more empty fields
     public void validateInput(int[] selectedField) {
         // detecter if (0,0) was selected since selectedField get set at (0,0) at default
 
@@ -428,7 +426,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
 
     }
-
+        //this pushes to endscreen
     private void lastValidation() {
         boolean isComplete = false;
         for (int i = 0; i < sudokuBoard.getSize(); i++) {
@@ -445,14 +443,14 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
     }
 
-    @Override // If you don't need a resize callback, just delete this
+    @Override //resizes text and sudoku if the aspect ratio changes
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
         sudokuFront.resize(width, height);
         text.setXY(width, height);
     }
-
+        // gives hint when hint button is pressed
     private void giveHint() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -470,7 +468,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
     }
 
-    @Override // If you don't need a mouse button callback, just delete this
+    @Override // handles mouse clicks
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -502,7 +500,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
 
         
     }
-
+        //handles changes of screen
     public void windowTransition(MenuButton b, boolean mouseClick) {
         if (elementExists(b)) {
             if ((mouseClick && !gpad.isConnected()) || gpad.isConnected()) {
@@ -519,7 +517,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
         }
     }
 
-    @Override
+    @Override 
     public void cursorPosCallback(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
