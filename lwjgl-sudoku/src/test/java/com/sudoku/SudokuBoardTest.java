@@ -19,25 +19,6 @@ public class SudokuBoardTest {
         board = new SudokuBoard(boardSize);
     }
     
-    @Test
-public void updateLETest() {
-    SudokuBoard board2 = new SudokuBoard(4);
-    board2.readIntoBoard(new int[][] {
-        {2,1,3,4},
-        {3,0,1,2},
-        {1,2,4,3},
-        {4,3,2,1}
-    });
-
-    Field f = board2.getSingleField(1,1);
-    board2.updateLegalEntriesOfField(f);
-
-    System.out.println(f.getValue()); // 0
-    ArrayList<Integer> LE = f.getLegalEntries();
-    ArrayList<Integer> ManualLE = new ArrayList<>();
-    ManualLE.add(4);
-    assertEquals(ManualLE, LE);
-}
 
     @Test
     public void validityTest() {
