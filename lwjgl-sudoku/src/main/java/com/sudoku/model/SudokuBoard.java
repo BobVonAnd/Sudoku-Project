@@ -125,19 +125,8 @@ import com.sudoku.view.TerminalView;
 
         public void populatebasepop(int amountToRemove){
             this.clear();
-            for (int i = 0; i < this.bigFieldSize; i += 2) {
-                // Get choices
-            ArrayList<Integer> choices = new ArrayList<>(Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-            Collections.shuffle(choices);
-            int counter = 0;
-                //Insert Field
-            for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                    changeField(k, j, choices.get(counter));
-                    counter++;
-                    }
-                }
-            }
+            Random rand = new Random(System.currentTimeMillis());
+            changeField(rand.nextInt(this.size), rand.nextInt(this.size), rand.nextInt(this.size));
             algoX.algoXManager(this);
             ArrayList<Field> notRemoved = new ArrayList<>();
             for (int i = 0 ; i < size ; i++) {
@@ -145,10 +134,6 @@ import com.sudoku.view.TerminalView;
                     notRemoved.add(wholeBoard[i][j]);
                 }
             }
-            System.out.println(String.valueOf(amountToRemove));
-            Random rand = new Random();
-            int beforesize = notRemoved.size();
-        
             while (notRemoved.size() > 0 && nrOfFieldsLeft < amountToRemove) {
                 Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
                 int x = f.getCoordinates()[0];
