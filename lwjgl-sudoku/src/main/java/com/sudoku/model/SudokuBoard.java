@@ -151,7 +151,7 @@ import com.sudoku.view.TerminalView;
                     notRemoved.add(wholeBoard[i][j]);
                 }
             }
-            
+            System.out.println(String.valueOf(amountToRemove));
             Random rand = new Random();
             int beforesize = notRemoved.size();
         
@@ -163,7 +163,6 @@ import com.sudoku.view.TerminalView;
                 int tempVal = wholeBoard[x][y].getValue();
                 wholeBoard[x][y].setValue(0);
                 notRemoved.remove(wholeBoard[x][y]);
-            
 
                 boolean isUnique = algoX.algoXIsUnique(this);
                 if (!isUnique) {
@@ -172,7 +171,7 @@ import com.sudoku.view.TerminalView;
                 } else if (isUnique) {
                     wholeBoard[x][y].setLocked(false);
                     nrOfFieldsLeft += 1;
-                    System.out.println(String.valueOf(beforesize-notRemoved.size()));
+                    System.out.println(String.valueOf(nrOfFieldsLeft));
                 } else {
                     wholeBoard[x][y].setValue(tempVal);
                 }   
@@ -183,11 +182,12 @@ import com.sudoku.view.TerminalView;
         public void populatebase(){
             int amountToRemove = getFieldsToRemove(this.difficultyScale);
             int attemps = 1;
-            //while (nrOfFieldsLeft < amountToRemove){
-                System.out.println("trying again " +attemps);
+            this.clear();
+            while (nrOfFieldsLeft < amountToRemove){
+                System.out.println("trying again " + attemps);
                 populatebasepop(amountToRemove);
                 attemps++;
-            //}
+            }
             System.out.println("Removing " + Integer.toString(nrOfFieldsLeft) + " fields.");
             TerminalView after = new TerminalView(this);
             after.printBoard();
