@@ -21,7 +21,7 @@ import com.sudoku.view.TerminalView;
 
         private int nrOfFieldsLeft = 0;
 
-        private int solutions; // for generating the sudoku
+        private int solutions = 0; // for generating the sudoku
 
         public SudokuBoard(int size) {
             wholeBoard = new Field[size][size];
@@ -131,36 +131,15 @@ import com.sudoku.view.TerminalView;
 
         public void populatebasepop(int amountToRemove){
             this.clear();
-            for (int i = 0; i < this.bigFieldSize; i += 2) {
-                // Get choices
-            ArrayList<Integer> choices = new ArrayList<>(Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-            Collections.shuffle(choices);
-            int counter = 0;
-                //Insert Field
-            for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-                for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-                    changeField(k, j, choices.get(counter));
-                    counter++;
-                    }
-                }
-            }
-            //TerminalView before = new TerminalView(this);
-            //before.printBoard();
+            Random rand = new Random(System.currentTimeMillis());
+            changeField(rand.nextInt(this.size), rand.nextInt(this.size), rand.nextInt(this.size));
             algoX.algoXManager(this);
-
-            //TerminalView solved = new TerminalView(this);
-            //solved.printBoard();
-            //System.out.println("Solved Sudoku (Before removal)^^");
             ArrayList<Field> notRemoved = new ArrayList<>();
             for (int i = 0 ; i < size ; i++) {
                 for (int j = 0 ; j < size ; j++) {
                     notRemoved.add(wholeBoard[i][j]);
                 }
             }
-            System.out.println(String.valueOf(amountToRemove));
-            Random rand = new Random();
-            int beforesize = notRemoved.size();
-        
             while (notRemoved.size() > 0 && nrOfFieldsLeft < amountToRemove) {
                 Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
                 int x = f.getCoordinates()[0];
@@ -169,12 +148,9 @@ import com.sudoku.view.TerminalView;
                 int tempVal = wholeBoard[x][y].getValue();
                 wholeBoard[x][y].setValue(0);
                 notRemoved.remove(wholeBoard[x][y]);
-
-                boolean isUnique = algoX.algoXIsUnique(this);
-                if (!isUnique) {
-                    wholeBoard[x][y].setValue(tempVal);
-                    
-                } else if (isUnique) {
+                this.solutions = 0;
+                uniquenessTest();
+                if (this.solutions == 1) {
                     wholeBoard[x][y].setLocked(false);
                     nrOfFieldsLeft += 1;
                     System.out.println(String.valueOf(nrOfFieldsLeft));
@@ -262,7 +238,7 @@ import com.sudoku.view.TerminalView;
 
     public Boolean uniquenessTest() {
         if (this.solutions > 1) {
-            return false;
+            return true;
         }
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
@@ -280,95 +256,95 @@ import com.sudoku.view.TerminalView;
         }
         this.solutions++;
         return false;
+    }   
+
+    public String getDifficultyString() {
+        int amountToRemove = getFieldsToRemove(this.difficultyScale);
+        if (amountToRemove >= getFieldsToRemove(0.25)) {
+            return "Impossible";
+        } else if (amountToRemove >= getFieldsToRemove(0.5)) {
+            return "Hard";
+        } else if (amountToRemove >= getFieldsToRemove(0.75)) {
+            return "Medium";
+        } else {
+            return "Easy";
+        }
     }
 
-        public String getDifficultyString() {
-            int amountToRemove = getFieldsToRemove(this.difficultyScale);
-            if (amountToRemove >= getFieldsToRemove(0.25)) {
-                return "Impossible";
-            } else if (amountToRemove >= getFieldsToRemove(0.5)) {
-                return "Hard";
-            } else if (amountToRemove >= getFieldsToRemove(0.75)) {
-                return "Medium";
-            } else {
-                return "Easy";
-            }
+    public void changeField(int x, int y, int value) {
+        // changes a value of a field and therefore updates other legal entries
+        Field field = wholeBoard[x][y];
+        field.setValue(value);
+        if (value != 0) {
+            field.clearLe();
         }
+        field.removeValueFromLegalEntriesOfNeighbours();
+        //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
+    }
 
-        public void changeField(int x, int y, int value) {
-            // changes a value of a field and therefore updates other legal entries
-            Field field = wholeBoard[x][y];
-            field.setValue(value);
-            if (value != 0) {
-                field.clearLe();
+    public void updateLegalEntriesOfField(Field field) {
+        int x_coordinate = field.getCoordinates()[0];
+        int y_coordinate = field.getCoordinates()[1];
+
+        int cornerX = x_coordinate - field.getPosition()[0];
+        int cornerY = y_coordinate - field.getPosition()[1];
+
+        for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
+            if (field != fields) {
+                field.removeLE(fields.getValue());
             }
-            field.removeValueFromLegalEntriesOfNeighbours();
-            //System.out.println("Inserted " + value + " at (" + x + "," + y + ")");
+
         }
-
-        public void updateLegalEntriesOfField(Field field) {
-            int x_coordinate = field.getCoordinates()[0];
-            int y_coordinate = field.getCoordinates()[1];
-
-            int cornerX = x_coordinate - field.getPosition()[0];
-            int cornerY = y_coordinate - field.getPosition()[1];
-
-            for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
-                if (field != fields) {
-                    field.removeLE(fields.getValue());
-                }
-
-            }
-            for (int i = 0; i < this.size; i++) {
-                if (field != wholeBoard[i][y_coordinate]) {
-                    field.removeLE(wholeBoard[i][y_coordinate].getValue());
-                }
-
-            }
-
-            for (int j = 0; j < this.bigFieldSize; j++) {
-                for (int k = 0; k < this.bigFieldSize; k++) {
-                    Field f = wholeBoard[cornerX + j][cornerY + k];
-                    if (field != f) {
-                        field.removeLE(f.getValue());
-                    }
-                }
+        for (int i = 0; i < this.size; i++) {
+            if (field != wholeBoard[i][y_coordinate]) {
+                field.removeLE(wholeBoard[i][y_coordinate].getValue());
             }
 
         }
 
-        public void makeEdges(Field field) {
-            int x_coordinate = field.getCoordinates()[0];
-            int y_coordinate = field.getCoordinates()[1];
-
-            int cornerX = x_coordinate - field.getPosition()[0];
-            int cornerY = y_coordinate - field.getPosition()[1];
-
-            for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
-                if (fields.getValue() == 0 && field != fields && field.notcontainsEdge(fields)) {
-                    field.addEdge(fields);
+        for (int j = 0; j < this.bigFieldSize; j++) {
+            for (int k = 0; k < this.bigFieldSize; k++) {
+                Field f = wholeBoard[cornerX + j][cornerY + k];
+                if (field != f) {
+                    field.removeLE(f.getValue());
                 }
-
             }
-            for (int i = 0; i < this.size; i++) {
-                if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate]
-                        && field.notcontainsEdge(wholeBoard[i][y_coordinate])) {
-                    field.addEdge(wholeBoard[i][y_coordinate]);
-                }
+        }
 
-            }
+    }
 
-            for (int j = 0; j < this.bigFieldSize; j++) {
-                for (int k = 0; k < this.bigFieldSize; k++) {
-                    Field f = wholeBoard[cornerX + j][cornerY + k];
-                    if (f.getValue() == 0 && field.notcontainsEdge(f)) {
-                        field.addEdge(f);
-                    }
+    public void makeEdges(Field field) {
+        int x_coordinate = field.getCoordinates()[0];
+        int y_coordinate = field.getCoordinates()[1];
 
-                }
+        int cornerX = x_coordinate - field.getPosition()[0];
+        int cornerY = y_coordinate - field.getPosition()[1];
+
+        for (Field fields : wholeBoard[x_coordinate]) {// Removes legal entry from itself rn
+            if (fields.getValue() == 0 && field != fields && field.notcontainsEdge(fields)) {
+                field.addEdge(fields);
             }
 
         }
+        for (int i = 0; i < this.size; i++) {
+            if (wholeBoard[i][y_coordinate].getValue() == 0 && field != wholeBoard[i][y_coordinate]
+                    && field.notcontainsEdge(wholeBoard[i][y_coordinate])) {
+                field.addEdge(wholeBoard[i][y_coordinate]);
+            }
+
+        }
+
+        for (int j = 0; j < this.bigFieldSize; j++) {
+            for (int k = 0; k < this.bigFieldSize; k++) {
+                Field f = wholeBoard[cornerX + j][cornerY + k];
+                if (f.getValue() == 0 && field.notcontainsEdge(f)) {
+                    field.addEdge(f);
+                }
+
+            }
+        }
+
+    }
 
     public Field[][] getWholeBoard() {
         return this.wholeBoard;
