@@ -14,6 +14,7 @@ public class algoXSolver {
     private Node[] rowHeads;
     private int recursiveChecks;
     private static final int MAX_RECURSIVE_CHECKS = 500;
+    public boolean isInvalid = false;
 
     public void algoXManager(SudokuBoard sudokuBoard){
         //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
@@ -24,11 +25,7 @@ public class algoXSolver {
         //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
         ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
         //We start the solving of the sudoku using the search method. 
-        long startTime = System.nanoTime();
         solution = search(root, solution);
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000;
-        System.out.println("The algo itself took "+ duration + "ms");
         //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
         readNodesToBoard(sudokuBoard, solution);
         uncoverCluesInRoot(coveredClues);
@@ -282,10 +279,20 @@ public class algoXSolver {
         }
     }
     public boolean algoXIsUnique(SudokuBoard sudokuBoard){
+        isInvalid = false;
         solutionCounter = 0;
         solution = new ArrayList<>();
         int size = sudokuBoard.getSize();
         root = initializeNodes(size);
+        solution = readSudokuBoardToNodes(root, sudokuBoard, solution);
+        try {
+            ArrayList<Node> coveredNodes = coverCluesInRoot(root, solution);
+            uncoverCluesInRoot(coveredNodes);
+        } catch (Exception E){
+            isInvalid = true;
+            solutionCounter = 0;
+            return false;
+        }
         ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
         algoXUniqueTest(root, solution);
         uncoverCluesInRoot(coveredClues);
@@ -461,9 +468,9 @@ public class algoXSolver {
                     int columnCoord = f.getCoordinates()[1];
                     int value = f.getValue()-1;
                     Node node = findRowInSolution(root, rowCoord, columnCoord, value);
-                    if (node != null){
-                        clues.add(node);
-                    }
+                    
+                    clues.add(node);   
+                    
                 }
             }
         }
@@ -472,7 +479,6 @@ public class algoXSolver {
 
     public ArrayList<Node> coverCluesInRoot(ColumnNode root, ArrayList<Node> clues) {
         ArrayList<Node> coveredNodes = new ArrayList<>();
-
         for (Node clue : clues) {
             Node node = findRowInSolution(
                 root,
@@ -480,25 +486,26 @@ public class algoXSolver {
                 clue.getCol(),
                 clue.getNum()
             );
+                coveredNodes.add(node);
 
-            if (node == null) {
-                throw new IllegalArgumentException(
-                    "No row found for clue: row=" + clue.getRow()
-                    + ", col=" + clue.getCol()
-                    + ", num=" + clue.getNum()
-                );
-            }
+                cover(node.column);
 
-            coveredNodes.add(node);
-
-            cover(node.column);
-
-            for (Node temp = node.right; temp != node; temp = temp.right) {
-                cover(temp.column);
-            }
+                for (Node temp = node.right; temp != node; temp = temp.right) {
+                    cover(temp.column);
+                }
+            
         }
 
         return coveredNodes;
+    }
+    public boolean isValidNode(ColumnNode root, Node node){
+        int size = 1;
+        Node rightNode = node.right;
+        while (rightNode != node){
+            size++;
+            rightNode = rightNode.right;
+        }
+        return size == 4;
     }
    public void uncoverCluesInRoot(ArrayList<Node> coveredNodes) {
         for (int i = coveredNodes.size() - 1; i >= 0; i--) {
@@ -512,13 +519,21 @@ public class algoXSolver {
         }
     }
     public void readNodesToBoard(SudokuBoard sudokuBoard, ArrayList<Node> solution){
-        for (Node n : solution){
-            int i = n.getRow();
-            int j = n.getCol();
-            int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
-            //Then we update the sudokuboards field
-            sudokuBoard.changeField( i, j , value);
+        if (solution == null){
         }
-    }   
+        else {
+            for (Node n : solution){
+                int i = n.getRow();
+                int j = n.getCol();
+                int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
+                //Then we update the sudokuboards field
+                sudokuBoard.changeField( i, j , value);
+            }
+        }
+    }  
+    
+    public boolean getIsInvalid(){
+        return this.isInvalid;
+    }
 
 }
