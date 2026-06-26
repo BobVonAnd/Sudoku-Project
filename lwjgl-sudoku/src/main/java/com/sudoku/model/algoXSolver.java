@@ -24,11 +24,7 @@ public class algoXSolver {
         //Then we loop through the sudoku board and get the values that are already present on the board. These we add to the solution
         ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
         //We start the solving of the sudoku using the search method. 
-        long startTime = System.nanoTime();
         solution = search(root, solution);
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000;
-        System.out.println("The algo itself took "+ duration + "ms");
         //Each node of the solution has the coordinates of it's corresponding field and the value attached. 
         readNodesToBoard(sudokuBoard, solution);
         uncoverCluesInRoot(coveredClues);
@@ -480,15 +476,6 @@ public class algoXSolver {
                 clue.getCol(),
                 clue.getNum()
             );
-
-            if (node == null) {
-                throw new IllegalArgumentException(
-                    "No row found for clue: row=" + clue.getRow()
-                    + ", col=" + clue.getCol()
-                    + ", num=" + clue.getNum()
-                );
-            }
-
             coveredNodes.add(node);
 
             cover(node.column);
@@ -512,12 +499,16 @@ public class algoXSolver {
         }
     }
     public void readNodesToBoard(SudokuBoard sudokuBoard, ArrayList<Node> solution){
-        for (Node n : solution){
-            int i = n.getRow();
-            int j = n.getCol();
-            int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
-            //Then we update the sudokuboards field
-            sudokuBoard.changeField( i, j , value);
+        if (solution == null){
+        }
+        else {
+            for (Node n : solution){
+                int i = n.getRow();
+                int j = n.getCol();
+                int value = n.getNum() + 1; //We add one to the value as the int n is 0 indexed
+                //Then we update the sudokuboards field
+                sudokuBoard.changeField( i, j , value);
+            }
         }
     }   
 
