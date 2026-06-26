@@ -14,6 +14,7 @@ public class algoXSolver {
     private Node[] rowHeads;
     private int recursiveChecks;
     private static final int MAX_RECURSIVE_CHECKS = 500;
+    public boolean isInvalid = false;
 
     public void algoXManager(SudokuBoard sudokuBoard){
         //We initialize the size of the board and the solution arraylist and the nodes based on the size of the sudoku
@@ -278,10 +279,20 @@ public class algoXSolver {
         }
     }
     public boolean algoXIsUnique(SudokuBoard sudokuBoard){
+        isInvalid = false;
         solutionCounter = 0;
         solution = new ArrayList<>();
         int size = sudokuBoard.getSize();
         root = initializeNodes(size);
+        solution = readSudokuBoardToNodes(root, sudokuBoard, solution);
+        try {
+            ArrayList<Node> coveredNodes = coverCluesInRoot(root, solution);
+            uncoverCluesInRoot(coveredNodes);
+        } catch (Exception E){
+            isInvalid = true;
+            solutionCounter = 0;
+            return false;
+        }
         ArrayList<Node> coveredClues = coverCluesInRoot(root, solution);
         algoXUniqueTest(root, solution);
         uncoverCluesInRoot(coveredClues);
@@ -457,9 +468,9 @@ public class algoXSolver {
                     int columnCoord = f.getCoordinates()[1];
                     int value = f.getValue()-1;
                     Node node = findRowInSolution(root, rowCoord, columnCoord, value);
-                    if (node != null){
-                        clues.add(node);
-                    }
+                    
+                    clues.add(node);   
+                    
                 }
             }
         }
@@ -468,7 +479,6 @@ public class algoXSolver {
 
     public ArrayList<Node> coverCluesInRoot(ColumnNode root, ArrayList<Node> clues) {
         ArrayList<Node> coveredNodes = new ArrayList<>();
-
         for (Node clue : clues) {
             Node node = findRowInSolution(
                 root,
@@ -476,16 +486,26 @@ public class algoXSolver {
                 clue.getCol(),
                 clue.getNum()
             );
-            coveredNodes.add(node);
+                coveredNodes.add(node);
 
-            cover(node.column);
+                cover(node.column);
 
-            for (Node temp = node.right; temp != node; temp = temp.right) {
-                cover(temp.column);
-            }
+                for (Node temp = node.right; temp != node; temp = temp.right) {
+                    cover(temp.column);
+                }
+            
         }
 
         return coveredNodes;
+    }
+    public boolean isValidNode(ColumnNode root, Node node){
+        int size = 1;
+        Node rightNode = node.right;
+        while (rightNode != node){
+            size++;
+            rightNode = rightNode.right;
+        }
+        return size == 4;
     }
    public void uncoverCluesInRoot(ArrayList<Node> coveredNodes) {
         for (int i = coveredNodes.size() - 1; i >= 0; i--) {
@@ -510,6 +530,10 @@ public class algoXSolver {
                 sudokuBoard.changeField( i, j , value);
             }
         }
-    }   
+    }  
+    
+    public boolean getIsInvalid(){
+        return this.isInvalid;
+    }
 
 }
