@@ -240,39 +240,41 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             sudokuBoard.changeField(selectedField[0], selectedField[1], value);
 
             boolean algoUnique = false;
-            try {
-                algoUnique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+         
+            algoUnique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
 
             unique = algoUnique;
-            solveable = sudokuBoard.getAlgoX().getSolutionCounter() > 0;
+            if(sudokuBoard.getAlgoX().getSolutionCounter() > 0 == false){
+                solveable = false;
+            }else if(!(sudokuBoard.getAlgoX().isInvalid) == false){
+                solveable = false;
+            }else{
+                solveable = true;
+            }
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     int num = sudokuBoard.getSingleField(i, j).getValue();
                     if (num != 0) {
-                        System.out.println("is sol and not 0");
+                        // System.out.println("is sol and not 0");
                         sudokuBoard.changeField(i, j, 0);
 
                         boolean isAllValid = sudokuBoard.isValid(i, j, num);
 
                         if (!isAllValid) {
-                            System.out.println("is not valid " + isAllValid);
+                            // System.out.println("is not valid " + isAllValid);
                             sudokuFront.getButtonArray()[i][j].setNotValid(!isAllValid);
-                            playButton.setValid(isAllValid);
-                            solveButton.setValid(isAllValid);
+                            playButton.setValid(solveable);
+                            solveButton.setValid(solveable);
                         } else {
-                            System.out.println("is valid " + isAllValid);
+                            // System.out.println("is valid " + isAllValid);
                             sudokuFront.getButtonArray()[i][j].setNotValid(!isAllValid);
-                            playButton.setValid(isAllValid);
-                            solveButton.setValid(isAllValid);
+                            playButton.setValid(solveable);
+                            solveButton.setValid(solveable);
                         }
                         sudokuBoard.changeField(i, j, num);
-                    } else if (!solveable && sudokuBoard.getSingleField(i, j).getValue() != 0) {
-                        System.out.println("not sol and not 0");
+                    } else if (solveable && sudokuBoard.getSingleField(i, j).getValue() != 0) {
+                        // System.out.println("not sol and not 0");
                         sudokuFront.getButtonArray()[i][j].setNotValid(!solveable);
                         playButton.setValid(solveable);
                         solveButton.setValid(solveable);
