@@ -120,7 +120,10 @@ public class Solver {
             moves.add("Found pair between " + field.getStringCoords() + " " + partner.getStringCoords() + " pair:" + pair);
         }
     }
-    public void pointingSingleInBox(Field field) {
+
+    // this function is primarily written by chatGPT.
+    // We understand what its doing but we didn't write it
+    public void pointingSingleInBox(Field field) { 
     for (int candidate : field.getLegalEntries()) {
         boolean onlyInThisRow = true;
         boolean onlyInThisColumn = true;
