@@ -463,7 +463,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
                     selectedField[1] = j;
                     sudokuBoard.changeField(i, j, solution);
                     sudokuFront.getButtonArray()[i][j].selected(true);
-                    validateInput(selectedField);
+                    //validateInput(selectedField);
                     return; // one hint at a time
                 }
             }
@@ -484,7 +484,7 @@ public class playSudokuWindow extends Window implements WindowInterface {
             }
 
            
-            //validateInput(selectedField);
+            validateInput(selectedField);
 
             if (!gpad.isConnected()) {
                 int idx = numPad.getIndexSelec();
