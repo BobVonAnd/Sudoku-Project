@@ -1,7 +1,7 @@
 package com.sudoku.model;
 import java.util.ArrayList;
 
-
+        //class to hold our human solver
 public class Solver {
     private boolean progress = true;
     ArrayList<String> moves = new ArrayList<>();
@@ -17,6 +17,7 @@ public class Solver {
             }
         }
     }
+        // sequence for the drffrent techniques
     public void edgeSolver(Field field){
         single(field);
         pointingSingleInBox(field);
@@ -30,6 +31,7 @@ public class Solver {
         hiddenPair(field);
     }
 
+        //if there is only one legal entry in field thats the entry
     public void single(Field field){
         ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
         Integer value = null;
@@ -52,6 +54,8 @@ public class Solver {
             moves.add("Single in field " + field.getStringCoords() + " value: " + value);
         }
     }
+
+        // naked pair technique 
     public void nakedPair(Field field){
         if (field.getLeSize() != 2){
             return;
@@ -73,6 +77,7 @@ public class Solver {
         }
     }
 
+        // hidden pair technique
     public void hiddenPair(Field field){
         ArrayList<Integer> legalEntries = new ArrayList<>(field.getLegalEntries());
 
@@ -108,6 +113,7 @@ public class Solver {
         }
     }
 
+        // hidden pair technique to remove other legal entries from identified pairs
     public void applyHiddenPair(Field field, Field partner, ArrayList<Integer> pair){
         int fieldSize = field.getLeSize();
         int partnerSize = partner.getLeSize();
@@ -121,53 +127,56 @@ public class Solver {
         }
     }
 
+    // pointing Single In Box technique
     // this function is primarily written by chatGPT.
     // We understand what its doing but we didn't write it
     public void pointingSingleInBox(Field field) { 
-    for (int candidate : field.getLegalEntries()) {
-        boolean onlyInThisRow = true;
-        boolean onlyInThisColumn = true;
+        for (int candidate : field.getLegalEntries()) {
+            boolean onlyInThisRow = true;
+            boolean onlyInThisColumn = true;
 
-        for (Field boxEdge : field.getBoxEdges()) {
-            if (boxEdge.getLegalEntries().contains(candidate)) {
-                if (!Field.isRowEdge(field, boxEdge)) {
-                    onlyInThisRow = false;
-                }
-                if (!Field.isColumnEdge(field, boxEdge)) {
-                    onlyInThisColumn = false;
-                }
-            }
-        }
-
-        if (onlyInThisRow) {
-            for (Field rowEdge : field.getRowEdges()) {
-                if (!field.getBoxEdges().contains(rowEdge)) {
-                    int before = rowEdge.getLeSize();
-                    rowEdge.removeLE(candidate);
-
-                    if (rowEdge.getLeSize() != before) {
-                        moves.add("Pointing candidate " + candidate + " from box removes from row at " + rowEdge.getStringCoords());
-                        progress = true;
+            for (Field boxEdge : field.getBoxEdges()) {
+                if (boxEdge.getLegalEntries().contains(candidate)) {
+                    if (!Field.isRowEdge(field, boxEdge)) {
+                        onlyInThisRow = false;
+                    }
+                    if (!Field.isColumnEdge(field, boxEdge)) {
+                        onlyInThisColumn = false;
                     }
                 }
             }
-        }
 
-        if (onlyInThisColumn) {
-            for (Field columnEdge : field.getColumnEdges()) {
-                if (!field.getBoxEdges().contains(columnEdge)) {
-                    int before = columnEdge.getLeSize();
-                    columnEdge.removeLE(candidate);
+            if (onlyInThisRow) {
+                for (Field rowEdge : field.getRowEdges()) {
+                    if (!field.getBoxEdges().contains(rowEdge)) {
+                        int before = rowEdge.getLeSize();
+                        rowEdge.removeLE(candidate);
 
-                    if (columnEdge.getLeSize() != before) {
-                        moves.add("Pointing candidate " + candidate + " from box removes from column at " + columnEdge.getStringCoords());
-                        progress = true;
+                        if (rowEdge.getLeSize() != before) {
+                            moves.add("Pointing candidate " + candidate + " from box removes from row at " + rowEdge.getStringCoords());
+                            progress = true;
+                        }
+                    }
+                }
+            }
+
+            if (onlyInThisColumn) {
+                for (Field columnEdge : field.getColumnEdges()) {
+                    if (!field.getBoxEdges().contains(columnEdge)) {
+                        int before = columnEdge.getLeSize();
+                        columnEdge.removeLE(candidate);
+
+                        if (columnEdge.getLeSize() != before) {
+                            moves.add("Pointing candidate " + candidate + " from box removes from column at " + columnEdge.getStringCoords());
+                            progress = true;
+                        }
                     }
                 }
             }
         }
     }
-}
+
+        // XY Wing technique
     public void XY_wing(Field hinge){
         if (hinge.getLegalEntries().size() != 2){
             return;
@@ -210,6 +219,8 @@ public class Solver {
             }
         }
     }
+
+        // XY Chain technique 
     public void XY_Chain(Field hinge) {
         if (hinge.getLeSize() != 2) {
             return;
@@ -244,6 +255,7 @@ public class Solver {
         }
     }
 
+    // Y wing technique
     public void Y_Wing(Field hinge){
         ArrayList<Field> hingeEdges = hinge.getEdges();
         for (Integer legalEntry : hinge.getLegalEntries()){
@@ -290,6 +302,8 @@ public class Solver {
             }
         }
     }
+
+    // XY chain link technique
     public Field XY_Chain_Link(
             Field link,
             Field hinge,
@@ -354,6 +368,7 @@ public class Solver {
         return null;
     }
 
+    //X wing technique, that don't work 
     private void xWing(Field field){
         ArrayList<Integer> leField = field.getLegalEntries(); 
         Field pair1;
@@ -382,12 +397,14 @@ public class Solver {
         }
     }
     
+    // helper functions to remove legal entries from an array of fields
     private void removeFrom(ArrayList<Field> array, int LE){
         for (Field field : array){
             field.removeLE(LE);
         }
     }
 
+    // add fields from colums of field that isn't the checkingField to array
     private ArrayList<Field> removeListColumn(Field field, Field checkingField,  ArrayList<Field> array){
         for (Field addingField : field.getColumnEdges()){
             if (addingField != checkingField){
@@ -397,6 +414,7 @@ public class Solver {
         return array;
     }
 
+        
     private ArrayList<Field> columnFieldsWithLE(Field field, int checkingEntry){
         ArrayList<Field> rows = new ArrayList<>();
         for (Field checkingField : field.getColumnEdges()){
@@ -408,6 +426,7 @@ public class Solver {
         }
         return rows;
     }
+
 
     private ArrayList<Field> pairRow(Field field, int checkingEntry){
         ArrayList<Field> pair = new ArrayList<>();
@@ -421,6 +440,7 @@ public class Solver {
         return pair;
     }
 
+
     public boolean legalEntryInFields(ArrayList<Field> fields, int legalEntry){
         for (Field field : fields){
             if (field.getLegalEntries().contains(legalEntry)){
@@ -429,6 +449,8 @@ public class Solver {
         }
         return false;
     }
+
+
     public Field findValidPairInFields(ArrayList<Field> fields, ArrayList<Integer> legalEntries){
         int fieldsCounter = 0;
         Field candidate = null;
@@ -453,12 +475,16 @@ public class Solver {
     public boolean intersect(Field field1, Field field2){
         return field1.getEdges().contains(field2) && field2.getEdges().contains(field1);
     }
+
+
     public boolean fieldIsInIntersection(Field field1, Field field2, Field intersectField){
         if (field1 == null || field2 == null || intersectField == null){
             return false;
         }
         return intersect(field1, intersectField) && intersect(field2, intersectField);
     }
+
+
     public boolean sameTypeEdge(Field field1, Field field2, Field edge){
         if (Field.isBoxEdge(field1,edge) && Field.isBoxEdge(field2, edge)){
             return true;
@@ -472,9 +498,12 @@ public class Solver {
         return false;
     }
 
+
     public ArrayList<String> getMoves(){
         return moves;
     }
+
+
     public void removeLegalEntryFromIntersection(Field field1, Field field2, int legalEntry){
         for (Field edge : field1.getEdges()){
             if (fieldIsInIntersection(field1, field2, edge) && edge != field2 && edge != field1){
@@ -487,6 +516,8 @@ public class Solver {
             }
         }
     }
+
+
     public void removeLegalEntryInConstraint(Field field1, Field field2, int legalEntry){
         for (Field edge : field1.getEdges()){
             if (edge == field1 || edge == field2) {
