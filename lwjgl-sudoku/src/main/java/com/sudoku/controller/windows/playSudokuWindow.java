@@ -486,8 +486,8 @@ public class playSudokuWindow extends Window implements WindowInterface {
            
             //validateInput(selectedField);
 
-                if (!gpad.isConnected()) {
-                    int idx = numPad.getIndexSelec();
+            if (!gpad.isConnected()) {
+                int idx = numPad.getIndexSelec();
                 if (numPad.isSelected()[idx]) {
                     typeBoard(idx);
                 }
