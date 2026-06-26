@@ -27,7 +27,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     
     private WindowManager wm;
     private MenuButton startButton, backButton;
-    private Slider difficultySlider;
+    private Slider difficultySlider; 
     private MenuButton[] Buttons = new MenuButton[2];
     private double mouseX;
     private double mouseY;
@@ -44,19 +44,19 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
     private Gamepad gpad;
     private NumPadButton numPad;
     private int gpadNumpadIndex = 0;
-    private long numpad_buffer = 167;
-    private long numpad_buffer_timestamp = System.currentTimeMillis();
-    private long numpad_type_buffer = 167;
-    private long numpad_type_buffer_timestamp = System.currentTimeMillis();
+    private long numpad_buffer = 167; // buffer
+    private long numpad_buffer_timestamp = System.currentTimeMillis(); // now
+    private long numpad_type_buffer = 167; // buffer
+    private long numpad_type_buffer_timestamp = System.currentTimeMillis(); // now
     private boolean numpad_type_selected_before = false;
     private boolean gpad_selected_before = true;
 
     public PlaySudokuSettingsWindow(WindowManager wm, int width, int height) {
-        super(wm);
+        super(wm); // init parent
         this.wm = wm;
         this.width = width;
         this.height = height;
-        this.sb = new SudokuBoard(9);
+        this.sb = new SudokuBoard(9); // make a empty sudoku board, cuz we need it to get difficulty
         wm.setActiveWindow(this);
     }
 
@@ -68,13 +68,16 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
 		Shader fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font, width, height);
 
+        // create the startbutton
         startButton = new MenuButton(.5,-.5,0.4,text,fontShader,"Start");
         Buttons[0] = startButton;
 
+        // create the back button
         backButton = new MenuButton(-.5,-.5,0.4,text,fontShader,"Back");
         addElement(backButton,0);
         Buttons[1] = backButton;
 
+        // create the slider
         difficultySlider = new Slider(0, 0.3, this.mouseX, this.mouseY, this.width, this.height, 1, 1, text, fontShader, gpad, "Difficulty: ", " (easy)");
 
         textField = new TextFieldButton(text, fontShader, output, textFieldPrime[0], textFieldPrime[1], 
@@ -86,10 +89,12 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         numPad = new NumPadButton(-.6f, .62f, 0.1f, 0.1f * aspect, text, fontShader);
         
 
+        // add elements to controller support
         gpad.addElement(textField, 0, 0);
         gpad.addElement(backButton, -1, 2);
     }
 
+    // if we hover over textfield
     private void textFieldHover(double mouseXt, double mouseYt){
         if(mouseXt < textField.quadPos[0] && mouseXt > textField.quadPos[4]
             && mouseYt > textField.quadPos[1] && mouseYt < textField.quadPos[3]
@@ -100,6 +105,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
     }
 
+    // when typing on textfield with controller
     public void typeSize(int idx) {
         if (numpad_type_selected_before && gpad.isSelected(numPad)) {
             numpad_type_buffer_timestamp = System.currentTimeMillis();
@@ -128,6 +134,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
     }
 
+    // numpad hover over
     private void numPadHover(double mouseXt, double mouseYt) {
         float xNP = numPad.getX();
         float yNP = numPad.getY();
@@ -155,8 +162,9 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
         long now = System.currentTimeMillis();
         boolean canMove = (numpad_buffer_timestamp == -1 ||
-                now - numpad_buffer_timestamp >= numpad_buffer);
+                now - numpad_buffer_timestamp >= numpad_buffer); // can move if the buffer allows it
 
+                // navigate the numpad
         if (gpad.isSelected(numPad)) {
             gpad.setMoveLocked(true);
             numPad.setSelected(gpadNumpadIndex, true);
@@ -170,13 +178,13 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
     }
 
-    @Override
+    @Override // update mouse coordinates
     public void cursorPosCallback(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
     }
 
-    @Override
+    @Override // update window size
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
@@ -187,9 +195,11 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         gpad.step();
         difficultySlider.update(mouseX, mouseY, width, height, mbLeftHeld);
     
+        // translate the mouse coordinates to LWJGL coordinates
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
     
+        // button collisions
         for (int i = 0; i < Buttons.length; i++) {
             if ((Buttons[i].getPos()[0] - Buttons[i].getSize() / 2 < mouseXt &&
                     Buttons[i].getPos()[0] + Buttons[i].getSize() / 2 > mouseXt &&
@@ -203,17 +213,20 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             }
         }
     
+        // check if the textfield is  valid, then make the new sudokuboard
         if (textField.getValidity() && sb.getSize() != Integer.valueOf(textField.getInput())) {
             sb = null;
             sb = new SudokuBoard(Integer.valueOf(textField.getInput()));
         }
     
+        // input a size text display
         if (!textField.getValidity() && !textField.isSelected()) {
             textField.setInput("Input a valid size here...");
         } else if (textField.getInput() == "Input a valid size here...") {
             textField.setInput("");
         }
 
+        // gamepad support for textfield via numpad
         if (gpad.isConnected()) {
             if (gpad.isSelected(textField)) {
                 textField.setSelected(true);
@@ -234,8 +247,10 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             }
         }
         
+        // numpad hover over with mouse
         numPadHover(mouseXt, mouseYt);
     
+        // numpad creation and removal of gpad and ui
         if (!elementExists(numPad)) {
             if (textField.getValidity() && !startButtonShowing) {
                 addElement(startButton, 0);
@@ -258,16 +273,18 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
             startButtonShowing = false;
         }
     
+        // sets the difficulty scale on the slider
         sb.setDifficultyScale(1 - difficultySlider.getValue());
         difficultySlider.setOverrideValueString(sb.getDifficultyString());
         difficultySlider.updateSuffix(" (Removes " + sb.getFieldsToRemove(1 - difficultySlider.getValue()) + " Fields)");
         textFieldHover(mouseXt, mouseYt);
     
+        // text under textfield
         textInfo.makeText("You Can Customize a 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f), (textFieldPrime[1] - 0.06f), 0.2f, new float[]{1.0f, 0.0f, 0.0f});
         textInfo.flush();
     }
 
-    @Override // If you don't need a key callback, just delete this
+    @Override  // typing numbers in
     public void keyCallback(int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
             System.out.println("Space pressed!");
@@ -291,7 +308,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
     }
 
-    @Override // If you don't need a mouse button callback, just delete this
+    @Override // clicking via mouse
     public void mouseButtonCallback(int button, int action, int mods) {
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
             mbLeftHeld = true;
@@ -313,6 +330,7 @@ public class PlaySudokuSettingsWindow extends Window implements WindowInterface 
         }
     }
 
+    // transition between windows
     public void windowTransition(MenuButton b, boolean mouseClick) {
         if (mouseClick || gpad.isEntered()) {
             if (b.isHeldOver() && elementExists(b)) {

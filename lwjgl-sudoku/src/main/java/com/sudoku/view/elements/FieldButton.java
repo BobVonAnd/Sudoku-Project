@@ -18,6 +18,7 @@ import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 
+    // this class is the front end element of fields
 public class FieldButton implements Element {
     private Field field;
     private SudokuBoard sb;
@@ -75,7 +76,7 @@ public class FieldButton implements Element {
 
         posField();
     }
-
+    // calculates the position for the field in the window
     public void posField() {
 
         float newX = (float) x + xOffset * (float) sizeX;
@@ -120,6 +121,7 @@ public class FieldButton implements Element {
         userGess = isGess;
     }
 
+    //the function to draw the field in the sudoku
     public void draw() {
 
         fontShader.detach();
@@ -136,7 +138,7 @@ public class FieldButton implements Element {
         if (value != 0) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+                // the colour and position of the numbers in the field change depending on the how big the number is and if its correct
             if (isSolved) {
                 if (userGess) {
                     text.makeText("" + value, (float) (x + sizeX / 3.9), (float) (y - sizeY / 0.895),
@@ -197,7 +199,7 @@ public class FieldButton implements Element {
     public void selected(boolean isIt) {
         this.selected = isIt;
     }
-
+        //function to change the colour of the field
     private void setColour() {
         if (selected) {
             selectedcolour();
@@ -241,7 +243,7 @@ public class FieldButton implements Element {
     public Field getField() {
         return field;
     }
-
+    // used to potentially change the size of the field if the aspect changes
     public void setXY(double[] xy) {
         this.x = xy[0];
         this.y = xy[1];

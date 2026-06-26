@@ -16,6 +16,7 @@ public abstract class Window {
 		this.wm = wm;
 	}
 
+    // add element to the window, so it can be drawn later on
     public void addElement(Element e, double depth) {
         ArrayList<Element> list = dictionary.get(depth);
         if (list != null) {
@@ -27,6 +28,7 @@ public abstract class Window {
         }
     }
 
+    // checks if the element is part of the map
     public boolean elementExists(Element e) {
         for (ArrayList<Element> list : dictionary.values()) {
             if (list.contains(e)) {
@@ -36,25 +38,28 @@ public abstract class Window {
         return false;
     }
 
+    // removes element from map
     public boolean removeElement(Element e) {
-    for (Map.Entry<Double, ArrayList<Element>> entry : dictionary.entrySet()) {
-        ArrayList<Element> list = entry.getValue();
+        for (Map.Entry<Double, ArrayList<Element>> entry : dictionary.entrySet()) {
+            ArrayList<Element> list = entry.getValue();
 
-        if (list.remove(e)) {
-            if (list.isEmpty()) {
-                dictionary.remove(entry.getKey());
+            if (list.remove(e)) {
+                if (list.isEmpty()) {
+                    dictionary.remove(entry.getKey());
+                }
+                return true;
             }
-            return true;
         }
+        return false;
     }
-    return false;
-}
 
+    // changes the depth of the element
     public void changeElementDepth(Element e, double depth) {
         removeElement(e);
         addElement(e, depth);
     }
 
+    // gets run every frame, and draws every active element
     public void draw() {
         for (Map.Entry<Double, ArrayList<Element>> entry : dictionary.entrySet()) {
             ArrayList<Element> list = entry.getValue();
