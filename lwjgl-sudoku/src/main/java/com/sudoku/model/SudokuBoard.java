@@ -1,6 +1,13 @@
     package com.sudoku.model;
 
     import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+import java.util.stream.IntStream;
+
+import com.sudoku.view.TerminalView;
+
 
     public class SudokuBoard {
 
@@ -8,7 +15,7 @@
         private Field[][] wholeBoard;
         private int size;
         private int bigFieldSize;
-        private double difficultyScale;
+        private double difficultyScale = 1;
         private algoXSolver algoX = new algoXSolver();
         private int fieldsAmount = 0;
 
@@ -45,12 +52,13 @@
         }
 
         
-        public void clear() {
+        public void clear(){
             for (int i = 0 ; i < wholeBoard.length ; i++) {
                 for (int j = 0 ; j < wholeBoard.length ; j++) {
                     wholeBoard[i][j].setValue(0);
                 }
             }
+            nrOfFieldsLeft = 0;
         }
 
     public void setDifficultyScale(double difficultyScale) {
@@ -113,69 +121,81 @@
 
 
 
-
-        //     this.clear();
-        //     for (int i = 0; i < this.bigFieldSize; i+=2) {
-        //         // Get choices
-        //         ArrayList<Integer> choices = new ArrayList<>(
-        //                 Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
-        //         Collections.shuffle(choices);
-        //         int counter = 0;
-        //         // Insert Field
-        //         for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
-        //             for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
-        //                 changeField(k, j, choices.get(counter));
-        //                 counter++;
-        //             }
-        //         }
-        //     }
-        //     TerminalView before = new TerminalView(this);
-        //     before.printBoard();
-        //     algoX.algoXManager(this);
-
-        // TerminalView solved = new TerminalView(this);
-        // solved.printBoard();
-        // System.out.println("Solved Sudoku (Before removal)^^");
-        // ArrayList<Field> notRemoved = new ArrayList<>();
-        // for (int i = 0 ; i < size ; i++) {
-        //     for (int j = 0 ; j < size ; j++) {
-        //         notRemoved.add(wholeBoard[i][j]);
-        //     }
-        // }
-        // int amountToRemove = getFieldsToRemove(this.difficultyScale);
-        // Random rand = new Random();
-        // int beforesize = notRemoved.size();
-        
-        // while (notRemoved.size() > beforesize-amountToRemove) {
-        //     Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
-        //     int x = f.getCoordinates()[0];
-        //     int y = f.getCoordinates()[1];
-
-        //     // temp removal of field
-        //     int tempVal = wholeBoard[x][y].getValue();
-        //     wholeBoard[x][y].setValue(0);
-            
-            
-
-        //     boolean isUnique = algoX.algoXIsUnique(this);
-        //     if (!isUnique) {
-        //         wholeBoard[x][y].setValue(tempVal);
-        //     } else if (isUnique) {
-        //         notRemoved.remove(wholeBoard[x][y]);
-        //         wholeBoard[x][y].setLocked(false);
-        //         nrOfFieldsLeft += 1;
-        //         System.out.println(String.valueOf(beforesize-notRemoved.size()));
-        //     } else {
-        //         wholeBoard[x][y].setValue(tempVal);
-        //     }
-
-        //     }
-        //     System.out.println("Removing " + Integer.toString(amountToRemove) + " fields.");
-        //     TerminalView after = new TerminalView(this);
-        //     after.printBoard();
-        //     System.out.println("Stopped initialising here");
         }
 
+        public void populatebasepop(int amountToRemove){
+            this.clear();
+            for (int i = 0; i < this.bigFieldSize; i += 2) {
+                // Get choices
+            ArrayList<Integer> choices = new ArrayList<>(Arrays.asList(IntStream.rangeClosed(1, this.size).boxed().toArray(Integer[]::new)));
+            Collections.shuffle(choices);
+            int counter = 0;
+                //Insert Field
+            for (int j = i * this.bigFieldSize; j < this.bigFieldSize + i * this.bigFieldSize; j++) {
+                for (int k = i * this.bigFieldSize; k < this.bigFieldSize + i * this.bigFieldSize; k++) {
+                    changeField(k, j, choices.get(counter));
+                    counter++;
+                    }
+                }
+            }
+            TerminalView before = new TerminalView(this);
+            before.printBoard();
+            algoX.algoXManager(this);
+
+            TerminalView solved = new TerminalView(this);
+            solved.printBoard();
+            System.out.println("Solved Sudoku (Before removal)^^");
+            ArrayList<Field> notRemoved = new ArrayList<>();
+            for (int i = 0 ; i < size ; i++) {
+                for (int j = 0 ; j < size ; j++) {
+                    notRemoved.add(wholeBoard[i][j]);
+                }
+            }
+            
+            Random rand = new Random();
+            int beforesize = notRemoved.size();
+        
+            while (notRemoved.size() > 0 && nrOfFieldsLeft < amountToRemove) {
+                Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
+                int x = f.getCoordinates()[0];
+                int y = f.getCoordinates()[1];
+
+                    //temp removal of field
+                int tempVal = wholeBoard[x][y].getValue();
+                wholeBoard[x][y].setValue(0);
+                notRemoved.remove(wholeBoard[x][y]);
+            
+
+                boolean isUnique = algoX.algoXIsUnique(this);
+                if (!isUnique) {
+                    wholeBoard[x][y].setValue(tempVal);
+                } else if (isUnique) {
+                    wholeBoard[x][y].setLocked(false);
+                    nrOfFieldsLeft += 1;
+                    System.out.println(String.valueOf(beforesize-notRemoved.size()));
+                } else {
+                    wholeBoard[x][y].setValue(tempVal);
+                }   
+
+            }
+        }
+
+        public void populatebase(){
+            int amountToRemove = getFieldsToRemove(this.difficultyScale);
+
+            while (nrOfFieldsLeft < amountToRemove){
+                populatebasepop(amountToRemove);
+            }
+            System.out.println("Removing " + Integer.toString(nrOfFieldsLeft) + " fields.");
+            TerminalView after = new TerminalView(this);
+            after.printBoard();
+            System.out.println("Stopped initialising here");
+        }
+
+        public void populatebase(double difficultyScale) {
+            this.difficultyScale = difficultyScale;    
+            populatebase();
+        }
 
         public int getFieldsToRemove(double difficultyScale/* hard to easy aka 0 to 1 (decimal) */) {
             double scale = Math.min(1, Math.max(difficultyScale, 0));
