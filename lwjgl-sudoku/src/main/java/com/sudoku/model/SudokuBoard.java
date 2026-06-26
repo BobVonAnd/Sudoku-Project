@@ -138,20 +138,20 @@ import com.sudoku.view.TerminalView;
                     }
                 }
             }
-            TerminalView before = new TerminalView(this);
-            before.printBoard();
+            //TerminalView before = new TerminalView(this);
+            //before.printBoard();
             algoX.algoXManager(this);
 
-            TerminalView solved = new TerminalView(this);
-            solved.printBoard();
-            System.out.println("Solved Sudoku (Before removal)^^");
+            //TerminalView solved = new TerminalView(this);
+            //solved.printBoard();
+            //System.out.println("Solved Sudoku (Before removal)^^");
             ArrayList<Field> notRemoved = new ArrayList<>();
             for (int i = 0 ; i < size ; i++) {
                 for (int j = 0 ; j < size ; j++) {
                     notRemoved.add(wholeBoard[i][j]);
                 }
             }
-            
+            System.out.println(String.valueOf(amountToRemove));
             Random rand = new Random();
             int beforesize = notRemoved.size();
         
@@ -159,20 +159,19 @@ import com.sudoku.view.TerminalView;
                 Field f = notRemoved.get(rand.nextInt(notRemoved.size()));
                 int x = f.getCoordinates()[0];
                 int y = f.getCoordinates()[1];
-
                     //temp removal of field
                 int tempVal = wholeBoard[x][y].getValue();
                 wholeBoard[x][y].setValue(0);
                 notRemoved.remove(wholeBoard[x][y]);
-            
 
                 boolean isUnique = algoX.algoXIsUnique(this);
                 if (!isUnique) {
                     wholeBoard[x][y].setValue(tempVal);
+                    
                 } else if (isUnique) {
                     wholeBoard[x][y].setLocked(false);
                     nrOfFieldsLeft += 1;
-                    System.out.println(String.valueOf(beforesize-notRemoved.size()));
+                    System.out.println(String.valueOf(nrOfFieldsLeft));
                 } else {
                     wholeBoard[x][y].setValue(tempVal);
                 }   
@@ -182,9 +181,12 @@ import com.sudoku.view.TerminalView;
 
         public void populatebase(){
             int amountToRemove = getFieldsToRemove(this.difficultyScale);
-
+            int attemps = 1;
+            this.clear();
             while (nrOfFieldsLeft < amountToRemove){
+                System.out.println("trying again " + attemps);
                 populatebasepop(amountToRemove);
+                attemps++;
             }
             System.out.println("Removing " + Integer.toString(nrOfFieldsLeft) + " fields.");
             TerminalView after = new TerminalView(this);
