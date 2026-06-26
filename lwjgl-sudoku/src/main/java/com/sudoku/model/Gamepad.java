@@ -8,18 +8,19 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.util.TreeMap;
 
 public class Gamepad {
-    enum X_Input {
+    enum X_Input { // Enum for if the joystick or d-pad goes left right or isnt used
         LEFT,
         RIGHT,
         NONE
     }
 
-    enum Y_Input {
+    enum Y_Input { // Enum for if the joystick or d-pad goes up down or isnt used
         UP,
         DOWN,
         NONE
     }
 
+    // set to none as a starting point
     private X_Input x = X_Input.NONE;
     private Y_Input y = Y_Input.NONE;
 
@@ -45,15 +46,16 @@ public class Gamepad {
     private Position position = new Position(0,0);
 
     private long buffer = 200; // in ms
-    private long buffer_timestamp = System.currentTimeMillis();
-    private long aTimestamp = System.currentTimeMillis();
+    private long buffer_timestamp = System.currentTimeMillis(); // now
+    private long aTimestamp = System.currentTimeMillis(); // now
     private long aBuffer = 200; // in ms
-    private boolean connected = false;
-    private double deadzone = 0.4;
-    private boolean entered = false;
-    private boolean moveLocked = false;
-    private boolean pressed = false;
+    private boolean connected = false; // whether the controller is connected
+    private double deadzone = 0.4; // joystick deadzone 
+    private boolean entered = false; // if a has been pressed
+    private boolean moveLocked = false; // if you can navigate with the gamepad further
+    private boolean pressed = false; 
 
+    // if the gamepad is hovering over a element (has it selected)
     public boolean isSelected(Element e) {
         if (connected && e != null) {
             return e.equals(buttonMap.get(position));
@@ -62,18 +64,22 @@ public class Gamepad {
 
     }
 
+    // just returns moveLocked
     public boolean isMoveLocked() {
         return moveLocked;
     }
 
+    // if we want to set movelocked to true/false (used in numpad for example)
     public void setMoveLocked(boolean moveLocked) {
         this.moveLocked = moveLocked;
     }
 
+    // if we want to forcibly change the position of the gamepad (used in numpad for example)
     public void setPosition(int x, int y) {
         position = new Position(x, y);
     }
     
+    // most used function here, it adds a element to the map
     public void addElement(Element e, int x, int y) {
         if (buttonMap.isEmpty()) {
             setPosition(x, y);
@@ -88,6 +94,7 @@ public class Gamepad {
         buttonMap.put(pos, e);
     }
 
+    // removes element from the map
     public void removeElement(Element e) {
         Position toRemove = null;
 
@@ -103,11 +110,13 @@ public class Gamepad {
         }
     }
 
+    // updates a position for a element from the map (never used)
     public void updateElement(Element e, int x, int y) {
         removeElement(e);
         addElement(e, x, y);
     }
 
+    // converts the enum to actual numbers
     public int getXDir() {
         switch (x) {
             case LEFT:
@@ -121,6 +130,7 @@ public class Gamepad {
         }
     }
 
+    // converts the enum to actual numbers
     public int getYDir() {
         switch (y) {
             case UP:
@@ -134,12 +144,14 @@ public class Gamepad {
         }
     }
 
+    // returns if a has been pressed, and resets it
     public boolean isEntered() {
         boolean temp = entered;
         entered = false;
         return temp;
     }
 
+    // returns if the gamepad is connected, very important
     public boolean isConnected() {
         return connected;
     }
@@ -148,14 +160,17 @@ public class Gamepad {
         return (new int[] {position.x, position.y});
     }
 
+    // gets the currently selected element
     public Element getCurrentElement() {
         return buttonMap.get(position);
     }
 
+    // returns the element at a specific position
     public Element getElementAt(int x, int y) {
         return buttonMap.get(new Position(x, y));
     }
 
+    // used to move to the nearest element
     private Position findNearest(X_Input xDir, Y_Input yDir) {
         entered = false;
         Position current = new Position(position.x(), position.y());
@@ -193,21 +208,23 @@ public class Gamepad {
         return best;
     }
 
+    // must be called in every gamepad supported window, 
+    // it creates the controller and manages if its connected 
     public void step() {
         GLFWGamepadState state = GLFWGamepadState.create();
 
         if (glfwGetGamepadState(GLFW_JOYSTICK_1, state)) {
-            connected = true;
-            // get state
-            float leftX = state.axes(GLFW_GAMEPAD_AXIS_LEFT_X);
+            connected = true; // if glfwGetGamepadState(GLFW_JOYSTICK_1, state) then the controller is connected
+            // get axis for movement
+            float leftX = state.axes(GLFW_GAMEPAD_AXIS_LEFT_X); 
             float leftY = state.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
 
+            // dpad
             if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_LEFT) == GLFW_PRESS) {
                 leftX = -1.0f;
             } else if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT) == GLFW_PRESS) {
                 leftX = 1.0f;
             }
-
             if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == GLFW_PRESS) {
                 leftY = -1.0f;
             } else if (state.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == GLFW_PRESS) {
@@ -235,11 +252,13 @@ public class Gamepad {
             
             long now = System.currentTimeMillis();
 
+            // buffer
             boolean canMove =
                 (buffer_timestamp == -1 ||
                 now - buffer_timestamp >= buffer) &&
                 !moveLocked;
 
+            // if buffer allows movement
             if (canMove) {
                 Position best = null;
 
@@ -255,6 +274,7 @@ public class Gamepad {
                 }
             }
             
+            // whether a has been pressed, and the buffer allows it
             boolean aPressed = state.buttons(GLFW_GAMEPAD_BUTTON_A) == GLFW_RELEASE && pressed;
             if (aPressed && now - aTimestamp >= aBuffer) {
                 entered = true;
@@ -262,6 +282,7 @@ public class Gamepad {
             }
             pressed = state.buttons(GLFW_GAMEPAD_BUTTON_A) == GLFW_PRESS;
         } else {
+            // disconnect
             connected = false;
         }
     }

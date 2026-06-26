@@ -14,16 +14,17 @@ import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 
 public class MenuButton implements Element {
-    private double size;
-    private double x,y,half,ten;
-    private boolean heldOver;
-    private double startTime = System.currentTimeMillis();
-    private String textString;
-    private CreateString text;
-    private Shader fontShader;
-    private boolean toggle;
-    private boolean valid = true;
+    private double size; // size scalar
+    private double x,y,half,ten; // positions
+    private boolean heldOver; // if the button is heldover
+    private double startTime = System.currentTimeMillis(); // now
+    private String textString; // font string text
+    private CreateString text; // text for font rendering
+    private Shader fontShader; // font rendering shader
+    private boolean toggle; // if it is able to be pressed
+    private boolean valid = true; 
 
+    // constructor initializes the object
     public MenuButton(double x, double y, double size, CreateString text, Shader fontShader, String textString) {   
         this.size = size;
 
@@ -68,6 +69,7 @@ public class MenuButton implements Element {
         return heldOver;
     }
 
+    // called every frame when the element is actually active
     public void draw() {
         double currentTime = System.currentTimeMillis() - startTime;
         double spd = 0.01;
@@ -77,6 +79,7 @@ public class MenuButton implements Element {
 
         fontShader.detach();
         glBegin(GL_QUADS);
+        // animation
         if (!valid){
             glColor3d(1.0, 0.2941, 0.1020);
             xOffset = 0;
@@ -95,11 +98,13 @@ public class MenuButton implements Element {
             yOffset = 0;
         }
         
+        // back rectangle
         glVertex2d(x - half - ten*2 + ten + xOffset, y - half + ten - yOffset);
         glVertex2d(x + half + ten - xOffset, y - half + ten + yOffset);
         glVertex2d(x + half + ten*2 + ten + xOffset, y + half + ten - yOffset);
         glVertex2d(x - half + ten - xOffset, y + half + ten + yOffset);
 
+        // front rectangle
         glColor3d(0.2, 0.3, 0.7);
         glVertex2d(x - half - ten*2 + xOffset *overSpd, y - half - yOffset *overSpd);
         glVertex2d(x + half - xOffset *overSpd, y - half + yOffset *overSpd); 

@@ -59,11 +59,11 @@ public class Slider implements Element {
         this.mbLeftHeld = mbLeftHeld;
     }
 
-    public void updateSuffix(String t) {
+    public void updateSuffix(String t) { // update last part of the string
         this.suffixTextString = t;
     }
 
-    public void updatePrefix(String t) {
+    public void updatePrefix(String t) { // update first part of the string
         this.prefixTextString = t;
     }
 
@@ -108,7 +108,7 @@ public class Slider implements Element {
         double pickerX = x - pickerBarWidth/2;
         double pickerRadiusX = (ten * diamondScale) / aspect;
         double pickerRadiusY = ten * diamondScale;
-
+        // dragging the picker
         if (pickerDragging) {
             if (gpad.isConnected()) {
                 if (gpad.getXDir() == 0) {
@@ -128,6 +128,7 @@ public class Slider implements Element {
             sliderX = x + (width-pickerBarWidth)/2;
         }
 
+        // if picker is held over
         pickerHeldOver = 
             mouseXt >= pickerX - pickerRadiusX + sliderX && 
             mouseXt <= pickerX + pickerRadiusX + sliderX && 
@@ -139,17 +140,19 @@ public class Slider implements Element {
         double bottom = y - ten;
         double top = y + ten;
 
+        // if the slider is held over
         heldOver =
             (mouseXt >= left &&
             mouseXt <= right &&
             mouseYt >= bottom &&
             mouseYt <= top) || gpad.isSelected(this);
 
-        double currentTime = System.currentTimeMillis() - startTime;
-        double spd = 0.01;
-        double overSpd = 0.15;
-        double xOffset = (heldOver || pickerHeldOver || pickerDragging ? (Math.sin(currentTime * spd)) : 0) / 500 ;
-        double yOffset = (heldOver || pickerHeldOver || pickerDragging  ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500;
+        double currentTime = System.currentTimeMillis() - startTime; // now
+        double spd = 0.01; // animation spd (back)
+        double overSpd = 0.15; // animation spd (front)
+        double xOffset = (heldOver || pickerHeldOver || pickerDragging ? (Math.sin(currentTime * spd)) : 0) / 500 ; // tween for animation
+        double yOffset = (heldOver || pickerHeldOver || pickerDragging  ? (Math.sin(currentTime * spd) + Math.cos(currentTime * spd)) : 0) / 500; // tween for animation
+        // if the gamepad is on
         if (gpad.isConnected() && gpad.isSelected(this)) {
             boolean gpadEnter = gpad.isEntered();
             if (gpadEnter && !pickerDragging) {
@@ -196,6 +199,7 @@ public class Slider implements Element {
         ySquareSpd = lerp(ySquareSpd, ySquareSpdMax,  deltaTime);
         ySquareRot += ySquareVelocity;
 
+        // rotation of the yellow rectangle
         double cos = Math.cos(ySquareRot);
         double sin = Math.sin(ySquareRot);
 
@@ -233,6 +237,7 @@ public class Slider implements Element {
         glEnd();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // text
         String v = overrideValueString == "" ? String.valueOf(getValue()) : overrideValueString;
         text.makeText(prefixTextString + String.valueOf(overrideValueString) + suffixTextString, (float)(x-pickerBarWidth/2),(float)(y+.05), (float)(size*.5), new float[]{0.0f,0.0f,0.0f} );
 		text.flush();
