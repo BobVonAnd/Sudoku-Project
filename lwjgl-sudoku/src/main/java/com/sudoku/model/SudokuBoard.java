@@ -144,11 +144,7 @@ import com.sudoku.view.TerminalView;
                 notRemoved.remove(wholeBoard[x][y]);
                 this.solutions = 0;
                 uniquenessTest();
-                boolean isUnique = this.solutions == 1;
-                if (!isUnique) {
-                    wholeBoard[x][y].setValue(tempVal);
-                    
-                } else if (isUnique) {
+                if (this.solutions == 1) {
                     wholeBoard[x][y].setLocked(false);
                     nrOfFieldsLeft += 1;
                     System.out.println(String.valueOf(nrOfFieldsLeft));
