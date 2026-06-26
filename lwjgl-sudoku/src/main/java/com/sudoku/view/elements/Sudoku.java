@@ -12,7 +12,7 @@ import com.sudoku.model.SudokuBoard;
 import com.sudoku.view.CreateString;
 import com.sudoku.view.Shader;
 import com.sudoku.view.font.CreateFont;
-
+    // element to hold all the fieldbuttons in the ui
 public class Sudoku implements Element {
 
     private Window wp;
@@ -40,10 +40,10 @@ public class Sudoku implements Element {
         size = sudokuBoard.getSize();
         this.bigfield = (int) Math.sqrt(size);
         buttonArray = new FieldButton[size][size];
-
+            
         yStart = sudokuSize / 2;
         xStart = -(sudokuSize / 2);
-
+                
         setAspect();
 
         xAspect -= xOffset;
@@ -102,7 +102,7 @@ public class Sudoku implements Element {
             x += fieldsizeX;
         }
     }
-
+        // removes every field
     public void clear(){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
@@ -116,7 +116,7 @@ public class Sudoku implements Element {
     public FieldButton[][] getButtonArray() {
         return buttonArray;
     }
-
+        // draws the lines in the sudoku
     public void draw() {
 
         fontShader.detach();
@@ -188,7 +188,7 @@ public class Sudoku implements Element {
     public void setNotValidInputToFalse(int[] selectedField) {
         buttonArray[selectedField[0]][selectedField[1]].setNotValid(false);
     }
-
+        // used to handle leftclick
     public int[] leftClick(double x, double y) {
         double[] pos = new double[2];
         double mouseXt = x / (width / 2) - 1;
@@ -240,7 +240,7 @@ public class Sudoku implements Element {
         }
     }
 
-
+        // finds the relative fields to the field that is highlighted 
     private void isTouching(int x, int y) {
         System.out.println(x + "x  " + y + " y" + " bool " + buttonArray[x][y].isSelected());
         int xDiv = x / bigfield;
@@ -300,7 +300,7 @@ public class Sudoku implements Element {
         text.setXY(width, height);
 
     }
-
+        //calculations for making the fields square
     private void setAspect() {
         if (height <= width) {
             aspect = (double) height / (double) width;
