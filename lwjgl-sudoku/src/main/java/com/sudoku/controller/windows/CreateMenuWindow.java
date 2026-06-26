@@ -33,8 +33,10 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private TextFieldButton textField;
     private NumPadButton numPad;
 
+    //is sudoku unique and solveable
     private boolean unique, solveable;
 
+    //controller support
     private Gamepad gpad;
     private int gpadNumpadIndex = 0;
     private long numpad_buffer = 167; // in ms
@@ -46,6 +48,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private boolean numpad_for_board = false;
 
     private String output = "Size: ";
+
     // x, y, scale, width, hight
     private float[] textFieldPrime = new float[] { -0.6f, 0.7f, 0.3f, 0.0f, 0.1f };
 
@@ -55,15 +58,21 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private int size = standardSize;
     private int width;
     private int height;
+
+    
     private FieldButton[][] buttonArray;
     private double fieldsize;
     private double yStart = 0.6;
     private double xStart = -0.8;
+    private boolean errorDetected = false;
+
     private int[] selectedField = new int[2];
 
     private boolean sudokuCreated = false;
-    private boolean errorDetected = false;
 
+
+    
+    //buttons
     private MenuButton returnButton;
     private MenuButton playButton;
     private MenuButton solveButton;
@@ -79,14 +88,19 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         this.width = width;
         this.height = height;
         wm.setActiveWindow(this);
+        //need this to go from her to another window and back
         classCreated = true;
     }
 
+    //initialising all the buttons and UI elements 
     public void create() {
         // This code runs once
         if (!classCreated) {
+
+            
             gpad = new Gamepad();
 
+            //font, text and shader
             font = wm.getFont();
             fontShader = wm.getFontShader();
             text = new CreateString(fontShader, font, width, height);
@@ -96,12 +110,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     textFieldPrime[2], new float[] { 1.0f, 0.0f, 0.0f }, textFieldPrime[3], textFieldPrime[4]);
             textInfo = new CreateString(fontShader, font, width, height);
 
+            //numpad
             float aspect = 1280f / 720f;
             numPad = new NumPadButton(0.65f, 0.6f, 0.1f, 0.1f * aspect, text, fontShader);
             addElement(numPad, 0);
             addElement(textField, 0);
 
-            // return to menu button
+            // return to menu button, play and solve button
             returnButton = new MenuButton(-0.8, 0.8, 0.2, text, fontShader, "Menu");
             playButton = new MenuButton(-0.8, 0.55, 0.2, text, fontShader, "Play");
             solveButton = new MenuButton(-0.8, 0.30, 0.2, text, fontShader, "Solve");
@@ -122,22 +137,30 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     public void step() {
         // This code runs every frame
         gpad.step();
+
+        //normilized mousecoordinates
         double mouseXt = mouseX / (1280 / 2) - 1;
         double mouseYt = -mouseY / (720 / 2) + 1;
 
+        //is mouse over the button
         holdOver(returnButton);
         holdOver(playButton);
         holdOver(solveButton);
 
+        //hover over textField elements
         textFieldHover(mouseXt, mouseYt);
         numPadHover(mouseXt, mouseYt);
+
+        //show text while textField exist
         if (elementExists(textField)) {
             textInfo.makeText("You Can Customize A 4x4, 9x9, 16x16, 25x25, 36x36", (textFieldPrime[0] - 0.005f),
             (textFieldPrime[1] - 0.06f), 0.2f, new float[] { 1.0f, 0.0f, 0.0f });
         }
         
+        //displaying text
         textInfo.makeText("Solveable: " + String.valueOf(solveable) + "   Unique: " + String.valueOf(unique), -.9f,
                 -.9f, .3f, new float[] { 1.0f, 0.0f, 0.0f });
+        //will make the text apear
         textInfo.flush();
 
         // Textfield Controller Support
@@ -145,6 +168,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             boolean entered = gpad.isEntered();
             // select when the gpad is over it
 
+            //when select numpad apear
             if (gpad.isSelected(textField)) {
                 textField.setSelected(true);
                 // press a to enter
@@ -154,6 +178,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     numpad_for_board = false;
                 }
             } else {
+                //not selected
                 textField.setSelected(false);
                 // reset the numpad if enter
                 if (entered && gpad.isSelected(numPad)) {
@@ -169,9 +194,11 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         // Sudoku board gamepad
         if (gpad.isConnected()) {
             boolean entered = gpad.isEntered();
+            //when button is pressed then move to a new window
             windowTransition(returnButton, false, entered);
             windowTransition(playButton, false, entered);
             windowTransition(solveButton, false, entered);
+            //when sudoku is created initialise the element for controller
             if (textField.getValidity() && sudokuCreated) {
                 FieldButton fieldButton;
                 if (!gpad.isSelected(returnButton)
@@ -191,7 +218,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                             }
                         }
                     }
-
+                    //uses the numpad for sudoku
                     if (entered) {
                         numpad_for_board = true;
                         gpad.addElement(numPad, 37, 0);
@@ -212,6 +239,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
     private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
+        //detecs button borders
         if ((button.getPos()[0] - button.getSize() / 2 < mouseXt &
                 button.getPos()[0] + button.getSize() / 2 > mouseXt &
                 !gpad.isConnected() &&
@@ -224,6 +252,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
     }
 
+    //detect if the mouse is on the element
     private void textFieldHover(double mouseXt, double mouseYt) {
         if (mouseXt < textField.quadPos[0] && mouseXt > textField.quadPos[4]
                 && mouseYt > textField.quadPos[1] && mouseYt < textField.quadPos[3]) {
@@ -233,17 +262,22 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
     }
 
+    //will validate and update the sudoku
     private void updateBoardState(int value) {
-
-        // gets if the sudoku is solveable
+        // if the field is selected
         if (sudokuFront.getButtonArray()[selectedField[0]][selectedField[1]].isSelected()) {
+            
+            //inputs value in field
             sudokuBoard.changeField(selectedField[0], selectedField[1], value);
 
-            boolean algoUnique = false;
-         
-            algoUnique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
 
+            boolean algoUnique = false;
+            //gets a boolean dependent on the number of way to
+            //solve the sudoku 
+            algoUnique = sudokuBoard.getAlgoX().algoXIsUnique(sudokuBoard);
             unique = algoUnique;
+
+            //checks if the sudoku is solveable
             if(sudokuBoard.getAlgoX().getSolutionCounter() > 0 == false){
                 solveable = false;
             }else if(!(sudokuBoard.getAlgoX().isInvalid) == false){
@@ -252,17 +286,21 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 solveable = true;
             }
 
+            //validates the whole sudokuboard for any valiations
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     int num = sudokuBoard.getSingleField(i, j).getValue();
                     if (num != 0) {
                         // System.out.println("is sol and not 0");
                         sudokuBoard.changeField(i, j, 0);
-
+                        
+                        //gets T/F if the inputs violates the any constrains
                         boolean isAllValid = sudokuBoard.isValid(i, j, num);
 
                         if (!isAllValid) {
                             // System.out.println("is not valid " + isAllValid);
+
+                            //changes the colors and locks/unlocks the buttons
                             sudokuFront.getButtonArray()[i][j].setNotValid(!isAllValid);
                             playButton.setValid(solveable);
                             solveButton.setValid(solveable);
@@ -332,6 +370,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     }
 
+    //checks if the mouse is on a textfield
     private void numPadHover(double mouseXt, double mouseYt) {
         float xNP = numPad.getX();
         float yNP = numPad.getY();
@@ -367,7 +406,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         numPad.setSelected(11, mouseXt > xNP + (widthNP * 2) && mouseXt < xNP + (widthNP * 3)
                 && mouseYt > yNP - (heightNP * 4) && mouseYt < yNP - (heightNP * 3) && !gpad.isConnected());
 
-        // Gamepad stuff
+        // Gamepad timedelay
         if (gpad_selected_before && gpad.isSelected(numPad)) {
             numpad_buffer_timestamp = System.currentTimeMillis();
             gpad_selected_before = false;
@@ -389,6 +428,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
     }
 
+    //write in textfield with numpad
     public void typeSize(int idx) {
 
         if (numpad_type_selected_before && gpad.isSelected(numPad)) {
@@ -417,6 +457,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
         }
     }
 
+    //writes in sudoku with numpad
     private void typeBoard(int idx) {
         int value = sudokuBoard.getSingleField(
                 selectedField[0],
@@ -443,27 +484,35 @@ public class CreateMenuWindow extends Window implements WindowInterface {
             return;
         }
     
+        //updates the sudokuboard
         sudokuBoard.changeField(selectedField[0], selectedField[1], value);
         updateBoardState(value);
     }
 
+
+    //creates and shows the sudoku when a correct input is given
     public void createSudoku() {
         if (textField.getValidity()) {
+
+            //gets size form input from textField
             size = Integer.parseInt(textField.getInput());
             sudokuBoard = new SudokuBoard(size);
-
+            //boolean that shows the sudoku
             sudokuCreated = true;
+            
+            //initialising the element sudoku
             sudokuFront = new Sudoku(width, height, 1.3, 0, -0.1, sudokuBoard, font, fontShader, this);
             addElement(sudokuFront, 0);
             sudokuFront.openAllLocks();
 
+            //adds the fields to the gamepad
             boardButtons = sudokuFront.getButtonArray();
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     gpad.addElement(boardButtons[i][j], 2 + i, 2 + j);
                 }
             }
-
+            //resets the sudoku and make it disapear
         } else if (!textField.getValidity() && sudokuCreated == true) {
             sudokuFront.clear();
             sudokuCreated = false;
@@ -479,7 +528,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
                 errorDetected = false;
                 int value = sudokuBoard.getSingleField(selectedField[0], selectedField[1]).getValue();
-
+                //gets the value form key input to field
                 if ((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_9)) {
 
                     if (key <= 57){
@@ -494,7 +543,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                     sudokuBoard.changeField(selectedField[0], selectedField[1], value);
                     // updateBoardState(value);
                     System.out.println(String.valueOf(value) + " pressed!");
-
+                    //deletes the last digit
                 } else if (key == GLFW_KEY_BACKSPACE) {
 
                     value = value / 10;
@@ -509,7 +558,7 @@ public class CreateMenuWindow extends Window implements WindowInterface {
                 }
 
             }
-            // creation of sudoku
+            // input for creation of sudoku
             if (textField.isSelected()) {
                 if ((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_9)) {
                     char c;
@@ -531,12 +580,13 @@ public class CreateMenuWindow extends Window implements WindowInterface {
 
     }
 
+    //resets selectedField
     private void clearSelectField() {
         selectedField[0] = 0;
         selectedField[1] = 0;
     }
 
-    @Override // If you don't need a resize callback, just delete this
+    @Override // resize the coords form the screen size
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;

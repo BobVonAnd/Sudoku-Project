@@ -9,6 +9,8 @@ public class CharInfo {
     public int y;
     public int width;
     public int height;
+
+    
     public float yOfSet = 94.8125f - 67.875f+1;
 
     public Vector2f[] textureCoord = new Vector2f[4];
@@ -30,7 +32,7 @@ public class CharInfo {
         float y0 = ((float)y - (height-67.875f)) / (float)fontHeight;
         float y1 = (float)(y+yOfSet) / (float)fontHeight;
 
-     
+        //texture Coordinates
         textureCoord[0] = new Vector2f(x1, y1);
         textureCoord[1] = new Vector2f(x0, y0);
     }

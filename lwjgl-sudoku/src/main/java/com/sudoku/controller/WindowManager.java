@@ -58,13 +58,13 @@ import com.sudoku.view.Shader;
 import com.sudoku.view.font.CreateFont;
 
 public class WindowManager {
-    private WindowInterface activeWindow;
-    private long window;
+    private WindowInterface activeWindow; // active window object
+    private long window; // object specific 
     private int h; // Initial
 	private int w; // Initial
 	private boolean fullscreen = false; // Initial
-	private CreateFont font;
-	private Shader fontShader;
+	private CreateFont font; // font 
+	private Shader fontShader; // font shader
 
 	public WindowManager(int width, int height) {
 		this.h = height;
@@ -79,6 +79,7 @@ public class WindowManager {
 		return fontShader;
 	}
 
+	// sets the active window, the window must be a Window class, look at WindowTemplate.java
     public void setActiveWindow(WindowInterface window) {
 		this.activeWindow = window;
 		if (this.window != NULL) { // GLFW window already exists
@@ -140,6 +141,7 @@ public class WindowManager {
 			}
 		});
 
+		// cursor callbacks!
 		glfwSetCursorPosCallback(window, (win, xpos, ypos) -> {
 
 			if (activeWindow != null) {
@@ -148,6 +150,7 @@ public class WindowManager {
 
 		});
 
+		// mouse button callbacks!
 		glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
 
 			if (activeWindow != null) {
@@ -156,6 +159,7 @@ public class WindowManager {
 
 		});
 
+		// resize callbacks!
 		glfwSetWindowSizeCallback(window, (win, width, height) -> {
 
 			this.w = width;
@@ -200,11 +204,12 @@ public class WindowManager {
 	}
 
 
+	// run gets run once
     public void run() {
 		System.out.println("Running with LWJGL v" + Version.getVersion() + "");
-        init();
-        activeWindow.create();
-		loop();
+        init(); // initialize the window
+        activeWindow.create(); // run create from the active window
+		loop(); // start the loop
 	
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
@@ -216,6 +221,7 @@ public class WindowManager {
 		
 	}
 
+	// ran every frame
     private void loop() {
         glViewport(0, 0, this.w, this.h);
 		// Set the clear color
@@ -231,14 +237,14 @@ public class WindowManager {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
             ((Window) activeWindow).draw();
-			activeWindow.step();
+			activeWindow.step(); // step for active window
 			
 			glfwSwapBuffers(window); // swap the color buffers
 			glfwPollEvents();
 		}
 	}
 
-	public void toggleFullscreen() {
+	public void toggleFullscreen() { // full screen toggle
     fullscreen = !fullscreen;
 
     if (fullscreen) {

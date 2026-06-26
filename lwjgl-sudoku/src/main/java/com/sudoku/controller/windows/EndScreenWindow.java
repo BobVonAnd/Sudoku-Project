@@ -1,8 +1,6 @@
 package com.sudoku.controller.windows;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 import com.sudoku.controller.Window;
@@ -27,43 +25,46 @@ public class EndScreenWindow extends Window implements WindowInterface {
     private int width;
     private int height;
 
-    private CreateFont font;
-    private CreateString text;
-    private Shader fontShader;
+    private CreateFont font; // font
+    private CreateString text; // text
+    private Shader fontShader; // font shader
 
     private String endCondition;
 
   
 
     public EndScreenWindow(WindowManager wm, SudokuBoard sb, int width, int height, String endCondition) {
-        super(wm);
-        this.wm = wm;
-        this.sudokuBoard = sb;
-        this.width = width;
-        this.height = height;
-        this.endCondition = endCondition;
-        wm.setActiveWindow(this);
+        super(wm); // initialize parent
+        this.wm = wm; // wm
+        this.sudokuBoard = sb; // sudokuboard
+        this.width = width; // width
+        this.height = height; // height
+        this.endCondition = endCondition; // end condition
+        wm.setActiveWindow(this); // sets the active window this end screen window
     }
 
+    // when the end screen window is created
     public void create() {
         // This code runs once
-        font = wm.getFont();
-        fontShader = wm.getFontShader();
-        text = new CreateString(fontShader, font, width, height);
-        gpad = new Gamepad();
+        font = wm.getFont(); // font
+        fontShader = wm.getFontShader(); // shader
+        text = new CreateString(fontShader, font, width, height); // string
+        gpad = new Gamepad(); // init gamepad
 
+        // make the return button
         returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Return");
-        addElement(returnButton, 0);
+        addElement(returnButton, 0); // add the retun button to the ui
 
+        // make the sudoku ui
         sudokuUI = new Sudoku(width, height, 1.6, 0,0, sudokuBoard, font, fontShader, this);
-        addElement(sudokuUI, 0);
+        addElement(sudokuUI, 0); // add the sudoku ui to the ui
     }
 
     public void step() {
         // This code runs every frame
-        gpad.step();
+        gpad.step(); // gamepad step evetn
 
-
+        // end condition, just read it, you'll get it
         switch (endCondition) {
             case "win":
                 text.makeText("You Finished The Sudoku!", -0.3f, 0.83f, 0.5f, new float[]{0f,0f,0f});
@@ -81,6 +82,7 @@ public class EndScreenWindow extends Window implements WindowInterface {
         holdOver(returnButton);
     }
 
+    // mouse collision
     private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
@@ -95,40 +97,22 @@ public class EndScreenWindow extends Window implements WindowInterface {
         }
     }
 
-    @Override // If you don't need a key callback, just delete this
-    public void keyCallback(int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-            System.out.println("Space pressed!");
-        }
-    }
-    
-    @Override // If you don't need a resize callback, just delete this
-    public void resizeCallback(int width, int height) {
-        System.out.println("New size: " + width + "x" + height);
-    }
-
-    @Override // If you don't need a mouse button callback, just delete this
+    @Override
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
             action == GLFW_PRESS) {
-
+                // go to main menu if click on button
             if(returnButton.isHeldOver()){
                 new mainMenuWindow(wm, width, height);
             }
-        }
-
-        if (button == GLFW_MOUSE_BUTTON_RIGHT &&
-            action == GLFW_PRESS) {
-
-            System.out.println("Right click!");
         }
     }
 
     private double mouseX;
     private double mouseY;
 
-    @Override
+    @Override // cursor pos updater
     public void cursorPosCallback(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
