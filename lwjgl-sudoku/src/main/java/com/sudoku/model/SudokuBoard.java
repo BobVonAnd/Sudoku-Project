@@ -34,6 +34,12 @@ import com.sudoku.view.TerminalView;
                 }
             }
         }
+
+
+        public int getSolutions(){
+            return solutions;
+        }
+
         public void inputRemoved(){
               nrOfFieldsLeft += 1;
         }
