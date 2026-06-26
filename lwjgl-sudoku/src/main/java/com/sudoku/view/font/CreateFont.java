@@ -33,19 +33,17 @@ import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 
 
-//Borrowed form GamesWithGabe and edited
+//Borrowed form GamesWithGabe and edited by Nikolaj
 public class CreateFont {
     
-
     public String filePath;
     public int fontSize;
     public Map<Character, CharInfo> charMap;
-    //public Map<Integer, CharInfo> charMap;
 
     public int textureId;
 
     
-
+    //an atlas with all the glyphs we want.
     public char[] atlas = {
         'a','b','c','d','e','f','g','h','i','j','k','l','m',
         'n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -59,7 +57,7 @@ public class CreateFont {
     };
 
     
-
+    //gets font and fontsize
     public CreateFont(String filePath, int fontSize){
         this.filePath = filePath;
         this.fontSize = fontSize;
@@ -67,11 +65,12 @@ public class CreateFont {
         createBitMap();
     }
 
-
+    //returns the information of a specific char
     public CharInfo getChar(char character){
         return charMap.get(character);
     }
 
+    
     public void createBitMapV2(){
         int estimatedWidth = (int)Math.sqrt(atlas.length) * fontSize + 1;
 
