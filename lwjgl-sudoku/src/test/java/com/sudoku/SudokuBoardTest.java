@@ -110,6 +110,42 @@ public void updateLETest() {
     }
 
     @Test
+    public void fieldsToRemoveTest(){
+        double dif = 0.5;
+        SudokuBoard sb = new SudokuBoard(4);
+        sb.populate(dif);
+
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+
+        sb = new SudokuBoard(9);
+        sb.populate(dif);
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+
+        sb = new SudokuBoard(16);
+        sb.populate(dif);
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+
+        sb = new SudokuBoard(25);
+        sb.populate(dif);
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+
+        sb = new SudokuBoard(36);
+        sb.populate(dif);
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+
+         sb = new SudokuBoard(1);
+        sb.populate(dif);
+        assertTrue(sb.getNrOfFieldsLeft() == sb.getFieldsToRemove(dif));
+        sb.clear();
+         
+    }
+
+    @Test
     public void clearTest(){
         boolean fail= true;
         SudokuBoard sb = new SudokuBoard(9);
@@ -241,6 +277,23 @@ public void updateLETest() {
         assertTrue(sb.getNrOfFieldsLeft() == 1);
         sb.inputDetected();
         assertTrue(sb.getNrOfFieldsLeft() == 0);
+    }
+
+
+    @Test
+    public void sbCopyTest(){
+        SudokuBoard sb = new SudokuBoard(4);
+        sb.populate();
+        SudokuBoard sb1 = new SudokuBoard(4);
+        sb1 = sb.getCopy();
+         for(int i = 0; i < sb.getSize(); i++){
+            for(int j = 0; j < sb.getSize(); j++){
+                if(sb.getSingleField(i, j).getValue() != sb1.getSingleField(i, j).getValue()){
+                    assertTrue(false);
+                }
+            }   
+        }
+        assertTrue(true);
     }
 
 
