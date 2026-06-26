@@ -1,7 +1,7 @@
 package com.sudoku.model;
 
 import java.util.ArrayList;
-
+//This class helps the solver class by doing the setup that enables the human solver
 public class humanSolverBoardHelper {
     public void BoardHelper(SudokuBoard sudokuBoard){
         ArrayList<Field> fields = sudokuBoard.getFields();
@@ -9,7 +9,8 @@ public class humanSolverBoardHelper {
             updateLegalEntriesOfField(f, sudokuBoard);
             makeEdges(f, sudokuBoard);
         }
-    }
+    }  
+    //This method removes the legal entries of empty fields based on the filled fields
     public void updateLegalEntriesOfField(Field field, SudokuBoard sudokuBoard) {
         Field[][] wholeBoard = sudokuBoard.getWholeBoard();
         int bigFieldSize = (int) Math.sqrt(sudokuBoard.getSize());
@@ -42,7 +43,7 @@ public class humanSolverBoardHelper {
         }
 
     }
-
+    //This method makes edges between the fields that are empty and are within the same constraint
     public void makeEdges(Field field, SudokuBoard sudokuBoard) {
         int size = sudokuBoard.getSize();
         Field[][] wholeBoard = sudokuBoard.getWholeBoard();
@@ -77,22 +78,5 @@ public class humanSolverBoardHelper {
             }
         }
 
-    }
-    public boolean sameBoardCheck(SudokuBoard sudokuBoard1, SudokuBoard sudokuBoard2){
-        int size1 = sudokuBoard1.getSize();
-        int size2 = sudokuBoard2.getSize();
-        if (size1 != size2){
-            return false;
-        }
-        for (int x = 0; x < size1; x++){
-            for (int y = 0; y < size1; y++){
-                int value1 = sudokuBoard1.getSingleField(x,y).getValue();
-                int value2 = sudokuBoard2.getSingleField(x, y).getValue();
-                if (value1 != value2 && value1 != 0 && value2 != 0){
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

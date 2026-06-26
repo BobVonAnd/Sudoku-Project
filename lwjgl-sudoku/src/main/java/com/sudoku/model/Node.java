@@ -1,6 +1,7 @@
 package com.sudoku.model;
-import java.util.ArrayList;
 
+//This class represents the node datastructure used by algoXSolver. 
+// It holds it's neighbors, it's corresponding position in the sudoku board and it's columnNode
 public class Node {
     Node up;
     Node left;
