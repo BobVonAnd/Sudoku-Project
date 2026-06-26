@@ -18,20 +18,21 @@ import com.sudoku.view.font.CreateFont;
 
 public class SolvedWindow extends Window implements WindowInterface {
     
-    private WindowManager wm;
-    private Sudoku sudokuUI;
+    private WindowManager wm; 
+    private Sudoku sudokuUI; // holds the sudoku ui element
     private SudokuBoard sudokuBoard;
     private SudokuBoard solvedSudokuBoard;
-    private playSudokuWindow pw;
-    private CreateMenuWindow cmw;
-    private Gamepad gpad;
+    private playSudokuWindow pw; // holds the play sudoku window
+    private CreateMenuWindow cmw; // holds the create menu window
+    private Gamepad gpad; // holds the gamepad
 
     private int width;
     private int height;
     private CreateFont font;
-    private Shader fontShader;
+    private Shader fontShader; // font shader
     private CreateString text;
 
+    // buffer for `a` button
     private long a_buffer_timestamp = System.currentTimeMillis();
     private long a_buffer_max = 200;
 
@@ -39,37 +40,37 @@ public class SolvedWindow extends Window implements WindowInterface {
     private MenuButton end; 
 
     public SolvedWindow(WindowManager wm, int width, int height, SudokuBoard sb, SudokuBoard solvedsb, playSudokuWindow pw) {
-        super(wm);
+        super(wm); // init parent
         this.wm = wm;
-        sudokuBoard = sb;
+        sudokuBoard = sb; // updated sudoku board
         solvedSudokuBoard = solvedsb;
         this.pw = pw;
         this.width = width;
         this.height = height;
-        wm.setActiveWindow(this);
+        wm.setActiveWindow(this); // set this to active window
         
     }
 
      public SolvedWindow(WindowManager wm, int width, int height, SudokuBoard sb, SudokuBoard solvedsb, CreateMenuWindow cmw) {
         super(wm);
         this.wm = wm;
-        sudokuBoard = sb;
+        sudokuBoard = sb; // updated sudoku board
         solvedSudokuBoard = solvedsb;
         this.cmw = cmw;
         this.width = width;
         this.height = height;
-        wm.setActiveWindow(this);
+        wm.setActiveWindow(this); // set this to active window
         
     }
 
     public void update(WindowManager wm, int width, int height, SudokuBoard sb, SudokuBoard solvedsb, playSudokuWindow pw){
         this.wm = wm;
         sudokuBoard = sb;
-        solvedSudokuBoard = solvedsb;
+        solvedSudokuBoard = solvedsb; // updated sudoku board
         this.pw = pw;
         this.width = width;
         this.height = height;
-        wm.setActiveWindow(this);
+        wm.setActiveWindow(this);  // set this to active window
     }
 
 
@@ -80,17 +81,18 @@ public class SolvedWindow extends Window implements WindowInterface {
 		fontShader = wm.getFontShader();
 		text = new CreateString(fontShader, font, width, height);        
 
+        // create return button
         returnButton = new MenuButton(-0.7, 0.75, 0.2, text, fontShader, "Back");
-        addElement(returnButton, 0);
-        gpad.addElement(returnButton, 0, 0);
+        addElement(returnButton, 0); // add return button to ui
+        gpad.addElement(returnButton, 0, 0); // add return button to gamepad
 
         end = new MenuButton(-0.7, -0.75, 0.2, text, fontShader, "End");
-        addElement(end, 0);
-        gpad.addElement(end, 0, 1);
+        addElement(end, 0); // add end button to ui
+        gpad.addElement(end, 0, 1);  // add end button to gamepad
 
 
         sudokuUI = new Sudoku(width, height, 1.6, solvedSudokuBoard, sudokuBoard, font, fontShader, this);
-        addElement(sudokuUI, 0);
+        addElement(sudokuUI, 0); // add sudoku to ui
 
     }
 
@@ -98,19 +100,20 @@ public class SolvedWindow extends Window implements WindowInterface {
 
     public void step() {
         // This code runs every frame
-        gpad.step();
-        holdOver(end);
-        holdOver(returnButton);
+        gpad.step(); // controller step
+        holdOver(end); // is held over end?
+        holdOver(returnButton); // is held over return?
         long now = System.currentTimeMillis();
+        // if pressed a?
         boolean entered = gpad.isEntered() && (now - a_buffer_timestamp >= a_buffer_max);
         if (entered) {
-            a_buffer_timestamp = now;
-            windowTransition(end);
-            windowTransition(returnButton);
+            a_buffer_timestamp = now; // set new timestamp
+            windowTransition(end); // go to end if selected
+            windowTransition(returnButton); // go to return if selected
         }
     }
 
-
+    // collision detection with mouse and button
      private void holdOver(MenuButton button) {
         double mouseXt = mouseX / (width / 2) - 1;
         double mouseYt = -mouseY / (height / 2) + 1;
@@ -124,38 +127,25 @@ public class SolvedWindow extends Window implements WindowInterface {
             button.heldOver(false);
         }
     }
-    @Override // If you don't need a key callback, just delete this
-    public void keyCallback(int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-            System.out.println("Space pressed!");
-        }
-    }
     
-    @Override // If you don't need a resize callback, just delete this
+    @Override 
     public void resizeCallback(int width, int height) {
         this.width = width;
         this.height = height;
         sudokuUI.resize(width, height);
     }
 
-    @Override // If you don't need a mouse button callback, just delete this
+    @Override
     public void mouseButtonCallback(int button, int action, int mods) {
 
         if (button == GLFW_MOUSE_BUTTON_LEFT &&
             action == GLFW_PRESS) {
-            windowTransition(returnButton);
-            windowTransition(end);
-            
-
-        }
-
-        if (button == GLFW_MOUSE_BUTTON_RIGHT &&
-            action == GLFW_PRESS) {
-
-            System.out.println("Right click!");
+            windowTransition(returnButton); // if click mouse return
+            windowTransition(end); // if click mouse end
         }
     }
 
+    // this is where it checks if we need to go to a specfic window, then goes to that window
     public void windowTransition(MenuButton e) {
         if(e == returnButton && returnButton.isHeldOver()){
             if(pw == null && cmw != null){
@@ -172,11 +162,11 @@ public class SolvedWindow extends Window implements WindowInterface {
     private double mouseX;
     private double mouseY;
 
-    @Override
+    @Override // updates the mouse position
     public void cursorPosCallback(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
     }
 
 
-}
+} // hi Karl! :)
