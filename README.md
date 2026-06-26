@@ -13,7 +13,7 @@ Advisor \& Professor:
 This project was built for Java 17+ and requires Maven 3.8+. The installation
 varies depending on the operating system, so here are some basic instructions.
 
-### Windows or MacOS
+### Windows
 
 We have built this on a Zulu distribution of Java. So for the sake of simplicity, we recommend a distribution of Azul Zulu, which can be found
 [here](https://www.azul.com/downloads/?package=jdk#zulu). Scroll down and
@@ -51,11 +51,6 @@ On Windows:
 mvn install
 mvn clean compile exec:java
 ```
-On MacOS:
-```bash
-mvn install
-mvn clean compile exec:exec
-```
 
 ## Packaging and running the project
 
@@ -72,11 +67,7 @@ mvn clean package
 
 **To run the package:**
 
-On Windows or MacOS:
+On Windows:
 ```bash
 java -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
-```
-On MacOS:
-```bash
-java -XstartOnFirstThread -jar target/lwjgl-sudoku-1.0-SNAPSHOT.jar
 ```
